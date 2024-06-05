@@ -10,7 +10,7 @@ public class MipsController {
 
 	@GetMapping
 	public String main() {
-		return "/member/main";
+		return "/main";
 	}
 	
 }
