@@ -2,33 +2,27 @@ package com.application.mips.dto;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
 public class MemberDTO {
-
-	/*
-		회원_ID varchar(20) [primary key]
-		비밀번호 varchar(30)
-		닉네임 varchar(50)
-		이메일 varchar(50)
-		생년월일 timestamp
-		성별 varchar(6)
-		주소 varchar(50)
-		권한 varchar(5)
-		회원_등록_날짜 timestamp
-		최종_로그인 timestamp
-	*/
 	
-	private String memberId;
-	private String passwd;
-	private String nickname;
-	private String email;
-	private Date birth;
-	private String gender;
-	private String address;
-	private String role;
-	private Date createdAt;
-	private Date lastLogin;
+	private Long memberIdx;		// 회원 index
+	private String memberId;	// 회원_ID
+	private String passwd; 		// 비밀번호
+	private String nickname;	// 닉네임
+	private String email;		// 이메일
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date birth;			// 생년월일
+	private String gender;		// 성별
+	private String address;		// 주소
+	private String role;		// 권한
+	private String activeYn;    // 회원 활성화 여부
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date createdAt;		// 회원 등록 날짜
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date lastLogin;		// 최종 로그인
 
 }

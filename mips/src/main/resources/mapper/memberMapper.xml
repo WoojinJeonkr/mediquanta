@@ -3,4 +3,46 @@
 
 <mapper namespace="com.application.mips.dao.MemberDAO">
 
+	<insert id="createMember" parameterType="MemberDTO">
+		INSERT INTO MEMBER (
+			MEMBER_ID,
+			PASSWD,
+			NICKNAME,
+			EMAIL,
+			BIRTH,
+			GENDER,
+			ADDRESS,
+			ROLE,
+			ACTIVE_YN,
+			CREATED_AT,
+			LAST_LOGIN
+		) 
+		VALUES (
+			#{memberId},
+			#{passwd},
+			#{nickname},
+			#{email},
+			#{birth},
+			#{gender},
+			#{address},
+			#{role},
+			#{activeYn},
+			#{createdAt},
+			#{lastLogin}
+		 )
+	</insert>	
+	
+	<select id="checkValidId" parameterType="String" resultType="String"> 
+		SELECT MEMBER_ID
+		FROM   MEMBER
+		WHERE  MEMBER_ID = #{memberId}
+	</select>
+
+	<select id="login" parameterType="String" resultType="MemberDTO">
+		SELECT	PASSWD ,
+				ACTIVE_YN
+		FROM	MEMBER
+		WHERE	MEMBER_ID = #{memberId}
+	</select>
+
 </mapper>
