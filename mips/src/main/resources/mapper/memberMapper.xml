@@ -3,6 +3,7 @@
 
 <mapper namespace="com.application.mips.dao.MemberDAO">
 
+	<!-- 회원가입 -->
 	<insert id="createMember" parameterType="MemberDTO">
 		INSERT INTO MEMBER (
 			MEMBER_ID,
@@ -32,14 +33,23 @@
 		 )
 	</insert>	
 	
+	<!-- 아이디 중복 체크 -->
 	<select id="checkValidId" parameterType="String" resultType="String"> 
 		SELECT MEMBER_ID
 		FROM   MEMBER
 		WHERE  MEMBER_ID = #{memberId}
 	</select>
 
+	<!-- 닉네임 중복 체크 -->
+	<select id="checkValidNickname" parameterType="String" resultType="String"> 
+		SELECT NICKNAME
+		FROM   MEMBER
+		WHERE  NICKNAME = #{nickname}
+	</select>
+	
+	<!-- 로그인 -->
 	<select id="login" parameterType="String" resultType="MemberDTO">
-		SELECT	PASSWD ,
+		SELECT	PASSWD,
 				ACTIVE_YN
 		FROM	MEMBER
 		WHERE	MEMBER_ID = #{memberId}

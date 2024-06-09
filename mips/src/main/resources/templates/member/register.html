@@ -5,36 +5,84 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
-<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-<script th:src="@{/js/jquery-main.js}"></script>
+<script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
 <script>
-	$(function() {
 
-		$("#registerBtn").click(function() {
-
-		});
-
-	});
+	function checkFormValidation() {
+		
+		let isValid = true;
 	
-	window.addEventListener('load', () => {
-	      const forms = document.getElementsByClassName('validation-form');
+	    let memberId = $("#memberId").val();
+	    if (memberId.trim() == "") {
+	        $("#isValidIdMsg").html(`<span style="color:red;">아이디를 입력하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidIdMsg").text("");
+	    }
+	
+	    let nickname = $("#nickname").val();
+	    if (nickname.trim() == "") {
+	        $("#isValidNicknameMsg").html(`<span style="color:red;">닉네임을 입력하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidNicknameMsg").text("");
+	    }
+	
+	    let passwd = $("#passwd").val();
+	    if (passwd.trim() == "") {
+	        $("#isValidPasswdMsg").html(`<span style="color:red;">비밀번호를 입력하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidPasswdMsg").text("");
+	    }
+	
+	    let confirmPasswd = $("#confirmPasswd").val();
+	    if (confirmPasswd.trim() == "") {
+	        $("#isValidConfirmPasswdMsg").html(`<span style="color:red;">비밀번호를 다시 입력하세요.</span>`);
+	        isValid = false;
+	    } else if (passwd != confirmPasswd) {
+	        $("#isValidConfirmPasswdMsg").html(`<span style="color:red;">비밀번호가 일치하지 않습니다.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidConfirmPasswdMsg").text("");
+	    }
+	
+	    let email = $("#email").val();
+	    if (email.trim() == "") {
+	        $("#isValidEmailMsg").html(`<span style="color:red;">이메일을 입력하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidEmailMsg").text("");
+	    }
+	
+	    let address = $("#address").val();
+	    if (address.trim() == "") {
+	        $("#isValidAddressMsg").html(`<span style="color:red;">주소를 입력하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidAddressMsg").text("");
+	    }
+	
+	    let birth = $("#birth").val();
+	    if (birth.trim() == "") {
+	        $("#isValidBirthMsg").html(`<span style="color:red;">생년월일을 입력하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidBirthMsg").text("");
+	    }
+	
+	    if (!$('#aggrement').is(':checked')) {
+	        isValid = false;
+	    }
+	
+	    return isValid;
+		
+	}
 
-	      Array.prototype.filter.call(forms, (form) => {
-	        form.addEventListener('submit', function (event) {
-	          if (form.checkValidity() === false) {
-	            event.preventDefault();
-	            event.stopPropagation();
-	          }
-
-	          form.classList.add('was-validated');
-	        }, false);
-	      });
-	    }, false);
 </script>
 <style>
 	.custom-background {
 		min-height: 100vh;
-		
 	    background: -webkit-gradient(linear, left bottom, right top, from(#92b5db), to(#1d466c));
 	    background: -webkit-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
 	    background: -moz-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
@@ -59,77 +107,73 @@
 
 	<div layout:fragment="content">
 		<main class="main-content site-wrapper-reveal">
-			<section class="vh-80 d-flex justify-content-center align-items-center custom-background">
-				<div class="input-form col-md-12 mx-auto" style="margin-top: 18%; transform: translateY(-18%);">
-					<h4 class="mb-3">회원가입</h4>
-					<form class="validation-form" novalidate>
+			<section class="vh-60 d-flex justify-content-center align-items-center custom-background">
+				<div class="input-form col-md-12 mx-auto" style="margin-top: 22%; transform: translateY(-18%);">
+					<h4 class="mb-3"><b>회원가입</b></h4>
+					<div class="mb-4"></div>
+					<form class="validation-form" th:action="@{/mips/member/register}" th:onsubmit="return checkFormValidation();" method="post" enctype="multipart/form-data">
 						<div class="row">
 							<div class="col-md-6 mb-3">
-								<label for="userId">아이디</label> <input type="text"
-									class="form-control" id="userId" placeholder="" value=""
-									required>
-								<div class="invalid-feedback">사용하실 아이디를 입력해주세요.</div>
+								<label for="memberId">아이디</label>
+								<input type="text" class="form-control" id="memberId" name="memberId"
+									   placeholder="사용하실 아이디를 입력해주세요." required>
+								<span id="isValidIdMsg"></span>
 							</div>
 							<div class="col-md-6 mb-3">
-								<label for="nickname">닉네임</label> <input type="text"
-									class="form-control" id="nickname" placeholder="" value=""
-									required>
-								<div class="invalid-feedback">사용하실 닉네임을 입력해주세요.</div>
+								<label for="nickname">닉네임</label>
+								<input type="text" class="form-control" id="nickname" name="nickname"
+									   placeholder="사용하실 닉네임을 입력해주세요." required>
+								<span id="isValidNicknameMsg"></span>
 							</div>
 						</div>
 
 						<div class="mb-3">
-							<label for="userPw">비밀번호</label> <input type="password"
-								class="form-control" id="userPw"
-								placeholder="영어 소문자, 숫자, 특수문자를 포함한 10자리 이상" required>
-							<div class="invalid-feedback">비밀번호를 입력해주세요.</div>
+							<label for="passwd">비밀번호</label>
+							<input type="password" class="form-control" id="passwd" name="passwd"
+								   placeholder="영어 소문자, 숫자, 특수문자를 포함한 10자리 이상" required>
+							<span id="isValidPasswdMsg"></span>
 						</div>
 
 						<div class="mb-3">
-							<label for="userPw_confirm">비밀번호 재확인</label> <input
-								type="password" class="form-control" id="userPw_confirm"
-								placeholder="영어 소문자, 숫자, 특수문자를 포함한 10자리 이상" required>
-							<div class="invalid-feedback">비밀번호를 다시 입력해주세요.</div>
+							<label for="confirmPasswd">비밀번호 재확인</label>
+							<input type="password" class="form-control" id="confirmPasswd" name="confirmPasswd"
+								   placeholder="비밀번호를 다시 입력해주세요" required>
+							<span id="isValidConfirmPasswdMsg"></span>
 						</div>
 
 						<div class="mb-3">
-							<label for="email">이메일</label> <input type="email"
-								class="form-control" id="email" placeholder="you@example.com"
-								required>
-							<div class="invalid-feedback">이메일을 입력해주세요.</div>
+							<label for="email">이메일</label>
+							<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+							<span id="isValidEmailMsg"></span>
 						</div>
 
 						<div class="mb-3">
-							<label for="address">주소</label> <input type="text"
-								class="form-control" id="address"
-								placeholder="서울특별시 강남구 압구정로 201 (압구정동, 현대아파트)" required>
-							<div class="invalid-feedback">주소를 입력해주세요.</div>
+							<label for="address">주소</label>
+							<input type="text" class="form-control" id="address" name="address"
+								   placeholder="서울특별시 강남구 압구정로 201 (압구정동, 현대아파트)" required>
+							<span id="isValidAddressMsg"></span>
 						</div>
 
 						<div class="row">
 							<div class="col-md-6 mb-3">
-								<label for="birth">생년월일</label> <input type="date"
-									class="form-control" id="birth" placeholder="" value=""
-									required>
-								<div class="invalid-feedback">생년월일을 입력해주세요.</div>
+								<label for="birth">생년월일</label>
+								<input type="date" class="form-control" id="birth" name="birth" required>
+								<span id="isValidBirthMsg"></span>
 							</div>
 							<div class="col-md-6 mb-3">
-								<label for="gender">성별</label> <select name="gender"
-									id="gender" class="form-select">
+								<label for="gender">성별</label>
+								<select name="gender" id="gender" class="form-select">
 									<option value="male">남</option>
 									<option value="female">여</option>
 								</select>
 							</div>
 						</div>
 						<div class="custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input"
-								id="aggrement" required> <label
-								class="custom-control-label" for="aggrement">개인정보 수집 및
-								이용에 동의합니다.</label>
+							<input type="checkbox" class="custom-control-input" id="aggrement" required>
+							<label class="custom-control-label" id="aggrement" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
 						</div>
 						<div class="mb-4"></div>
-						<button class="btn btn-primary btn-lg btn-block" type="submit">가입
-							완료</button>
+						<button class="btn btn-primary btn-lg btn-block" id="signInBtn" type="submit">회원가입</button>
 					</form>
 				</div>
 			</section>

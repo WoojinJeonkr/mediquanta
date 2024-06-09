@@ -15,10 +15,3 @@ CREATE TABLE MEMBER (
     CREATED_AT		TIMESTAMP,
     LAST_LOGIN		TIMESTAMP
 );
-
-
-INSERT INTO 
-		MEMBER 
-VALUES
-	(1, 'test', 'test', 'test', 'test@naver.com', '1986-07-15', 'M', '서울시 강남구 논현동 25', 'USER', 'Y', '2024-05-04 12:00:00', '2024-05-06 10:30:28')
- 

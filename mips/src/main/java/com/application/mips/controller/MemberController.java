@@ -35,10 +35,9 @@ public class MemberController {
 	}
 	
 	@PostMapping("/register")
-	@ResponseBody
 	public String register(@ModelAttribute MemberDTO memberDTO) {
 		memberService.createMember(memberDTO);
-		return "redirect:/mips";
+		return "redirect:/mips/member/login";
 	}
 	
 	@GetMapping("/login")
@@ -49,7 +48,6 @@ public class MemberController {
 	@PostMapping("/login")
 	@ResponseBody
 	public String login(@RequestBody MemberDTO memberDTO, HttpServletRequest request) {
-		
 		String isValidMember = "n";
 		if (memberService.login(memberDTO)) {
 			HttpSession session = request.getSession();

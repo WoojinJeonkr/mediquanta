@@ -12,7 +12,7 @@
 	<link rel="shortcut icon" th:href="@{/img/favicon.ico}" type="image/x-icon" />
 	
 	<!--== Main Style CSS ==-->
-	<link th:href="@{/css/style.css}" rel="stylesheet" />
+	<link th:href="@{/css/style.css}" type="text/css" rel="stylesheet" />
 </head>
 <body>
 
@@ -53,9 +53,9 @@
                       <li><a th:href="@{/service-details.html}">Service Details</a></li>
                     </ul>
                   </li>
-                  <li><a href="about.html">About</a></li>
-                  <li><a href="contact.html">Contact</a></li>
-                  <li class="has-submenu"><a th:href="blog.html">Blog</a>
+                  <li><a th:href="@{/#}">About</a></li>
+                  <li><a th:href="@{/#}">Contact</a></li>
+                  <li class="has-submenu"><a th:href="@{/#}">Blog</a>
                     <ul class="submenu-nav">
                       <li><a href="blog.html">Blog Grid</a></li>
                       <li><a href="blog-details.html">Blog Single</a></li>
@@ -234,7 +234,6 @@
   <script th:src="@{/js/jquery-ui.min.js}"></script>
   <!--=== Plugin Collection Js ===-->
   <script th:src="@{/js/plugincollection.js}"></script>
-
 
   <!--=== Custom Js ===-->
   <script th:src="@{/js/custom.js}"></script>
