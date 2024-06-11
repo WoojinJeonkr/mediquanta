@@ -24,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
 		memberDTO.setGender(memberDTO.getGender().equals("female") ? "F" : "M");
 		memberDTO.setBirth(memberDTO.getBirth());
 		memberDTO.setActiveYn("y");
+		memberDTO.setEtcAddress(memberDTO.getEtcAddress() == null ? "" : memberDTO.getEtcAddress());
 		memberDTO.setRole("USER");
 		memberDTO.setCreatedAt(new Date());
 		memberDTO.setLastLogin(new Date());

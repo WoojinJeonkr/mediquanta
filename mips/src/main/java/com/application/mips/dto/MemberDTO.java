@@ -17,7 +17,10 @@ public class MemberDTO {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;			// 생년월일
 	private String gender;		// 성별
-	private String address;		// 주소
+	private String zipcode;		// 우편번호
+	private String roadAddress;	// 도로명주소
+	private String landAddress;	// 지번 주소
+	private String etcAddress;	// 기타 주소
 	private String role;		// 권한
 	private String activeYn;    // 회원 활성화 여부
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")

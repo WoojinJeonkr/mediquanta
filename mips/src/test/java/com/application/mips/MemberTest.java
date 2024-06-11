@@ -37,7 +37,6 @@ public class MemberTest {
 		memberDTO.setPasswd("test");
 		memberDTO.setNickname("test");
 		memberDTO.setEmail("test1@gmail.com");
-		memberDTO.setAddress("");
 		memberDTO.setBirth(birth);
 		memberDTO.setGender("F");
 		memberDTO.setRole("USER");
