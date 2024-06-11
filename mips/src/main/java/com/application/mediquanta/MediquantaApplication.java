@@ -1,13 +1,13 @@
-package com.application.mips;
+package com.application.mediquanta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MipsApplication {
+public class MediquantaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MipsApplication.class, args);
+		SpringApplication.run(MediquantaApplication.class, args);
 	}
 
 }
