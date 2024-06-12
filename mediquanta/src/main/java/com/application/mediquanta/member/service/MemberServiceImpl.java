@@ -1,4 +1,4 @@
-package com.application.mediquanta.service;
+package com.application.mediquanta.member.service;
 
 import java.util.Date;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.application.mediquanta.dao.MemberDAO;
 import com.application.mediquanta.dto.MemberDTO;
+import com.application.mediquanta.member.dao.MemberDAO;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -42,12 +42,22 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public String checkNickname(String nickname) {
+	public String checkValidNickname(String nickname) {
 		String isValidNickname = "n";
 		if (memberDAO.checkValidNickname(nickname) == null) {
 			isValidNickname = "y";
 		}
 		return isValidNickname;
+	}
+	
+	@Override
+	public String checkValidEmail(String email) {
+		System.out.println(email);
+		String isValidEmail = "n";
+		if (memberDAO.checkValidEmail(email) == null) {
+			isValidEmail = "y";
+		}
+		return isValidEmail;
 	}
 
 	@Override

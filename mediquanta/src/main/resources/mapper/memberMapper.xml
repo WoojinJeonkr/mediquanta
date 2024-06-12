@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.application.mediquanta.dao.MemberDAO">
+<mapper namespace="com.application.mediquanta.member.dao.MemberDAO">
 
 	<!-- 회원가입 -->
 	<insert id="createMember" parameterType="MemberDTO">
@@ -51,6 +51,13 @@
 		SELECT NICKNAME
 		FROM   MEMBER
 		WHERE  NICKNAME = #{nickname}
+	</select>
+	
+	<!-- 이메일 중복 체크 -->
+	<select id="checkValidEmail" parameterType="String" resultType="String"> 
+		SELECT EMAIL
+		FROM   MEMBER
+		WHERE  EMAIL = #{email}
 	</select>
 	
 	<!-- 로그인 -->

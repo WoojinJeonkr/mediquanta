@@ -1,4 +1,4 @@
-package com.application.mediquanta.controller;
+package com.application.mediquanta.member.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.application.mediquanta.dto.MemberDTO;
-import com.application.mediquanta.service.MemberService;
+import com.application.mediquanta.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -32,6 +32,19 @@ public class MemberController {
 	@ResponseBody
 	public String validId(@RequestParam("memberId") String memberId) {
 		return memberService.checkValidId(memberId);
+	}
+	
+	@PostMapping("/validNickname")
+	@ResponseBody
+	public String validNickname(@RequestParam("nickname") String nickname) {
+		return memberService.checkValidNickname(nickname);
+	}
+	
+	@PostMapping("/validEmail")
+	@ResponseBody
+	public String validEmail(@RequestParam("email") String email) {
+		System.out.println(email);
+		return memberService.checkValidEmail(email);
 	}
 	
 	@PostMapping("/register")

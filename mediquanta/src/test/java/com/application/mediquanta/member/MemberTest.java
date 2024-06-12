@@ -1,4 +1,4 @@
-package com.application.mediquanta;
+package com.application.mediquanta.member;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.application.mediquanta.dto.MemberDTO;
-import com.application.mediquanta.service.MemberService;
+import com.application.mediquanta.member.service.MemberService;
 
 @SpringBootTest
 public class MemberTest {
@@ -46,7 +46,7 @@ public class MemberTest {
 		boolean isValidMember = false;
 		if (memberService.checkValidId(memberDTO.getMemberId()) == "y") {
 			isValidMember = true;
-		} else if (memberService.checkNickname(memberDTO.getNickname()) == "y") {
+		} else if (memberService.checkValidNickname(memberDTO.getNickname()) == "y") {
 			isValidMember = true;
 		} else {
 			isValidMember = false;
