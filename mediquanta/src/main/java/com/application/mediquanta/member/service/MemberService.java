@@ -1,6 +1,6 @@
 package com.application.mediquanta.member.service;
 
-import com.application.mediquanta.dto.MemberDTO;
+import com.application.mediquanta.member.dto.MemberDTO;
 
 public interface MemberService {
 

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.application.mediquanta.dto.MemberDTO;
+import com.application.mediquanta.member.dto.MemberDTO;
 import com.application.mediquanta.member.service.MemberService;
 
 @SpringBootTest

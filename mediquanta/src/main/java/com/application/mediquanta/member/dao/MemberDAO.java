@@ -2,7 +2,7 @@ package com.application.mediquanta.member.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.application.mediquanta.dto.MemberDTO;
+import com.application.mediquanta.member.dto.MemberDTO;
 
 @Mapper
 public interface MemberDAO {

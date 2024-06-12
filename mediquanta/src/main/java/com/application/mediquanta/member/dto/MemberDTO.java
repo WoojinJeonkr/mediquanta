@@ -1,4 +1,4 @@
-package com.application.mediquanta.dto;
+package com.application.mediquanta.member.dto;
 
 import java.util.Date;
 

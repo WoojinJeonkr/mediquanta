@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.application.mediquanta.dto.MemberDTO;
+import com.application.mediquanta.member.dto.MemberDTO;
 import com.application.mediquanta.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,5 +78,10 @@ public class MemberController {
 		
 		return "redirect:/mediquanta";
 		
+	}
+	
+	@GetMapping("/profile")
+	public String getUserInfo() {
+		return "/member/userProfile";
 	}
 }

@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.application.mediquanta.dto.MemberDTO;
 import com.application.mediquanta.member.dao.MemberDAO;
+import com.application.mediquanta.member.dto.MemberDTO;
 
 @Service
 public class MemberServiceImpl implements MemberService {
