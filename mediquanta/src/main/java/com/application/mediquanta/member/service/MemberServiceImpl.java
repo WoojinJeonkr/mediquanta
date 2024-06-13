@@ -79,4 +79,9 @@ public class MemberServiceImpl implements MemberService {
 		return false;
 	}
 
+	@Override
+	public MemberDTO getUserInfo(String memberId) {
+		return memberDAO.getUserInfo(memberId);
+	}
+
 }

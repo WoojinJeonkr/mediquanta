@@ -46,34 +46,25 @@
               </div>
               <div class="header-navigation-area">
                 <ul class="main-menu nav justify-content-center">
-                  <li><a th:href="@{/mediquanta}">Home</a></li>
-                  <li class="has-submenu"><a th:href="@{/services.html}">Services</a>
+                  <li class="has-submenu"><a th:href="@{/services.html}">서비스</a>
                     <ul class="submenu-nav">
-                      <li><a th:href="@{/services.html}">Services</a></li>
-                      <li><a th:href="@{/service-details.html}">Service Details</a></li>
+                      <li><a th:href="@{/services.html}">서비스</a></li>
+                      <li><a th:href="@{/service-details.html}">서비스 상세</a></li>
                     </ul>
                   </li>
-                  <li><a th:href="@{/#}">About</a></li>
-                  <li><a th:href="@{/#}">Contact</a></li>
-                  <li class="has-submenu"><a th:href="@{/#}">Blog</a>
-                    <ul class="submenu-nav">
-                      <li><a href="blog.html">Blog Grid</a></li>
-                      <li><a href="blog-details.html">Blog Single</a></li>
-                    </ul>
-                  </li>
+                  <li><a th:href="@{/#}">사이트 소개</a></li>
+                  <li class="has-submenu"><a th:href="@{/#}">커뮤니티</a></li>
+                  <li><a th:href="@{/#}">FAQ</a></li>
                 </ul>
               </div>
               <div class="header-action-area">
                 <div class="login-reg">
                   <span th:if="${session.memberId == null}">
-                  	<a th:href="@{/mediquanta/member/login}">log in</a><span>/</span><a th:href="@{/mediquanta/member/register}">register</a>
+                  	<a th:href="@{/mediquanta/member/login}">로그인</a><span>/</span><a th:href="@{/mediquanta/member/register}">회원가입</a>
                   </span>
                   <span th:unless="${session.memberId == null}">
-                  	<a th:href="@{/mediquanta/member/logout}">logout</a>
-                  	<a th:if="${session.role == 'USER'}" th:href="@{/mediquanta/member/profile}">
-                  		<i class="icon icofont-user-alt-3"></i>
-                  	</a>
-                  	<a th:if="${session.role == 'ADMIN'}" th:href="@{/mediquanta/member/profile}">
+                  	<a th:href="@{/mediquanta/member/logout}">로그아웃</a>
+                  	<a id="profileIcon" th:href="@{/mediquanta/member/profile}">
                   		<i class="icon icofont-user-alt-3"></i>
                   	</a>
                   </span>
@@ -99,15 +90,10 @@
                 <a class="footer-logo" th:href="index.html">
                   <img th:src="@{/img/logo.png}" alt="Logo">
                 </a>
-                <p class="mb-0">Sed elit quam, iaculis sed semper sit amet udin vitae nibh at magna akal semperFusce.
+                <p class="mb-0">근처에 존재하는 병원과 약국의 정보를 제공하는 의료 커뮤니티!
                 </p>
                 <ul class="widget-contact-info">
-                  <li class="info-address"><i class="icofont-location-pin"></i>69 Halsey St, New York, Ny 10002, United
-                    States.</li>
-                  <li class="info-mail"><i class="icofont-email"></i><a
-                      href="mailto://hello@yourdomain.com">hello@yourdomain.com</a></li>
-                  <li class="info-phone"><i class="icofont-ui-call"></i><a href="tel://(0091) 8547 632521">(0091) 8547
-                      632521</a></li>
+                  <li class="info-mail"><i class="icofont-email"></i><a href="mailto://devwoojinjeon@gmail.com">devwoojinjeon@gmail.com</a></li>
                 </ul>
               </div>
             </div>
@@ -179,8 +165,7 @@
           <div class="row text-center">
             <div class="col-sm-12">
               <div class="widget-copyright">
-                <p>© 2021 <span>MEXI</span>. Made with <i class="icofont-heart-alt"></i> by <a target="_blank"
-                    href="https://www.hasthemes.com">HasThemes</a></p>
+                <p>© 2024 <span>Mediquanta</span>
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@ package com.application.mediquanta.member.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,7 +88,13 @@ public class MemberController {
 	}
 	
 	@GetMapping("/profile")
-	public String profile() {
-		return "/member/userProfile";
+	public String redirectProfile(Model model, HttpSession session) {
+		String role = (String)session.getAttribute("role");
+		String page = role.equals("USER") ? "userProfile" : "adminProfile";
+		
+		String memberId = (String)session.getAttribute("memberId");
+		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
+		return "/member/" + page;
 	}
+	
 }

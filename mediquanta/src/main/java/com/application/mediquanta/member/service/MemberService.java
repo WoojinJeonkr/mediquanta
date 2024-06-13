@@ -9,6 +9,7 @@ public interface MemberService {
 	public String checkValidNickname(String nickname);
 	public String checkValidEmail(String email);
 	public String checkRole(String memberId);
+	public MemberDTO getUserInfo(String memberId);
 	public boolean login(MemberDTO memberDTO);
 	
 }

@@ -4,14 +4,15 @@
 	layout:decorate="~{/layout.html}">
 <head>
 <meta charset="UTF-8">
-<title>User Profile</title>
+<title>프로필</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+<script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
 <body>
 	<div layout:fragment="content">
 		<main class="main-content site-wrapper-reveal">
 			<section>
-				<div style="background-color: rgba(0, 0, 0, 0.65); height: 15vh; z-index: 8;">&emsp;</div>
+				<div style="height: 19vh; z-index: 8; background-color: #666666">&emsp;</div>
 			</section>
 			<section style="background-color: #eee;">
 			  <div class="container py-5">
@@ -19,8 +20,8 @@
 			      <div class="col">
 			        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
 			          <ol class="breadcrumb mb-0">
-			            <li class="breadcrumb-item"><a th:href="@{/mediquanta}">Home</a></li>
-			            <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+			            <li class="breadcrumb-item"><a th:href="@{/mediquanta}">메인</a></li>
+			            <li class="breadcrumb-item active" aria-current="page">사용자 프로필</li>
 			          </ol>
 			        </nav>
 			      </div>
@@ -31,8 +32,9 @@
 			          <div class="card-body text-center">
 			            <img th:src="@{/img/testimonial/01.jpg}" alt="avatar"
 			              class="rounded-circle img-fluid" style="width: 150px;">
-			            <h5 class="my-3">John Smith</h5>
-			            <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
+			            <div class="d-flex justify-content-center align-items-center mt-3">
+						    <h5 class="my-3" id="nickname" th:text="${memberDTO.nickname}"></h5>
+						</div>
 			            <div class="d-flex justify-content-center mb-2">
 			              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
 			              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>
@@ -40,29 +42,28 @@
 			          </div>
 			        </div>
 			        <div class="card mb-4 mb-lg-0">
-			          <div class="card-body p-0">
-			            <ul class="list-group list-group-flush rounded-3">
-			              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-			                <i class="fas fa-globe fa-lg text-warning"></i>
-			                <p class="mb-0">https://mdbootstrap.com</p>
-			              </li>
-			              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-			                <i class="fab fa-github fa-lg text-body"></i>
-			                <p class="mb-0">mdbootstrap</p>
-			              </li>
-			              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-			                <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-			                <p class="mb-0">@mdbootstrap</p>
-			              </li>
-			              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-			                <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-			                <p class="mb-0">mdbootstrap</p>
-			              </li>
-			              <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-			                <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-			                <p class="mb-0">mdbootstrap</p>
-			              </li>
-			            </ul>
+			          <div class="card-body">
+			          	<p class="mb-4"><span class="font-italic me-1">최근 열람한 게시글</span></p>
+			          	<div class="col-sm-3">
+			          		<p class="mb-1 text-primary" style="font-size: .85rem;">일상 게시판</p>
+			          	</div>
+			            <div class="col-sm-9">
+			                <p class="text-muted mb-0" style="font-size: .77rem;">게시글 제목 1</p>
+			            </div>
+			            <hr>
+			            <div class="col-sm-3">
+			          		<p class="mb-1 text-primary" style="font-size: .85rem;">자유 게시판</p>
+			          	</div>
+			            <div class="col-sm-9">
+			                <p class="text-muted mb-0" style="font-size: .77rem;">게시글 제목 1</p>
+			            </div>
+			            <hr>
+			            <div class="col-sm-3">
+			          		<p class="mb-1 text-primary" style="font-size: .85rem;">자유 게시판</p>
+			          	</div>
+			            <div class="col-sm-9">
+			                <p class="text-muted mb-0" style="font-size: .77rem;">게시글 제목 2</p>
+			            </div>
 			          </div>
 			        </div>
 			      </div>
@@ -74,7 +75,7 @@
 			                <p class="mb-0">닉네임</p>
 			              </div>
 			              <div class="col-sm-9">
-			                <p class="text-muted mb-0">Johnatan Smith</p>
+			                <p class="text-muted mb-0" th:text="${memberDTO.nickname}" />
 			              </div>
 			            </div>
 			            <hr>
@@ -83,16 +84,43 @@
 			                <p class="mb-0">이메일</p>
 			              </div>
 			              <div class="col-sm-9">
-			                <p class="text-muted mb-0">example@example.com</p>
+			                <p class="text-muted mb-0" th:text="${memberDTO.email}" />
+			              </div>
+			            </div>
+		            	<hr>
+			            <div class="row">
+			              <div class="col-sm-3">
+			                <p class="mb-0">우편번호</p>
+			              </div>
+			              <div class="col-sm-9">
+			                <p class="text-muted mb-0" th:text="${memberDTO.zipcode}" />
 			              </div>
 			            </div>
 			            <hr>
 			            <div class="row">
 			              <div class="col-sm-3">
-			                <p class="mb-0">주소</p>
+			                <p class="mb-0">도로명 주소</p>
 			              </div>
 			              <div class="col-sm-9">
-			                <p class="text-muted mb-0">Bay Area, San Francisco, CA</p>
+			                <p class="text-muted mb-0" th:text="${memberDTO.roadAddress}" />
+			              </div>
+			            </div>
+			            <hr>
+			            <div class="row">
+			              <div class="col-sm-3">
+			                <p class="mb-0">지번 주소</p>
+			              </div>
+			              <div class="col-sm-9">
+			                <p class="text-muted mb-0" th:text="${memberDTO.landAddress}" />
+			              </div>
+			            </div>
+			            <hr>
+			            <div class="row">
+			              <div class="col-sm-3">
+			                <p class="mb-0">기타 주소</p>
+			              </div>
+			              <div class="col-sm-9">
+			                <p class="text-muted mb-0" th:text="${memberDTO.etcAddress}" />
 			              </div>
 			            </div>
 			          </div>
@@ -101,8 +129,7 @@
 			          <div class="col-md-6">
 			            <div class="card mb-4 mb-md-0">
 			              <div class="card-body">
-			                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
-			                </p>
+			                <p class="mb-4"><span class="text-primary font-italic me-1">근처 병원 현황</span></p>
 			                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
 			                <div class="progress rounded" style="height: 5px;">
 			                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
@@ -134,8 +161,7 @@
 			          <div class="col-md-6">
 			            <div class="card mb-4 mb-md-0">
 			              <div class="card-body">
-			                <p class="mb-4"><span class="text-primary font-italic me-1">assigment</span> Project Status
-			                </p>
+			                <p class="mb-4"><span class="text-primary font-italic me-1">근처 약국 현황</span></p>
 			                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
 			                <div class="progress rounded" style="height: 5px;">
 			                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"

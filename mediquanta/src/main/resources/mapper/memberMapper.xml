@@ -74,5 +74,23 @@
 		FROM	MEMBER
 		WHERE	MEMBER_ID = #{memberId}
 	</select>
+	
+	<!-- 회원 정보 조회 -->
+	<select id="getUserInfo" parameterType="String" resultType="MemberDTO">
+		SELECT 	PASSWD,
+			    NICKNAME,
+			    EMAIL,
+			    BIRTH,
+			    GENDER,
+			    ZIPCODE,
+				ROAD_ADDRESS,
+				LAND_ADDRESS,
+				ETC_ADDRESS,
+			    ROLE,
+			    CREATED_AT,
+			    LAST_LOGIN
+		FROM	MEMBER
+		WHERE	MEMBER_ID = #{memberId}
+	</select>
 
 </mapper>
