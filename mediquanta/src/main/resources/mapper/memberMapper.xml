@@ -60,6 +60,13 @@
 		WHERE  EMAIL = #{email}
 	</select>
 	
+	<!-- 회원 권한 조회 -->
+	<select id="checkRole" parameterType="String" resultType="String"> 
+		SELECT ROLE
+		FROM   MEMBER
+		WHERE  MEMBER_ID = #{memberId}
+	</select>
+	
 	<!-- 로그인 -->
 	<select id="login" parameterType="String" resultType="MemberDTO">
 		SELECT	PASSWD,

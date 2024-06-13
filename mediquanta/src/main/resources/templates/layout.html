@@ -70,7 +70,12 @@
                   </span>
                   <span th:unless="${session.memberId == null}">
                   	<a th:href="@{/mediquanta/member/logout}">logout</a>
-                  	<a th:href="@{/mediquanta/member/profile}"><i class="icon icofont-user-alt-3"></i></a>
+                  	<a th:if="${session.role == 'USER'}" th:href="@{/mediquanta/member/profile}">
+                  		<i class="icon icofont-user-alt-3"></i>
+                  	</a>
+                  	<a th:if="${session.role == 'ADMIN'}" th:href="@{/mediquanta/member/profile}">
+                  		<i class="icon icofont-user-alt-3"></i>
+                  	</a>
                   </span>
                 </div>
               </div>

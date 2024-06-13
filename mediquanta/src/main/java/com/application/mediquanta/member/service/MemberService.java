@@ -8,6 +8,7 @@ public interface MemberService {
 	public String checkValidId(String memberId);
 	public String checkValidNickname(String nickname);
 	public String checkValidEmail(String email);
+	public String checkRole(String memberId);
 	public boolean login(MemberDTO memberDTO);
 	
 }

@@ -52,12 +52,16 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public String checkValidEmail(String email) {
-		System.out.println(email);
 		String isValidEmail = "n";
 		if (memberDAO.checkValidEmail(email) == null) {
 			isValidEmail = "y";
 		}
 		return isValidEmail;
+	}
+	
+	@Override
+	public String checkRole(String memberId) {
+		return memberDAO.checkRole(memberId);
 	}
 
 	@Override

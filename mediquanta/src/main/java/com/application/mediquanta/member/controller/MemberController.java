@@ -43,8 +43,13 @@ public class MemberController {
 	@PostMapping("/validEmail")
 	@ResponseBody
 	public String validEmail(@RequestParam("email") String email) {
-		System.out.println(email);
 		return memberService.checkValidEmail(email);
+	}
+	
+	@PostMapping("/checkRole")
+	@ResponseBody
+	public String checkRole(@RequestParam("memberId") String memberId) {
+		return memberService.checkRole(memberId);
 	}
 	
 	@PostMapping("/register")
@@ -65,6 +70,7 @@ public class MemberController {
 		if (memberService.login(memberDTO)) {
 			HttpSession session = request.getSession();
 			session.setAttribute("memberId", memberDTO.getMemberId());
+			session.setAttribute("role", checkRole(memberDTO.getMemberId()));
 			isValidMember = "y";
 		}
 		return isValidMember;
@@ -81,7 +87,7 @@ public class MemberController {
 	}
 	
 	@GetMapping("/profile")
-	public String getUserInfo() {
+	public String profile() {
 		return "/member/userProfile";
 	}
 }
