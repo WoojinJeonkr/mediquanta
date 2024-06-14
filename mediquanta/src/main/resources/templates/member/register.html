@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+<script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
+<script th:src="@{http://dmaps.daum.net/map_js_init/postcode.v2.js}"></script>
+<script>
+
+	$(document).ready(function() {
+	
+		$("#memberId").on("input", function() {
+			if ($("#checkIdButton").text() == "사용 불가" && $("#checkIdButton").hasClass("btn-danger")) {
+		        $("#checkIdButton").text("중복 확인").attr("style", "float: right;").removeClass("btn-danger").addClass("btn-primary");
+		    }
+
+		    if ($("#checkIdButton").text() == "사용 가능" && $("#checkIdButton").hasClass("btn-success")) {
+		        $("#checkIdButton").text("중복 확인").attr("style", "float: right;").removeClass("btn-success").addClass("btn-primary");
+		    }
+	    });
+		
+		$("#email").on("input", function() {
+			if ($("#checkEmailButton").text() == "사용 불가" && $("#checkEmailButton").hasClass("btn-danger")) {
+		        $("#checkEmailButton").text("중복 확인").attr("style", "float: right;").removeClass("btn-danger").addClass("btn-primary");
+		    }
+
+		    if ($("#checkEmailButton").text() == "사용 가능" && $("#checkEmailButton").hasClass("btn-success")) {
+		        $("#checkEmailButton").text("중복 확인").attr("style", "float: right;").removeClass("btn-success").addClass("btn-primary");
+		    }
+	    });
+		
+		function checkFormValidation() {
+			
+			let isValid = true;
+		
+		    let memberId = $("#memberId").val();
+		    if (memberId.trim() == "") {
+		        $("#isValidIdMsg").html(`<span style="color:red;">아이디를 입력하세요.</span>`);
+		        isValid = false;
+		    } else if (document.getElementById("checkIdButton").innerHTML == "중복 확인") {
+		    	$("#isValidIdMsg").html(`<span style="color:red;">닉네임 중복을 확인해주세요.</span>`);
+		    	isValid = false;
+		    } else if (document.getElementById("checkIdButton").innerHTML == "사용 불가") {
+		    	$("#isValidIdMsg").html(`<span style="color:red;">중복된 닉네임입니다.</span>`);
+		    	isValid = false;
+		    } else {
+		        $("#isValidIdMsg").text("");
+		    }
+		
+		    let nickname = $("#nickname").val();
+		    if (nickname.trim() == "") {
+		        $("#isValidNicknameMsg").html(`<span style="color:red;">닉네임을 입력하세요.</span>`);
+		        isValid = false;
+		    } else if (document.getElementById("checkNicknameButton").innerHTML == "중복 확인") {
+		    	$("#isValidNicknameMsg").html(`<span style="color:red;">닉네임 중복을 확인해주세요.</span>`);
+		    	isValid = false;
+		    } else if (document.getElementById("checkNicknameButton").innerHTML == "사용 불가") {
+		    	$("#isValidNicknameMsg").html(`<span style="color:red;">중복된 닉네임입니다.</span>`);
+		    	isValid = false;
+		    } else {
+		        $("#isValidNicknameMsg").text("");
+		    }
+		
+		    let passwd = $("#passwd").val();
+		    if (passwd.trim() == "") {
+		        $("#isValidPasswdMsg").html(`<span style="color:red;">비밀번호를 입력하세요.</span>`);
+		        isValid = false;
+		    } else {
+		        $("#isValidPasswdMsg").text("");
+		    }
+		
+		    let confirmPasswd = $("#confirmPasswd").val();
+		    if (confirmPasswd.trim() == "") {
+		        $("#isValidConfirmPasswdMsg").html(`<span style="color:red;">비밀번호를 다시 입력하세요.</span>`);
+		        isValid = false;
+		    } else if (passwd != confirmPasswd) {
+		        $("#isValidConfirmPasswdMsg").html(`<span style="color:red;">비밀번호가 일치하지 않습니다.</span>`);
+		        isValid = false;
+		    } else {
+		        $("#isValidConfirmPasswdMsg").text("");
+		    }
+		
+		    let email = $("#email").val();
+		    if (email.trim() == "") {
+		        $("#isValidEmailMsg").html(`<span style="color:red;">이메일을 입력하세요.</span>`);
+		        isValid = false;
+		    }  else if (document.getElementById("checkEmailButton").innerHTML == "중복 확인") {
+		    	$("#isValidEmailMsg").html(`<span style="color:red;">이메일 중복을 확인해주세요.</span>`);
+		    	isValid = false;
+		    } else if (document.getElementById("checkEmailButton").innerHTML == "사용 불가") {
+		    	$("#isValidEmailMsg").html(`<span style="color:red;">중복된 이메일입니다.</span>`);
+		    	isValid = false;
+		    } else {
+		        $("#isValidEmailMsg").text("");
+		    }
+		
+		    let zipcode = $("#zipcode").val();
+		    if (zipcode.trim() == "") {
+		        $("#isValidAddressMsg").html(`<span style="color:red;">우편번호를 선택하세요.</span>`);
+		        isValid = false;
+		    } else {
+		        $("#isValidAddressMsg").text("");
+		    }
+		    
+		    let birth = $("#birth").val();
+		    if (birth.trim() == "") {
+		        $("#isValidBirthMsg").html(`<span style="color:red;">생년월일을 입력하세요.</span>`);
+		        isValid = false;
+		    } else {
+		        $("#isValidBirthMsg").text("");
+		    }
+		
+		    if (!$('#aggrement').is(':checked')) {
+		        isValid = false;
+		    }
+		    
+		    return isValid;
+			
+		}
+		
+	});
+	
+	function execDaumPostcode() {
+	    new daum.Postcode({
+	        oncomplete: function(data) {
+	            var fullRoadAddr = data.roadAddress;
+	            var extraRoadAddr = '';
+
+	            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+	                extraRoadAddr += data.bname;
+	            }
+
+	            if (data.buildingName !== '' && data.apartment === 'Y'){
+	               extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	            }
+
+	            if (extraRoadAddr !== ''){
+	                extraRoadAddr = ' (' + extraRoadAddr + ')';
+	            }
+	            if (fullRoadAddr !== ''){
+	                fullRoadAddr += extraRoadAddr;
+	            }
+	            
+	            document.getElementById('zipcode').value = data.zonecode;
+	            document.getElementById('roadAddress').value = fullRoadAddr;
+	            document.getElementById('landAddress').value = data.jibunAddress;
+	            
+	        }
+	    }).open();
+	}
+
+	function checkMemberIdAvailability() {
+		
+		let param = {
+			"memberId" : $("#memberId").val()
+		}
+		
+		$.ajax({
+		
+			url : "/mediquanta/member/validId",
+			type : "post",
+			data : param,
+			success : function(isValid) {
+				if (isValid == 'y') {
+					document.getElementById("checkIdButton").className = "btn btn-success btn-sm mb-2 ml-auto";
+			        document.getElementById("checkIdButton").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkIdButton").className = "btn btn-danger btn-sm mb-2 ml-auto";
+			        document.getElementById("checkIdButton").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+
+	function checkNicknameAvailability() {
+		
+		let param = {
+			"nickname" : $("#nickname").val()
+		}
+		
+		$.ajax({
+		
+			url : "/mediquanta/member/validNickname",
+			type : "post",
+			data : param,
+			success : function(isValid) {
+				if (isValid == 'y') {
+					document.getElementById("checkNicknameButton").className = "btn btn-success btn-sm mb-2 ml-auto";
+			        document.getElementById("checkNicknameButton").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkNicknameButton").className = "btn btn-danger btn-sm mb-2 ml-auto";
+			        document.getElementById("checkNicknameButton").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+	
+	function checkEmailAvailability() {
+		
+		let param = {
+			"email" : $("#email").val()
+		}
+		
+		console.log(param);
+		
+		$.ajax({
+		
+			url : "/mediquanta/member/validEmail",
+			type : "post",
+			data : param,
+			success : function(isValid) {
+				if (isValid == 'y') {
+					document.getElementById("checkEmailButton").className = "btn btn-success btn-sm mb-2 ml-auto";
+			        document.getElementById("checkEmailButton").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkEmailButton").className = "btn btn-danger btn-sm mb-2 ml-auto";
+			        document.getElementById("checkEmailButton").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+	
+	function checkBirth() {
+		var today = new Date();
+		var minDate = new Date(today.getFullYear() - 8, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+		var maxDate = new Date(today.getFullYear() - 70, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+		document.getElementById("birth").setAttribute("max", minDate);
+		document.getElementById("birth").setAttribute("min", maxDate);
+		
+		var datePicker = document.getElementById("birth");
+	    var minDateValue = new Date(minDate);
+	    var maxDateValue = new Date(maxDate);
+
+	    datePicker.addEventListener('input', function() {
+	        var selectedDate = new Date(this.value);
+	        if (selectedDate > minDateValue) {
+	            this.value = minDate;
+	        } else if (selectedDate < maxDateValue) {
+	            this.value = maxDate;
+	        }
+	    });
+	}
+	
+</script>
+<style>
+	.custom-background {
+		min-height: 100vh;
+	    background: -webkit-gradient(linear, left bottom, right top, from(#92b5db), to(#1d466c));
+	    background: -webkit-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+	    background: -moz-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+	    background: -o-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+	    background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+    }
+    
+    .input-form {
+      max-width: 680px;
+      padding: 32px;
+      background: #fff;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+    }
+    
+</style>
+</head>
+<body>
+
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section class="vh-60 d-flex justify-content-center align-items-center custom-background">
+				<div class="input-form col-md-12 mx-auto" style="margin-top: 22%; transform: translateY(-18%);">
+					<h4 class="mb-3"><b>회원가입</b></h4>
+					<div class="mb-4"></div>
+					<form class="validation-form" th:action="@{/mediquanta/member/register}" th:onsubmit="return checkFormValidation();" method="post" enctype="multipart/form-data" novalidate>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="memberId">아이디<span style="color: red;">*</span></label><button id="checkIdButton" class="btn btn-primary btn-sm mb-2 ml-auto" type="button" onclick="checkMemberIdAvailability()" style="float: right;">중복 확인</button>
+								<input type="text" class="form-control" id="memberId" name="memberId"
+									   placeholder="사용하실 아이디를 입력해주세요." required>
+								<span id="isValidIdMsg"></span>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="nickname">닉네임<span style="color: red;">*</span></label><button id="checkNicknameButton" class="btn btn-primary btn-sm mb-2 ml-auto" type="button" onclick="checkNicknameAvailability()" style="float: right;">중복 확인</button>
+								<input type="text" class="form-control" id="nickname" name="nickname"
+									   placeholder="사용하실 닉네임을 입력해주세요." required>
+								<span id="isValidNicknameMsg"></span>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="passwd">비밀번호<span style="color: red;">*</span></label>
+							<input type="password" class="form-control" id="passwd" name="passwd"
+								   placeholder="영어 소문자, 숫자, 특수문자를 포함한 10자리 이상" required>
+							<span id="isValidPasswdMsg"></span>
+						</div>
+
+						<div class="mb-3">
+							<label for="confirmPasswd">비밀번호 재확인<span style="color: red;">*</span></label>
+							<input type="password" class="form-control" id="confirmPasswd" name="confirmPasswd"
+								   placeholder="비밀번호를 다시 입력해주세요" required>
+							<span id="isValidConfirmPasswdMsg"></span>
+						</div>
+
+						<div class="mb-3">
+							<label for="email">이메일<span style="color: red;">*</span></label><button id="checkEmailButton" class="btn btn-primary btn-sm mb-2 ml-auto" type="button" onclick="checkEmailAvailability()" style="float: right;">중복 확인</button>
+							<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+							<span id="isValidEmailMsg"></span>
+						</div>
+
+						<div class="mb-3">
+							<label for="zipcode">우편번호<span style="color: red;">*</span></label>
+							<input type="text" class="form-control" placeholder="해당 칸을 클릭하여 우편번호를 입력해주세요" id="zipcode" name="zipcode" onclick="execDaumPostcode()" required>
+						</div>
+						
+						<div class="mb-2" id="roadAddressSection">
+                            <label for="roadAddress">도로명 주소</label>
+                            <input type="text" class="form-control" name="roadAddress" id="roadAddress" placeholder="우편번호 선택 시 자동 입력됩니다" readonly/>
+                        </div>
+                        <div class="mb-2" id="landAddressSection">
+							<label for="landAddress">지번 주소</label>
+							<input type="text" class="form-control" name="landAddress" id="landAddress" placeholder="우편번호 선택 시 자동 입력됩니다" readonly/>
+						</div>
+						<div class="mb-2" id="etcAddressSection">
+							<label for="etcAddress">기타 주소</label>
+							<input type="text" class="form-control" name="etcAddress" id="etcAddress" placeholder="기타 주소를 입력해주세요" />
+						</div>
+						<div class="mb-2">
+							<span id="isValidAddressMsg"></span>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label for="birth">생년월일<span style="color: red;">*</span></label>
+								<input type="date" class="form-control" id="birth" name="birth" onclick="checkBirth()" required>
+								<span id="isValidBirthMsg"></span>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="gender">성별<span style="color: red;">*</span></label>
+								<select name="gender" id="gender" class="form-select">
+									<option value="male">남</option>
+									<option value="female">여</option>
+								</select>
+							</div>
+						</div>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="aggrement" required>
+							<label class="custom-control-label" id="aggrement" for="aggrement">개인정보 수집 및 이용에 동의합니다.<span style="color: red;">*</span></label>
+						</div>
+						<div class="mb-4"></div>
+						<button class="btn btn-primary btn-lg btn-block" id="signInBtn" type="submit">회원가입</button>
+					</form>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>
