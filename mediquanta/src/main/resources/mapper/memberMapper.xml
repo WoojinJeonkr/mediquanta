@@ -1,6 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.member.dao.MemberDAO">
 
-<mapper namespace="com.application.mediquanta.dao.MemberDAO">
+	<!-- 회원가입 -->
+	<insert id="createMember" parameterType="MemberDTO">
+		INSERT INTO MEMBER (
+			MEMBER_ID,
+			PASSWD,
+			NICKNAME,
+			EMAIL,
+			BIRTH,
+			GENDER,
+			ZIPCODE,
+			ROAD_ADDRESS,
+			LAND_ADDRESS,
+			ETC_ADDRESS,
+			ROLE,
+			ACTIVE_YN,
+			CREATED_AT,
+			LAST_LOGIN
+		) 
+		VALUES (
+			#{memberId},
+			#{passwd},
+			#{nickname},
+			#{email},
+			#{birth},
+			#{gender},
+			#{zipcode},
+			#{roadAddress},
+			#{landAddress},
+			#{etcAddress},
+			#{role},
+			#{activeYn},
+			#{createdAt},
+			#{lastLogin}
+		 )
+	</insert>	
+	
+	<!-- 아이디 중복 체크 -->
+	<select id="checkValidId" parameterType="String" resultType="String"> 
+		SELECT MEMBER_ID
+		FROM   MEMBER
+		WHERE  MEMBER_ID = #{memberId}
+	</select>
+
+	<!-- 닉네임 중복 체크 -->
+	<select id="checkValidNickname" parameterType="String" resultType="String"> 
+		SELECT NICKNAME
+		FROM   MEMBER
+		WHERE  NICKNAME = #{nickname}
+	</select>
+	
+	<!-- 이메일 중복 체크 -->
+	<select id="checkValidEmail" parameterType="String" resultType="String"> 
+		SELECT EMAIL
+		FROM   MEMBER
+		WHERE  EMAIL = #{email}
+	</select>
+	
+	<!-- 회원 권한 조회 -->
+	<select id="checkRole" parameterType="String" resultType="String"> 
+		SELECT ROLE
+		FROM   MEMBER
+		WHERE  MEMBER_ID = #{memberId}
+	</select>
+	
+	<!-- 로그인 -->
+	<select id="login" parameterType="String" resultType="MemberDTO">
+		SELECT	PASSWD,
+				ACTIVE_YN
+		FROM	MEMBER
+		WHERE	MEMBER_ID = #{memberId}
+	</select>
+	
+	<!-- 회원 정보 조회 -->
+	<select id="getUserInfo" parameterType="String" resultType="MemberDTO">
+		SELECT 	PASSWD,
+			    NICKNAME,
+			    EMAIL,
+			    BIRTH,
+			    GENDER,
+			    ZIPCODE,
+				ROAD_ADDRESS,
+				LAND_ADDRESS,
+				ETC_ADDRESS,
+			    ROLE,
+			    CREATED_AT,
+			    LAST_LOGIN
+		FROM	MEMBER
+		WHERE	MEMBER_ID = #{memberId}
+	</select>
 
 </mapper>
