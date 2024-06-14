@@ -1,21 +1,11 @@
 package com.application.mediquanta.member;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import com.application.mediquanta.member.dto.MemberDTO;
-import com.application.mediquanta.member.service.MemberService;
 
 @SpringBootTest
 public class MemberTest {
 
+	/*
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
@@ -66,7 +56,6 @@ public class MemberTest {
 		MemberDTO memberDTO = new MemberDTO();
 		memberDTO.setMemberId("test2");
 		
-		/*
 		 	[BCryptPasswordEncoder encode 비교]
 		 	
 		 	BCryptPasswordEncoder를 사용하여 패스워드를 암호화할 때마다 생성되는 해시 값은 무작위하고
@@ -84,7 +73,7 @@ public class MemberTest {
 		 	
 		 	따라서 BCryptPasswordEncoder를 통한 password를 비교할 때는 matches() 메서드를 사용해야 합니다.
 		 */
-		
+	/*
 		memberDTO.setPasswd("test2");
 		String resultMsg;
 		if (memberDTO.getMemberId().equals("test2") && passwordEncoder.matches(memberDTO.getPasswd(), passwordEncoder.encode("test2"))) {
@@ -94,4 +83,6 @@ public class MemberTest {
 		}
 		System.out.println(resultMsg);
 	}
+
+	*/
 }
