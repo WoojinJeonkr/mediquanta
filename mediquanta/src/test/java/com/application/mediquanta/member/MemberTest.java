@@ -33,13 +33,17 @@ public class MemberTest {
         Date createdAt = formatter.parse("2024-06-06 23:49:12");
         Date lastLogin = formatter.parse("2024-06-06 23:49:12");
 		
-		memberDTO.setMemberId("test1");
-		memberDTO.setPasswd("test");
-		memberDTO.setNickname("test");
-		memberDTO.setEmail("test1@gmail.com");
+		memberDTO.setMemberId("test2");
+		memberDTO.setPasswd("test2");
+		memberDTO.setNickname("test2");
+		memberDTO.setEmail("test2@gmail.com");
 		memberDTO.setBirth(birth);
 		memberDTO.setGender("F");
 		memberDTO.setRole("USER");
+		memberDTO.setZipcode("07021");
+		memberDTO.setRoadAddress("서울 동작구 남부순환로 2003 (사당동)");
+		memberDTO.setLandAddress("서울 동작구 사당동 1052-4");
+		memberDTO.setEtcAddress(null);
 		memberDTO.setCreatedAt(createdAt);
 		memberDTO.setLastLogin(lastLogin);
 		
@@ -60,7 +64,7 @@ public class MemberTest {
 	@Test
 	public void login() {
 		MemberDTO memberDTO = new MemberDTO();
-		memberDTO.setMemberId("test1");
+		memberDTO.setMemberId("test2");
 		
 		/*
 		 	[BCryptPasswordEncoder encode 비교]
@@ -81,9 +85,9 @@ public class MemberTest {
 		 	따라서 BCryptPasswordEncoder를 통한 password를 비교할 때는 matches() 메서드를 사용해야 합니다.
 		 */
 		
-		memberDTO.setPasswd("test");
+		memberDTO.setPasswd("test2");
 		String resultMsg;
-		if (memberDTO.getMemberId().equals("test1") && passwordEncoder.matches(memberDTO.getPasswd(), passwordEncoder.encode("test"))) {
+		if (memberDTO.getMemberId().equals("test2") && passwordEncoder.matches(memberDTO.getPasswd(), passwordEncoder.encode("test2"))) {
 			resultMsg = "로그인 성공";
 		} else {
 			resultMsg = "로그인 실패";
