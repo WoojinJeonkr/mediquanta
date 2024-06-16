@@ -25,7 +25,7 @@ public class MemberServiceImpl implements MemberService {
 		memberDTO.setBirth(memberDTO.getBirth());
 		memberDTO.setActiveYn("y");
 		memberDTO.setEtcAddress(memberDTO.getEtcAddress() == null ? "" : memberDTO.getEtcAddress());
-		memberDTO.setRole("USER");
+		memberDTO.setRole(memberDTO.getMemberId().equals("admin") ? "ADMIN" : "USER");
 		memberDTO.setCreatedAt(new Date());
 		memberDTO.setLastLogin(new Date());
 		
@@ -68,7 +68,6 @@ public class MemberServiceImpl implements MemberService {
 	public boolean login(MemberDTO memberDTO) {
 		
 		MemberDTO validateData = memberDAO.login(memberDTO.getMemberId());
-		
 		if (validateData != null) {
 			if (passwordEncoder.matches(memberDTO.getPasswd(), validateData.getPasswd())
 					&& validateData.getActiveYn().equals("y")) {
@@ -81,6 +80,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public MemberDTO getUserInfo(String memberId) {
+		// TODO member 정보 가져올 때 password decode 해서 보내기
 		return memberDAO.getUserInfo(memberId);
 	}
 

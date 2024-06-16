@@ -90,11 +90,25 @@ public class MemberController {
 	@GetMapping("/profile")
 	public String redirectProfile(Model model, HttpSession session) {
 		String role = (String)session.getAttribute("role");
-		String page = role.equals("USER") ? "userProfile" : "adminProfile";
+		String page = "";
+		if (role == null) {
+			page = "redirect:/mediquanta";
+		} else {
+			String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
+			
+			String memberId = (String)session.getAttribute("memberId");
+			model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
+			page = "/member/" + profilePage;
+		}
 		
+		return page;
+	}
+	
+	@GetMapping("/updateProfile")
+	public String updateProfile(HttpSession session, Model model) {
 		String memberId = (String)session.getAttribute("memberId");
 		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
-		return "/member/" + page;
+		return "/member/updateProfile";
 	}
 	
 }
