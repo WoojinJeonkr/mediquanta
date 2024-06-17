@@ -30,20 +30,26 @@
 			      <div class="col-lg-4">
 			        <div class="card mb-4">
 			          <div class="card-body text-center">
-			            <img th:src="@{/img/testimonial/01.jpg}" alt="avatar"
-			              class="rounded-circle img-fluid" style="width: 150px;">
+			            <img th:src="@{/mediquanta/member/thumbnails(fileName=${memberDTO.profileUUID})}" alt="avatar"
+			              class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
 			            <div class="d-flex justify-content-center align-items-center mt-3">
 						    <h5 class="my-3" id="nickname" th:text="${memberDTO.nickname}"></h5>
 						</div>
 			            <div class="d-flex justify-content-center mb-2">
-			              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
-			              <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>
+			            	<span th:if="${memberDTO.memberId} == ${session.memberId}">
+				            <input	type="button" value="회원 정보 수정"
+				            			data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-sm ms-1" 
+				            			th:onclick="|location.href='@{/mediquanta/member/updateProfile}'|">
+			            	<input	type="button" value="회원 탈퇴"
+			            			data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-sm ms-1" 
+			            			th:onclick="|location.href='@{/mediquanta/member/signOut}'|">
+			            	</span>
+			            	<button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm ms-1">Message</button>
 			            </div>
 			          </div>
 			        </div>
 			        <div class="card mb-4 mb-lg-0">
 			          <div class="card-body">
-			          	<p class="mb-4"><span class="font-italic me-1">개인 정보 관리</span></p><hr>
 			          	<p class="mb-4"><span class="font-italic me-1">회원 관리</span></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">병원 현황</span></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">약국 현황</span></p><hr>

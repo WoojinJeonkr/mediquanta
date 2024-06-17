@@ -313,6 +313,11 @@
 						</div>
 
 						<div class="mb-3">
+							<label for="profileImage">프로필<span style="color: red;">*</span></label>
+							<input type="file" class="form-control" id="profileImage" name="uploadProfile" required/>
+						</div>
+						
+						<div class="mb-3">
 							<label for="email">이메일<span style="color: red;">*</span></label><button id="checkEmailButton" class="btn btn-primary btn-sm mb-2 ml-auto" type="button" onclick="checkEmailAvailability()" style="float: right;">중복 확인</button>
 							<input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
 							<span id="isValidEmailMsg"></span>
@@ -348,8 +353,8 @@
 							<div class="col-md-6 mb-3">
 								<label for="gender">성별<span style="color: red;">*</span></label>
 								<select name="gender" id="gender" class="form-select">
-									<option value="male">남</option>
-									<option value="female">여</option>
+									<option value="M">남</option>
+									<option value="F">여</option>
 								</select>
 							</div>
 						</div>

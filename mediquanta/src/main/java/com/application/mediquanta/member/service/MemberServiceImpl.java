@@ -1,10 +1,15 @@
 package com.application.mediquanta.member.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.application.mediquanta.member.dao.MemberDAO;
 import com.application.mediquanta.member.dto.MemberDTO;
@@ -12,6 +17,9 @@ import com.application.mediquanta.member.dto.MemberDTO;
 @Service
 public class MemberServiceImpl implements MemberService {
 
+	@Value("${file.repo.path}")
+    private String fileRepositoryPath;
+	
 	@Autowired
 	private MemberDAO memberDAO;
 	
@@ -19,9 +27,19 @@ public class MemberServiceImpl implements MemberService {
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
-	public void createMember(MemberDTO memberDTO) {
+	public void createMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException {
+		
+		if (!uploadProfile.isEmpty()) { 													 
+			String originalFilename = uploadProfile.getOriginalFilename();
+			memberDTO.setProfileOriginalName(originalFilename);
+			String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+			String uploadFile = UUID.randomUUID() + extension;
+			memberDTO.setProfileUUID(uploadFile);
+			uploadProfile.transferTo(new File(fileRepositoryPath + uploadFile));
+		}
+		
 		memberDTO.setPasswd(passwordEncoder.encode(memberDTO.getPasswd()));
-		memberDTO.setGender(memberDTO.getGender().equals("female") ? "F" : "M");
+		memberDTO.setGender(memberDTO.getGender());
 		memberDTO.setBirth(memberDTO.getBirth());
 		memberDTO.setActiveYn("y");
 		memberDTO.setEtcAddress(memberDTO.getEtcAddress() == null ? "" : memberDTO.getEtcAddress());
@@ -84,9 +102,28 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void updateMember(MemberDTO memberDTO) {
+	public void updateMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException {
+		
+		if (!uploadProfile.isEmpty()) {	
+			new File(fileRepositoryPath + memberDTO.getProfileUUID()).delete();
+			String originalFilename = uploadProfile.getOriginalFilename();
+			memberDTO.setProfileOriginalName(originalFilename);
+			String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+			String uploadFile = UUID.randomUUID() + extension;
+			memberDTO.setProfileUUID(uploadFile);
+			uploadProfile.transferTo(new File(fileRepositoryPath + uploadFile));
+		}
+		
 		memberDTO.setPasswd(passwordEncoder.encode(memberDTO.getPasswd()));
 		memberDTO.setEtcAddress(memberDTO.getEtcAddress() == null ? "" : memberDTO.getEtcAddress());
+		memberDTO.setActiveYn("y");
+		memberDAO.updateMember(memberDTO);
+	}
+
+	@Override
+	public void signOut(String memberId) {
+		MemberDTO memberDTO = memberDAO.getUserInfo(memberId);
+		memberDTO.setActiveYn("n");
 		memberDAO.updateMember(memberDTO);
 	}
 

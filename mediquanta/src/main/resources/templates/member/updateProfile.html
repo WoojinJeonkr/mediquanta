@@ -5,9 +5,192 @@
 <head>
 <meta charset="UTF-8">
 <title th:text="|${memberDTO.nickname}님의 프로필|"></title>
-</head>
 <script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
-<script th:src="@{http://dmaps.daum.net/map_js_init/postcode.v2.js}"></script>
+<script th:src="@{http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js}"></script>
+<script>
+
+	$(document).ready(function() {
+		
+		$("#email").on("input", function() {
+			if ($("#checkEmailButton").text() === "사용 불가" && $("#checkEmailButton").hasClass("btn-danger")) {
+		        $("#checkEmailButton").text("중복 확인").removeClass("btn-danger").addClass("btn-primary");
+		    }
+
+		    if ($("#checkEmailButton").text() === "사용 가능" && $("#checkEmailButton").hasClass("btn-success")) {
+		        $("#checkEmailButton").text("중복 확인").removeClass("btn-success").addClass("btn-primary");
+		    }
+	    });
+		
+		function checkFormValidation() {
+			
+			let isValid = true;
+		
+		    let nickname = $("#nickname").val();
+		    if (nickname.trim() === "") {
+		        $("#isValidNicknameMsg").html(`<span style="color:red;">닉네임을 입력하세요.</span>`);
+		        isValid = false;
+		    } else if (document.getElementById("checkNicknameButton").innerHTML == "중복 확인") {
+		    	$("#isValidNicknameMsg").html(`<span style="color:red;">닉네임 중복을 확인해주세요.</span>`);
+		    	isValid = false;
+		    } else if (document.getElementById("checkNicknameButton").innerHTML == "사용 불가") {
+		    	$("#isValidNicknameMsg").html(`<span style="color:red;">중복된 닉네임입니다.</span>`);
+		    	isValid = false;
+		    } else {
+		        $("#isValidNicknameMsg").text("");
+		    }
+		
+		    let passwd = $("#passwd").val();
+		    if (passwd.trim() === "") {
+		        $("#isValidPasswdMsg").html(`<span style="color:red;">비밀번호를 입력하세요.</span>`);
+			} else {
+		        $("#isValidPasswdMsg").text("");
+		        isvalid = true;
+		    }
+		
+		    let email = $("#email").val();
+		    if (email.trim() === "") {
+		        $("#isValidEmailMsg").html(`<span style="color:red;">이메일을 입력하세요.</span>`);
+		        isValid = false;
+		    }  else if (document.getElementById("checkEmailButton").innerHTML == "중복 확인") {
+		    	$("#isValidEmailMsg").html(`<span style="color:red;">이메일 중복을 확인해주세요.</span>`);
+		    	isValid = false;
+		    } else if (document.getElementById("checkEmailButton").innerHTML == "사용 불가") {
+		    	$("#isValidEmailMsg").html(`<span style="color:red;">중복된 이메일입니다.</span>`);
+		    	isValid = false;
+		    } else {
+		        $("#isValidEmailMsg").text("");
+		    }
+		
+		    let zipcode = $("#zipcode").val();
+		    if (zipcode.trim() === "") {
+		        $("#isValidAddressMsg").html(`<span style="color:red;">우편번호를 선택하세요.</span>`);
+		        isValid = false;
+		    } else {
+		        $("#isValidAddressMsg").text("");
+		    }
+		    
+		    let birth = $("#birth").val();
+		    if (birth.trim() === "") {
+		        $("#isValidBirthMsg").html(`<span style="color:red;">생일을 입력하세요.</span>`);
+		        isValid = false;
+		    } else {
+		        $("#isValidBirthMsg").text("");
+		    }
+		
+		    if (!$("#aggrement").is(':checked')) {
+		    	isValid = false;
+		    }
+		    
+		    return isValid;
+			
+		}
+		
+	});
+	
+	function execDaumPostcode() {
+	    new daum.Postcode({
+	        oncomplete: function(data) {
+	            var fullRoadAddr = data.roadAddress;
+	            var extraRoadAddr = '';
+
+	            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+	                extraRoadAddr += data.bname;
+	            }
+
+	            if (data.buildingName !== '' && data.apartment === 'Y'){
+	               extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	            }
+
+	            if (extraRoadAddr !== ''){
+	                extraRoadAddr = ' (' + extraRoadAddr + ')';
+	            }
+	            if (fullRoadAddr !== ''){
+	                fullRoadAddr += extraRoadAddr;
+	            }
+	            
+	            document.getElementById('zipcode').value = data.zonecode;
+	            document.getElementById('roadAddress').value = fullRoadAddr;
+	            document.getElementById('landAddress').value = data.jibunAddress;
+	            
+	        }
+	    }).open();
+	}
+	
+	function checkNicknameAvailability() {
+		
+		let param = {
+			"nickname" : $("#nickname").val()
+		}
+		
+		$.ajax({
+		
+			url : "/mediquanta/member/validNickname",
+			type : "post",
+			data : param,
+			success : function(isValid) {
+				if (isValid == 'y') {
+					document.getElementById("checkNicknameButton").className = "btn btn-success btn-sm mt-1";
+			        document.getElementById("checkNicknameButton").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkNicknameButton").className = "btn btn-danger btn-sm mt-1";
+			        document.getElementById("checkNicknameButton").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+	
+	function checkEmailAvailability() {
+		
+		let param = {
+			"email" : $("#email").val()
+		}
+		
+		console.log(param);
+		
+		$.ajax({
+		
+			url : "/mediquanta/member/validEmail",
+			type : "post",
+			data : param,
+			success : function(isValid) {
+				if (isValid == 'y') {
+					document.getElementById("checkEmailButton").className = "btn btn-success btn-sm mt-1";
+			        document.getElementById("checkEmailButton").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkEmailButton").className = "btn btn-danger btn-sm mt-1";
+			        document.getElementById("checkEmailButton").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+	
+	function checkBirth() {
+		var today = new Date();
+		var minDate = new Date(today.getFullYear() - 8, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+		var maxDate = new Date(today.getFullYear() - 70, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+		document.getElementById("birth").setAttribute("max", minDate);
+		document.getElementById("birth").setAttribute("min", maxDate);
+		
+		var datePicker = document.getElementById("birth");
+	    var minDateValue = new Date(minDate);
+	    var maxDateValue = new Date(maxDate);
+
+	    datePicker.addEventListener('input', function() {
+	        var selectedDate = new Date(this.value);
+	        if (selectedDate > minDateValue) {
+	            this.value = minDate;
+	        } else if (selectedDate < maxDateValue) {
+	            this.value = maxDate;
+	        }
+	    });
+	}
+	
+</script>
+</head>
 <body>
 	<div layout:fragment="content">
 		<main class="main-content site-wrapper-reveal">
@@ -31,8 +214,8 @@
 			      <div class="col-lg-4">
 			        <div class="card mb-4">
 			          <div class="card-body text-center">
-			            <img th:src="@{/img/testimonial/01.jpg}" alt="avatar"
-			              class="rounded-circle img-fluid" style="width: 150px;">
+			            <img th:src="@{/mediquanta/member/thumbnails(fileName=${memberDTO.profileUUID})}" alt="avatar"
+			              class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
 			            <div class="d-flex justify-content-center align-items-center mt-3">
 						    <h5 class="my-3" id="nickname" th:text="${memberDTO.nickname}"></h5>
 						</div>
@@ -40,8 +223,7 @@
 			        </div>
 			      </div>
 			      <div class="col-lg-8">
-			      	<!-- TODO 해당 form에 대한 유효성 추가하기 -->
-			      	<form th:action="@{/mediquanta/member/updateProfile}" th:object="${memberDTO}" method="post" enctype="multipart/form-data">
+			      	<form th:action="@{/mediquanta/member/updateProfile}" th:object="${memberDTO}" th:onsubmit="return checkFormValidation();" method="post" enctype="multipart/form-data" novalidate>
 				        <div class="card mb-4">
 				          <div class="card-body">
 				            <div class="row">
@@ -59,15 +241,43 @@
 				              </div>
 				              <div class="col-sm-9">
 				                <input class="text-muted form-control col-md-6" type="password" id="passwd" name="passwd" value=""/>
+				              	<span id="isValidPasswdMsg"></span>
 				              </div>
 				            </div>
 				            <hr>
 				            <div class="row">
 				              <div class="col-sm-3">
-				                <p class="mb-0">닉네임</p>
+				                <p class="mb-0">프로필</p>
 				              </div>
 				              <div class="col-sm-9">
+					        	<input type="file" name="uploadProfile" />
+					        	<input type="hidden" th:field="*{profileUUID}" />
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">이메일</p>
+				              </div>
+				              <div class="col-sm-7">
+				                <input class="text-muted form-control col-md-6" th:field="*{email}" />
+				                <span id="isValidEmailMsg"></span>
+				              </div>
+				              <div class="col-sm-2 text-right">
+				              	<button id="checkEmailButton" class="btn btn-primary btn-sm mt-1" type="button" onclick="checkEmailAvailability()">중복 확인</button>
+				              </div>
+				            </div>
+			            	<hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">닉네임</p>
+				              </div>
+				              <div class="col-sm-7">
 				                <input class="text-muted form-control col-md-6" th:field="*{nickname}" />
+				                <span id="isValidNicknameMsg"></span>
+				              </div>
+				              <div class="col-sm-2 text-right">
+				              	<button id="checkNicknameButton" class="btn btn-primary btn-sm mt-1" type="button" onclick="checkNicknameAvailability()">중복 확인</button>
 				              </div>
 				            </div>
 				            <hr>
@@ -76,9 +286,9 @@
 				                <p class="mb-0">성별</p>
 				              </div>
 				              <div class="col-sm-9">
-				                <select class="text-muted form-control col-md-6 dropdown-toggle" th:field="*{gender}">
-								    <option value="M">Male</option>
-								    <option value="F">Female</option>
+				                <select th:field="*{gender}" class="form-select">
+									<option value="M">남</option>
+									<option value="F">여</option>
 								</select>
 				              </div>
 				            </div>
@@ -88,19 +298,11 @@
 				                <p class="mb-0">생일</p>
 				              </div>
 				              <div class="col-sm-9">
-				                <input class="text-muted form-control col-md-6" type="date" th:field="*{birth}" />
+				                <input class="text-muted form-control col-md-6" type="date" th:field="*{birth}" onclick="checkBirth()" />
+				                <span id="isValidBirthMsg"></span>
 				              </div>
 				            </div>
 				            <hr>
-				            <div class="row">
-				              <div class="col-sm-3">
-				                <p class="mb-0">이메일</p>
-				              </div>
-				              <div class="col-sm-9">
-				                <input class="text-muted form-control col-md-6" th:field="*{email}" />
-				              </div>
-				            </div>
-			            	<hr>
 				            <div class="row">
 				              <div class="col-sm-3">
 				                <p class="mb-0">우편번호</p>
@@ -140,9 +342,9 @@
 				            <hr>
 							<div class="row">
 								<div class="col-sm-12">
-									<input class="btn btn-primary btn-sm" style="float: right;" type="submit" value="수정하기">						
+									<button class="btn btn-primary btn-sm btn-block" style="float: right;" id="updateBtn" type="submit">회원 정보 저장</button>
 								</div>
-							</div>				            
+							</div>
 				          </div>
 				        </div>
 				      </form>

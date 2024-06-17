@@ -1,8 +1,13 @@
 package com.application.mediquanta.member.controller;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.application.mediquanta.member.dto.MemberDTO;
 import com.application.mediquanta.member.service.MemberService;
@@ -22,6 +28,9 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/mediquanta/member")
 public class MemberController {
+	
+	@Value("${file.repo.path}")
+    private String fileRepositoryPath;
 
 	@Autowired
 	private MemberService memberService;
@@ -56,8 +65,8 @@ public class MemberController {
 	}
 	
 	@PostMapping("/register")
-	public String register(@ModelAttribute MemberDTO memberDTO) {
-		memberService.createMember(memberDTO);
+	public String register(@RequestParam("uploadProfile") MultipartFile uploadProfile, @ModelAttribute MemberDTO memberDTO) throws IllegalStateException, IOException {
+		memberService.createMember(uploadProfile, memberDTO);
 		return "redirect:/mediquanta/member/login";
 	}
 	
@@ -91,6 +100,12 @@ public class MemberController {
 		
 	}
 	
+	@GetMapping("/thumbnails")
+    @ResponseBody
+    public Resource thumbnails(@RequestParam("fileName") String fileName) throws MalformedURLException{
+        return new UrlResource("file:" + fileRepositoryPath + fileName);
+    }
+	
 	@GetMapping("/profile")
 	public String redirectProfile(Model model, HttpSession session) {
 		String role = (String)session.getAttribute("role");
@@ -116,11 +131,18 @@ public class MemberController {
 	}
 	
 	@PostMapping("/updateProfile")
-	public String updateProfile(MemberDTO memberDTO, HttpSession session) {
+	public String updateProfile(@RequestParam("uploadProfile") MultipartFile uploadProfile, MemberDTO memberDTO, HttpSession session) throws IllegalStateException, IOException {
 		String role = (String)session.getAttribute("role");
-		memberService.updateMember(memberDTO);
+		memberService.updateMember(uploadProfile, memberDTO);
 		String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
 		return "/member/" + profilePage;
+	}
+	
+	@GetMapping("/signOut")
+	public String signOut(HttpSession session, Model model) {
+		String memberId = (String)session.getAttribute("memberId");
+		memberService.signOut(memberId);
+		return "redirect:/member/login";
 	}
 	
 }
