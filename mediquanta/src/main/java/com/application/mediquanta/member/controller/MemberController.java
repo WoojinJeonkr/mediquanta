@@ -91,11 +91,8 @@ public class MemberController {
 	}
 	
 	@GetMapping("/logout")
-	public String logout(HttpServletRequest request) {
-		
-		HttpSession session = request.getSession(); 
+	public String logout(HttpSession session) {
 		session.invalidate();
-		
 		return "redirect:/mediquanta";
 		
 	}
@@ -142,7 +139,8 @@ public class MemberController {
 	public String signOut(HttpSession session, Model model) {
 		String memberId = (String)session.getAttribute("memberId");
 		memberService.signOut(memberId);
-		return "redirect:/member/login";
+		session.invalidate();
+		return "redirect:/mediquanta";
 	}
 	
 }
