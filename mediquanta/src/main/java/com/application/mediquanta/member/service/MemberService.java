@@ -10,6 +10,7 @@ public interface MemberService {
 	public String checkValidEmail(String email);
 	public String checkRole(String memberId);
 	public MemberDTO getUserInfo(String memberId);
+	public void updateMember(MemberDTO memberDTO);
 	public boolean login(MemberDTO memberDTO);
 	
 }

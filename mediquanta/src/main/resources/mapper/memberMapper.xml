@@ -93,4 +93,22 @@
 		WHERE	MEMBER_ID = #{memberId}
 	</select>
 
+	<!-- 회원 정보 수정 -->
+	<update id="updateMember" parameterType="MemberDTO">
+		<![CDATA[
+		UPDATE MEMBER
+	    SET 
+	        NICKNAME = #{nickname},
+	        EMAIL = #{email}, 
+	        PASSWD = #{passwd},
+	        GENDER = #{gender},
+	        BIRTH = #{birth},
+	        ZIPCODE = #{zipcode},
+	        ROAD_ADDRESS = #{roadAddress},
+	        LAND_ADDRESS = #{landAddress},
+	        ETC_ADDRESS = #{etcAddress}
+	    WHERE 
+	        MEMBER_ID = #{memberId}
+		]]>
+	</update>
 </mapper>

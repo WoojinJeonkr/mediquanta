@@ -80,8 +80,14 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public MemberDTO getUserInfo(String memberId) {
-		// TODO member 정보 가져올 때 password decode 해서 보내기
 		return memberDAO.getUserInfo(memberId);
+	}
+
+	@Override
+	public void updateMember(MemberDTO memberDTO) {
+		memberDTO.setPasswd(passwordEncoder.encode(memberDTO.getPasswd()));
+		memberDTO.setEtcAddress(memberDTO.getEtcAddress() == null ? "" : memberDTO.getEtcAddress());
+		memberDAO.updateMember(memberDTO);
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.application.mediquanta.member.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,6 +75,8 @@ public class MemberController {
 			session.setAttribute("memberId", memberDTO.getMemberId());
 			session.setAttribute("role", checkRole(memberDTO.getMemberId()));
 			isValidMember = "y";
+			memberDTO.setLastLogin(new Date());
+			
 		}
 		return isValidMember;
 	}
@@ -109,6 +113,14 @@ public class MemberController {
 		String memberId = (String)session.getAttribute("memberId");
 		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
 		return "/member/updateProfile";
+	}
+	
+	@PostMapping("/updateProfile")
+	public String updateProfile(MemberDTO memberDTO, HttpSession session) {
+		String role = (String)session.getAttribute("role");
+		memberService.updateMember(memberDTO);
+		String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
+		return "/member/" + profilePage;
 	}
 	
 }
