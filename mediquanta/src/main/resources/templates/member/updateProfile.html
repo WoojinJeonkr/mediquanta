@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout.html}">
+<head>
+<meta charset="UTF-8">
+<title th:text="|${memberDTO.nickname}님의 프로필|"></title>
+<script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
+<script th:src="@{http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js}"></script>
+<script>
+
+	$(document).ready(function() {
+		
+		$("#nickname").on("input", function() {
+			if ($("#checkNicknameButton").text() === "사용 불가" && $("#checkNicknameButton").hasClass("btn-danger")) {
+		        $("#checkNicknameButton").text("중복 확인").removeClass("btn-danger").addClass("btn-primary");
+		    }
+
+		    if ($("#checkEmailButton").text() === "사용 가능" && $("#checkNicknameButton").hasClass("btn-success")) {
+		        $("#checkEmailButton").text("중복 확인").removeClass("btn-success").addClass("btn-primary");
+		    }
+		    
+	    });
+		
+		$("#email").on("input", function() {
+			if ($("#checkEmailButton").text() === "사용 불가" && $("#checkEmailButton").hasClass("btn-danger")) {
+		        $("#checkEmailButton").text("중복 확인").removeClass("btn-danger").addClass("btn-primary");
+		    }
+
+		    if ($("#checkEmailButton").text() === "사용 가능" && $("#checkEmailButton").hasClass("btn-success")) {
+		        $("#checkEmailButton").text("중복 확인").removeClass("btn-success").addClass("btn-primary");
+		    }
+	    });
+		
+	});
+	
+	function execDaumPostcode() {
+	    new daum.Postcode({
+	        oncomplete: function(data) {
+	            var fullRoadAddr = data.roadAddress;
+	            var extraRoadAddr = '';
+
+	            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+	                extraRoadAddr += data.bname;
+	            }
+
+	            if (data.buildingName !== '' && data.apartment === 'Y'){
+	               extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+	            }
+
+	            if (extraRoadAddr !== ''){
+	                extraRoadAddr = ' (' + extraRoadAddr + ')';
+	            }
+	            if (fullRoadAddr !== ''){
+	                fullRoadAddr += extraRoadAddr;
+	            }
+	            
+	            document.getElementById('zipcode').value = data.zonecode;
+	            document.getElementById('roadAddress').value = fullRoadAddr;
+	            document.getElementById('landAddress').value = data.jibunAddress;
+	            
+	        }
+	    }).open();
+	}
+	
+	function checkNicknameAvailability() {
+		
+		let param = {
+			"nickname" : $("#nickname").val()
+		}
+		
+		console.log(param);
+		
+		$.ajax({
+		
+			url : "/member/validNickname",
+			type : "post",
+			data : param,
+			success : function(isValid) {
+				if (isValid === 'y') {
+					document.getElementById("checkNicknameButton").className = "btn btn-success btn-sm mb-2 ml-auto";
+			        document.getElementById("checkNicknameButton").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkNicknameButton").className = "btn btn-danger btn-sm mb-2 ml-auto";
+			        document.getElementById("checkNicknameButton").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+	
+	function checkEmailAvailability() {
+		
+		let param = {
+			"email" : $("#email").val()
+		}
+		
+		$.ajax({
+		
+			url : "/member/validEmail",
+			type : "post",
+			data : param,
+			success : function(isValid) {
+				if (isValid === 'y') {
+					document.getElementById("checkEmailButton").className = "btn btn-success btn-sm mt-1";
+			        document.getElementById("checkEmailButton").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkEmailButton").className = "btn btn-danger btn-sm mt-1";
+			        document.getElementById("checkEmailButton").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+	
+function checkFormValidation() {
+		
+		let isValid = true;
+	
+	    let nickname = $("#nickname").val();
+	    if (nickname.trim() === "") {
+	        $("#isValidNicknameMsg").html(`<span style="color:red;">닉네임을 입력하세요.</span>`);
+	        isValid = false;
+	    } else if (document.getElementById("checkNicknameButton").innerHTML == "중복 확인") {
+	    	$("#isValidNicknameMsg").html(`<span style="color:red;">닉네임 중복을 확인해주세요.</span>`);
+	    	isValid = false;
+	    } else if (document.getElementById("checkNicknameButton").innerHTML == "사용 불가") {
+	    	$("#isValidNicknameMsg").html(`<span style="color:red;">중복된 닉네임입니다.</span>`);
+	    	isValid = false;
+	    } else {
+	        $("#isValidNicknameMsg").text("");
+	    }
+	
+	    let passwd = $("#passwd").val();
+	    if (passwd.trim() === "") {
+	        $("#isValidPasswdMsg").html(`<span style="color:red;">비밀번호를 입력하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidPasswdMsg").text("");
+	    }
+	
+	    let email = $("#email").val();
+	    if (email.trim() === "") {
+	        $("#isValidEmailMsg").html(`<span style="color:red;">이메일을 입력하세요.</span>`);
+	        isValid = false;
+	    }  else if (document.getElementById("checkEmailButton").innerHTML == "중복 확인") {
+	    	$("#isValidEmailMsg").html(`<span style="color:red;">이메일 중복을 확인해주세요.</span>`);
+	    	isValid = false;
+	    } else if (document.getElementById("checkEmailButton").innerHTML == "사용 불가") {
+	    	$("#isValidEmailMsg").html(`<span style="color:red;">중복된 이메일입니다.</span>`);
+	    	isValid = false;
+	    } else {
+	        $("#isValidEmailMsg").text("");
+	    }
+	
+	    let zipcode = $("#zipcode").val();
+	    if (zipcode.trim() === "") {
+	        $("#isValidAddressMsg").html(`<span style="color:red;">우편번호를 선택하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidAddressMsg").text("");
+	    }
+	    
+	    return isValid;
+		
+	}
+	
+	function checkBirth() {
+		var today = new Date();
+		var minDate = new Date(today.getFullYear() - 8, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+		var maxDate = new Date(today.getFullYear() - 70, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+		document.getElementById("birth").setAttribute("max", minDate);
+		document.getElementById("birth").setAttribute("min", maxDate);
+		
+		var datePicker = document.getElementById("birth");
+	    var minDateValue = new Date(minDate);
+	    var maxDateValue = new Date(maxDate);
+
+	    datePicker.addEventListener('input', function() {
+	        var selectedDate = new Date(this.value);
+	        if (selectedDate > minDateValue) {
+	            this.value = minDate;
+	        } else if (selectedDate < maxDateValue) {
+	            this.value = maxDate;
+	        }
+	    });
+	}
+	
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section>
+				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+			</section>
+			<section style="background-color: #eee;">
+			  <div class="container py-5">
+			    <div class="row">
+			      <div class="col">
+			        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+			          <ol class="breadcrumb mb-0">
+			            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+			            <li class="breadcrumb-item active">
+			            	<span th:if="${memberDTO.role == 'USER'}">
+			            		<a th:href="@{/member/profile}">사용자 프로필</a>
+			            	</span>
+			            	<span th:unless="${memberDTO.role == 'USER'}">
+			            		<a th:href="@{/member/profile}">관리자 프로필</a>
+			            	</span>
+			            </li>
+			            <li class="breadcrumb-item active" aria-current="page">회원 정보 수정</li>
+			          </ol>
+			        </nav>
+			      </div>
+			    </div>
+			    <div class="row">
+			      <div class="col-lg-4">
+			        <div class="card mb-4">
+			          <div class="card-body text-center">
+			            <img th:src="@{/member/thumbnails(fileName=${memberDTO.profileUUID})}" alt="avatar"
+			              class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+			            <div class="d-flex justify-content-center align-items-center mt-3">
+						    <h5 class="my-3" id="memberNickname" th:text="${memberDTO.nickname}"></h5>
+						</div>
+			          </div>
+			        </div>
+			      </div>
+			      <div class="col-lg-8">
+			      	<form class="validation-form" th:action="@{/member/updateProfile}" th:object="${memberDTO}" th:onsubmit="return checkFormValidation();" method="post" enctype="multipart/form-data" novalidate>
+				        <div class="card mb-4">
+				          <div class="card-body">
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">아이디</p>
+				              </div>
+				              <div class="col-sm-9">
+				                <input class="text-muted form-control col-md-6" th:field="*{memberId}" readonly/>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">비밀번호</p>
+				              </div>
+				              <div class="col-sm-9">
+				                <input class="text-muted form-control col-md-6" type="password" id="passwd" name="passwd" placeholder="새로운 비밀번호를 입력해주세요" />
+				              	<span id="isValidPasswdMsg"></span>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">프로필</p>
+				              </div>
+				              <div class="col-sm-9">
+					        	<input type="file" name="uploadProfile" />
+					        	<input type="hidden" th:field="*{profileUUID}" />
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">이메일</p>
+				              </div>
+				              <div class="col-sm-7">
+				                <input class="text-muted form-control col-md-6" th:field="*{email}" />
+				                <span id="isValidEmailMsg"></span>
+				              </div>
+				              <div class="col-sm-2 text-right">
+				              	<button id="checkEmailButton" class="btn btn-primary btn-sm mt-1" type="button" onclick="checkEmailAvailability()">중복 확인</button>
+				              </div>
+				            </div>
+			            	<hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">닉네임</p>
+				              </div>
+				              <div class="col-sm-7">
+				                <input type="text" class="text-muted form-control col-md-6" th:field="*{nickname}" />
+				                <span id="isValidNicknameMsg"></span>
+				              </div>
+				              <div class="col-sm-2 text-right">
+				              	<button id="checkNicknameButton" class="btn btn-primary btn-sm mt-1" type="button" onclick="checkNicknameAvailability()">중복 확인</button>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">성별</p>
+				              </div>
+				              <div class="col-sm-9">
+				                <select th:field="*{gender}" class="form-select">
+									<option value="M">남</option>
+									<option value="F">여</option>
+								</select>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">생일</p>
+				              </div>
+				              <div class="col-sm-9">
+				                <input class="text-muted form-control col-md-6" type="date" th:field="*{birth}" onclick="checkBirth()" />
+				                <span id="isValidBirthMsg"></span>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">우편번호</p>
+				              </div>
+				              <div class="col-sm-9">
+				                <input class="text-muted form-control col-md-6" th:field="*{zipcode}" onclick="execDaumPostcode()"/>
+				                <span id="isValidAddressMsg"></span>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">도로명 주소</p>
+				              </div>
+				              <div class="col-sm-9">
+				                <input class="text-muted form-control col-md-6" th:field="*{roadAddress}" readonly/>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">지번 주소</p>
+				              </div>
+				              <div class="col-sm-9">
+				              	<input class="text-muted form-control col-md-6" th:field="*{landAddress}" readonly/>
+				              </div>
+				            </div>
+				            <hr>
+				            <div class="row">
+				              <div class="col-sm-3">
+				                <p class="mb-0">기타 주소</p>
+				              </div>
+				              <div class="col-sm-9">
+				              	<input class="text-muted form-control col-md-6" th:field="*{etcAddress}" />
+				              </div>
+				            </div>
+				            <hr>
+							<div class="row">
+								<div class="col-sm-12">
+									<button class="btn btn-primary btn-sm btn-block" style="float: right;" id="updateBtn" type="submit">회원 정보 저장</button>
+								</div>
+							</div>
+				          </div>
+				        </div>
+				      </form>
+			      </div>
+			    </div>
+			  </div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>
