@@ -13,6 +13,8 @@ public class MemberDTO {
 	private String memberId;	// 회원_ID
 	private String passwd; 		// 비밀번호
 	private String nickname;	// 닉네임
+	private String profileOriginalName;
+	private String profileUUID;
 	private String email;		// 이메일
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;			// 생년월일
