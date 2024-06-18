@@ -8,6 +8,8 @@
 			MEMBER_ID,
 			PASSWD,
 			NICKNAME,
+			PROFILE_ORIGINAL_NAME,
+			PROFILE_UUID,
 			EMAIL,
 			BIRTH,
 			GENDER,
@@ -24,6 +26,8 @@
 			#{memberId},
 			#{passwd},
 			#{nickname},
+			#{profileOriginalName},
+			#{profileUUID},
 			#{email},
 			#{birth},
 			#{gender},
@@ -76,8 +80,11 @@
 	
 	<!-- 회원 정보 조회 -->
 	<select id="getUserInfo" parameterType="String" resultType="MemberDTO">
-		SELECT 	PASSWD,
+		SELECT 	MEMBER_ID,
+				PASSWD,
 			    NICKNAME,
+			    PROFILE_ORIGINAL_NAME,
+				PROFILE_UUID,
 			    EMAIL,
 			    BIRTH,
 			    GENDER,
@@ -86,10 +93,60 @@
 				LAND_ADDRESS,
 				ETC_ADDRESS,
 			    ROLE,
+			    ACTIVE_YN,
 			    CREATED_AT,
 			    LAST_LOGIN
 		FROM	MEMBER
 		WHERE	MEMBER_ID = #{memberId}
 	</select>
 
+	<!-- 회원 정보 수정 -->
+	<update id="updateMember" parameterType="MemberDTO">
+	    UPDATE
+	    		MEMBER
+	    <set>
+	    	<if test="profileOriginalName != null and profileOriginalName != ''">
+				PROFILE_ORIGINAL_NAME = #{profileOriginalName},
+			</if>
+			<if test="profileUUID != null and !profileUUID != ''">
+				PROFILE_UUID = #{profileUUID},
+			</if>
+			<if test="nickname != null and nickname != ''">
+				NICKNAME = #{nickname},
+			</if>
+			<if test="nickname != null and nickname != ''">
+				NICKNAME = #{nickname},
+			</if>
+			<if test="email != null and email != ''">
+				EMAIL = #{email}, 
+			</if>
+			<if test="passwd != null and passwd != ''">
+				PASSWD = #{passwd},
+			</if>
+			<if test="gender != null and gender != ''">
+				GENDER = #{gender},
+			</if>
+			<!-- birth 필드는 java.util.Date 타입이므로, null 체크만 수행합니다. -->
+			<!-- MyBatis는 자동으로 자바의 Date 객체를 데이터베이스의 날짜 형식으로 변환하여 사용합니다 -->
+			<if test="birth != null">
+				BIRTH = #{birth},
+			</if>
+			<if test="zipcode != null and zipcode != ''">
+				ZIPCODE = #{zipcode},
+			</if>
+			<if test="roadAddress != null and roadAddress != ''">
+				ROAD_ADDRESS = #{roadAddress},
+			</if>
+			<if test="landAddress != null and landAddress != ''">
+				LAND_ADDRESS = #{landAddress},
+			</if>
+			<if test="etcAddress != null and etcAddress != ''">
+				ETC_ADDRESS = #{etcAddress},
+			</if>
+			<if test="activeYn != null and activeYn != ''">
+				ACTIVE_YN = #{activeYn}
+			</if>
+	    </set>
+	    WHERE MEMBER_ID = #{memberId}
+	</update>
 </mapper>
