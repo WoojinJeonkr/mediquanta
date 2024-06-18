@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/mediquanta/member")
+@RequestMapping("/member")
 public class MemberController {
 	
 	@Value("${file.repo.path}")
@@ -67,7 +67,7 @@ public class MemberController {
 	@PostMapping("/register")
 	public String register(@RequestParam("uploadProfile") MultipartFile uploadProfile, @ModelAttribute MemberDTO memberDTO) throws IllegalStateException, IOException {
 		memberService.createMember(uploadProfile, memberDTO);
-		return "redirect:/mediquanta/member/login";
+		return "redirect:/member/login";
 	}
 	
 	@GetMapping("/login")
@@ -93,7 +93,7 @@ public class MemberController {
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/mediquanta";
+		return "redirect:/";
 		
 	}
 	
@@ -108,7 +108,7 @@ public class MemberController {
 		String role = (String)session.getAttribute("role");
 		String page = "";
 		if (role == null) {
-			page = "redirect:/mediquanta";
+			page = "redirect:/";
 		} else {
 			String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
 			
@@ -140,7 +140,7 @@ public class MemberController {
 		String memberId = (String)session.getAttribute("memberId");
 		memberService.signOut(memberId);
 		session.invalidate();
-		return "redirect:/mediquanta";
+		return "redirect:/";
 	}
 	
 }

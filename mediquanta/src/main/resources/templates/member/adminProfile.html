@@ -20,7 +20,7 @@
 			      <div class="col">
 			        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
 			          <ol class="breadcrumb mb-0">
-			            <li class="breadcrumb-item"><a th:href="@{/mediquanta}">메인</a></li>
+			            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
 			            <li class="breadcrumb-item active" aria-current="page">관리자 프로필</li>
 			          </ol>
 			        </nav>
@@ -30,7 +30,7 @@
 			      <div class="col-lg-4">
 			        <div class="card mb-4">
 			          <div class="card-body text-center">
-			            <img th:src="@{/mediquanta/member/thumbnails(fileName=${memberDTO.profileUUID})}" alt="avatar"
+			            <img th:src="@{/member/thumbnails(fileName=${memberDTO.profileUUID})}" alt="avatar"
 			              class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
 			            <div class="d-flex justify-content-center align-items-center mt-3">
 						    <h5 class="my-3" id="nickname" th:text="${memberDTO.nickname}"></h5>
@@ -39,10 +39,7 @@
 			            	<span th:if="${memberDTO.memberId} == ${session.memberId}">
 				            <input	type="button" value="회원 정보 수정"
 				            			data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-sm ms-1" 
-				            			th:onclick="|location.href='@{/mediquanta/member/updateProfile}'|">
-			            	<input	type="button" value="회원 탈퇴"
-			            			data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-sm ms-1" 
-			            			th:onclick="|location.href='@{/mediquanta/member/signOut}'|">
+				            			th:onclick="|location.href='@{/member/updateProfile}'|">
 			            	</span>
 			            	<button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm ms-1">Message</button>
 			            </div>
