@@ -67,7 +67,7 @@ public class MemberController {
 	@PostMapping("/register")
 	public String register(@RequestParam("uploadProfile") MultipartFile uploadProfile, @ModelAttribute MemberDTO memberDTO) throws IllegalStateException, IOException {
 		memberService.createMember(uploadProfile, memberDTO);
-		return "redirect:/member/login";
+		return "redirect:member/login";
 	}
 	
 	@GetMapping("/login")
@@ -93,7 +93,7 @@ public class MemberController {
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/";
+		return "redirect:";
 		
 	}
 	
@@ -114,7 +114,7 @@ public class MemberController {
 			
 			String memberId = (String)session.getAttribute("memberId");
 			model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
-			page = "/member/" + profilePage;
+			page = "member/" + profilePage;
 		}
 		
 		return page;
@@ -124,7 +124,7 @@ public class MemberController {
 	public String updateProfile(HttpSession session, Model model) {
 		String memberId = (String)session.getAttribute("memberId");
 		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
-		return "/member/updateProfile";
+		return "member/updateProfile";
 	}
 	
 	@PostMapping("/updateProfile")
@@ -132,7 +132,7 @@ public class MemberController {
 		String role = (String)session.getAttribute("role");
 		memberService.updateMember(uploadProfile, memberDTO);
 		String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
-		return "/member/" + profilePage;
+		return "member/" + profilePage;
 	}
 	
 	@GetMapping("/signOut")
@@ -140,7 +140,7 @@ public class MemberController {
 		String memberId = (String)session.getAttribute("memberId");
 		memberService.signOut(memberId);
 		session.invalidate();
-		return "redirect:/";
+		return "redirect:";
 	}
 	
 }
