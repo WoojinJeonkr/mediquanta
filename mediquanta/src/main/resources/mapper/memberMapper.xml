@@ -149,4 +149,22 @@
 	    </set>
 	    WHERE MEMBER_ID = #{memberId}
 	</update>
+	
+	<!-- 회원 전체 목록 조회 -->
+	<select id="getMemberList" resultType="MemberDTO">
+		SELECT  NICKNAME,
+			    PROFILE_ORIGINAL_NAME,
+				PROFILE_UUID,
+			    EMAIL,
+			    GENDER,
+			    ZIPCODE,
+				ROAD_ADDRESS,
+				LAND_ADDRESS,
+				ETC_ADDRESS,
+			    ROLE,
+			    ACTIVE_YN,
+			    CREATED_AT,
+			    LAST_LOGIN
+		FROM	MEMBER
+	</select>
 </mapper>

@@ -3,6 +3,7 @@ package com.application.mediquanta.member.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,16 @@ public class MemberServiceImpl implements MemberService {
 		MemberDTO memberDTO = memberDAO.getUserInfo(memberId);
 		memberDTO.setActiveYn("n");
 		memberDAO.updateMember(memberDTO);
+	}
+
+	@Override
+	public List<MemberDTO> getMemberList() {
+		List<MemberDTO> memberList = memberDAO.getMemberList();
+		if (memberList.size() > 0) {
+			return memberList;
+		} else {
+			return null;
+		}
 	}
 
 }

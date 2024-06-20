@@ -1,5 +1,7 @@
 package com.application.mediquanta.member.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.application.mediquanta.member.dto.MemberDTO;
@@ -13,9 +15,10 @@ public interface MemberDAO {
 	public String checkValidEmail(String email);		// 이메일 중복 검사
 	public String checkRole(String memberId);			// 회원 권한 조회
 	public MemberDTO login(String memberId);			// 로그인
-	public MemberDTO getUserInfo(String memberId);		// 회원 정보 가져오기
+	public MemberDTO getUserInfo(String memberId);		// 단일 회원 정보 가져오기
 	public void updateMember(MemberDTO memberDTO);		// 회원 정보 수정
 	public void signOut(String memberId);				// 회원 탈퇴
 	public void deleteMember(String memberId);			// 회원 삭제
-
+	public List<MemberDTO> getMemberList();				// 전체 회원 목록 조회
+	
 }
