@@ -167,4 +167,28 @@
 			    LAST_LOGIN
 		FROM	MEMBER
 	</select>
+	
+	<!-- 회원 권한 현황 조회 -->
+	<select id="getRoleCount" resultType="map">
+		SELECT
+	        SUM(CASE WHEN ROLE = 'ADMIN' THEN 1 ELSE 0 END) AS adminCount,
+	        SUM(CASE WHEN ROLE = 'USER' THEN 1 ELSE 0 END) AS userCount
+    	FROM MEMBER
+	</select>
+	
+	<!-- 회원 성별 현황 조회 -->
+	<select id="getGenderCount" resultType="map">
+		SELECT
+			SUM(CASE WHEN GENDER = 'M' THEN 1 ELSE 0 END) AS maleCount,
+	        SUM(CASE WHEN GENDER = 'F' THEN 1 ELSE 0 END) AS femaleCount
+		FROM MEMBER
+	</select>
+	
+	<!-- 회원 상태 현황 조회 -->
+	<select id="getActiveCount" resultType="map">
+		SELECT
+			SUM(CASE WHEN ACTIVE_YN = 'y' THEN 1 ELSE 0 END) AS activeCount,
+	        SUM(CASE WHEN ACTIVE_YN = 'n' THEN 1 ELSE 0 END) AS inactiveCount
+		FROM MEMBER
+	</select>
 </mapper>

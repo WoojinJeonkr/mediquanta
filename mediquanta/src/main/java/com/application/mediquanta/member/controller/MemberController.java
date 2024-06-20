@@ -148,6 +148,9 @@ public class MemberController {
 		String memberId = (String)session.getAttribute("memberId");
 		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
 		model.addAttribute("memberList", memberService.getMemberList());
+		model.addAttribute("memberRoleCount", memberService.getRoleCount());
+		model.addAttribute("memberGenderCount", memberService.getGenderCount());
+		model.addAttribute("memberActiveCount", memberService.getActiveCount());
 		return "member/memberList";
 	}
 	

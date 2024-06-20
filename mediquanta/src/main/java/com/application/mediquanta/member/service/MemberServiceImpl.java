@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +137,21 @@ public class MemberServiceImpl implements MemberService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public Map<String, Integer> getRoleCount() {
+		return memberDAO.getRoleCount();
+	}
+
+	@Override
+	public Map<String, Integer> getGenderCount() {
+		return memberDAO.getGenderCount();
+	}
+
+	@Override
+	public Map<String, Integer> getActiveCount() {
+		return memberDAO.getActiveCount();
 	}
 
 }

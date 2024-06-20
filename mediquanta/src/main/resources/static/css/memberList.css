@@ -1,13 +1,5 @@
 @charset "UTF-8";
 
-@import url(https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,800,900,|Libre+Baskerville:400,400i,700);
-@import url(bootstrap.min.css);
-@import url(icofont.css);
-@import url(animate.css);
-@import url(aos.css);
-@import url(swiper.min.css);
-@import url(plugin-collection.css);
-
 .user-list tbody td>img {
 	position: relative;
 	max-width: 50px;
@@ -221,4 +213,60 @@
 
 .table-stats .table-line-plus .status-social-icon {
 	color: #a75d54;
+}
+
+.order-card {
+    color: #fff;
+}
+
+.bg-c-blue {
+    background: linear-gradient(45deg,#4099ff,#73b4ff);
+}
+
+.bg-c-green {
+    background: linear-gradient(45deg,#2ed8b6,#59e0c5);
+}
+
+.bg-c-yellow {
+    background: linear-gradient(45deg,#FFB64D,#ffcb80);
+}
+
+.bg-c-pink {
+    background: linear-gradient(45deg,#FF5370,#ff869a);
+}
+
+.card {
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    border: none;
+    margin-bottom: 30px;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.card .card-block {
+    padding: 25px;
+}
+
+.order-card i {
+    font-size: 26px;
+}
+
+.f-left {
+    float: left;
+}
+
+.f-right {
+    float: right;
+}
+
+.color-white {
+	color : #fff;
+}
+
+.color-gray {
+	margin-bottom: 5px;
+	margin-right: 10px;
+	color : #fff;
 }
