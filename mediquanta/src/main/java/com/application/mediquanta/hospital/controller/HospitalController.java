@@ -23,9 +23,17 @@ public class HospitalController {
 		return "hospital/hospitalList";
 	}
 	
+	// TODO : 6. 병원 정보를 가져오는 api를 사용해서 정보를 가져오는 코드 작성
+	
 	@PostMapping("/hospitalList")
 	public List<HospitalDTO> getHospitalList() {
 		return hospitalService.getHospitalList();
 	}
+	
+	// TODO : 7. 병원 상세 목록 기능 개발
+	
+	// TODO : 8. 병원 정보 수정 기능 개발 (관리자인 경우)
+	
+	// TODO : 9. 병원 정보 삭제 기능 개발 (관리자인 경우)
 	
 }

@@ -90,6 +90,28 @@ public class MemberController {
 		return isValidMember;
 	}
 	
+	@GetMapping("/forgotPasswd")
+	public String tempPasswd() {
+		return "member/forgotPasswdForm";
+	}
+	
+	@PostMapping("/forgotPasswd")
+	public String forgotPasswd(@RequestParam("memberId") String memberId) {
+		System.out.println(memberId);
+		MemberDTO memberDTO = memberService.getUserInfo(memberId);
+		String page = "";
+		if (memberDTO == null) {
+			page = "/member/register";
+		} else {
+			// TODO : 1. 이메일 연동해서 사용자의 이메일로 임시 비밀번호를 보내는 기능 개발 진행 예정
+			// https://velog.io/@tjddus0302/Spring-Boot-%EB%A9%94%EC%9D%BC-%EB%B0%9C%EC%86%A1-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-Gmail
+			String email = memberDTO.getEmail();
+			System.out.println(email);
+			page = "/member/login";
+		}
+		return "redirect:" + page;
+	}
+	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
