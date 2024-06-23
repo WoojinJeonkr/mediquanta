@@ -154,4 +154,9 @@ public class MemberServiceImpl implements MemberService {
 		return memberDAO.getActiveCount();
 	}
 
+	@Override
+	public void setTempPassword(String email, String passwd) {
+		memberDAO.setTempPassword(email, passwordEncoder.encode(passwd));
+	}
+
 }

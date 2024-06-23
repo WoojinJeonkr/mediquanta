@@ -23,4 +23,5 @@ public interface MemberService {
 	public Map<String, Integer> getRoleCount();
 	public Map<String, Integer> getGenderCount();
 	public Map<String, Integer> getActiveCount();
+	public void setTempPassword(String email, String authNum);
 }

@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.mediquanta.email.entity.EmailMessage;
+import com.application.mediquanta.email.service.EmailService;
 import com.application.mediquanta.member.dto.MemberDTO;
 import com.application.mediquanta.member.service.MemberService;
 
@@ -34,6 +36,9 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@GetMapping("/register")
 	public String register() {
@@ -97,16 +102,18 @@ public class MemberController {
 	
 	@PostMapping("/forgotPasswd")
 	public String forgotPasswd(@RequestParam("memberId") String memberId) {
-		System.out.println(memberId);
 		MemberDTO memberDTO = memberService.getUserInfo(memberId);
 		String page = "";
 		if (memberDTO == null) {
 			page = "/member/register";
 		} else {
-			// TODO : 1. 이메일 연동해서 사용자의 이메일로 임시 비밀번호를 보내는 기능 개발 진행 예정
-			// https://velog.io/@tjddus0302/Spring-Boot-%EB%A9%94%EC%9D%BC-%EB%B0%9C%EC%86%A1-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-Gmail
 			String email = memberDTO.getEmail();
-			System.out.println(email);
+			EmailMessage emailMessage = EmailMessage.builder()
+	                .to(email)
+	                .subject("[Mediquanta] 임시 비밀번호 발급")
+	                .build();
+
+	        emailService.sendMail(emailMessage, "email");
 			page = "/member/login";
 		}
 		return "redirect:" + page;
@@ -128,18 +135,10 @@ public class MemberController {
 	@GetMapping("/profile")
 	public String redirectProfile(Model model, HttpSession session) {
 		String role = (String)session.getAttribute("role");
-		String page = "";
-		if (role == null) {
-			page = "redirect:/";
-		} else {
-			String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
-			
-			String memberId = (String)session.getAttribute("memberId");
-			model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
-			page = "member/" + profilePage;
-		}
-		
-		return page;
+		String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
+		String memberId = (String)session.getAttribute("memberId");
+		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
+		return "member/" + profilePage;
 	}
 	
 	@GetMapping("/updateProfile")

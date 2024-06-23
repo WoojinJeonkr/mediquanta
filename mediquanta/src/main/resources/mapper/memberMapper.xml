@@ -191,4 +191,11 @@
 	        SUM(CASE WHEN ACTIVE_YN = 'n' THEN 1 ELSE 0 END) AS inactiveCount
 		FROM MEMBER
 	</select>
+	
+	<!-- 비밀번호 재발급 -->
+	<update id="setTempPassword" parameterType="map">
+		UPDATE 	MEMBER
+		SET		PASSWD = #{authNum}
+		WHERE	EMAIL = #{email}
+	</update>
 </mapper>
