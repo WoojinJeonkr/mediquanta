@@ -2,6 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.application.mediquanta.hospital.dao.HospitalDAO">
 
+	<!-- 병원 목록 DB 저장 -->
+	<insert id="" parameterType="HospitalDTO">
+		INSERT INTO HOSPITAL (
+			HOSPITAL_ID,
+			HOSPITAL_NAME,
+			TYPE,
+			SIDOCDNM,
+			SGGUCDNM,
+			ADDRESS,
+			PHONE,
+			CREATED_AT,
+			UPDATED_AT
+		) 
+		VALUES (
+			#{hospitalId},
+			#{hospitalName},
+			#{type},
+			#{sidoCdNm},
+			#{sgguCdNm},
+			#{address},
+			#{phone},
+			#{createdAt},
+			#{updatedAt}
+		 )
+	</insert>
+	
 	<!-- 병원 목록 가져오기 -->
 	<select id="getHospitalList" resultType="HospitalDTO">
 		SELECT 	HOSPITAL_ID,

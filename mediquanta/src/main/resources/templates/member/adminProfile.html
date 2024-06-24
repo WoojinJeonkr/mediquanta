@@ -6,6 +6,29 @@
 <meta charset="UTF-8">
 <title th:text="|${memberDTO.nickname}님의 프로필|"></title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+
+	$().ready(function() {
+	
+		$("#hospitalBtn").click(function() {
+			
+			$.ajax({
+				
+				url : "/hospital/saveHospital",
+				type : "get",
+				contentType: "application/xml",
+				success : function() {
+			        document.getElementById("hospitalBtn").innerHTML = "성공";
+				}
+					
+			});
+			
+		});
+		
+	});
+	
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -48,7 +71,7 @@
 			          <div class="card-body">
 			          	<!-- a태그는 Get 요청만 가능하다 -->
 			          	<p class="mb-4"><span class="font-italic me-1"><a class="text-muted" th:href="@{/member/memberList}">회원 관리</a></span></p><hr>
-     				    <p class="mb-4"><span class="font-italic me-1">병원 현황</span></p><hr>
+     				    <p class="mb-4"><span class="font-italic me-1">병원 현황</span><button id="hospitalBtn">불러오기</button></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">약국 현황</span></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">커뮤니티 현황</span></p>
 			          </div>
