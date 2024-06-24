@@ -16,8 +16,14 @@ public class MediquantaController {
 		return "about";
 	}
 	
-	// TODO : 4. 이용약관 페이지 생성 및 페이지 이동 Controller 작성
+	@GetMapping("/term")
+	public String term() {
+		return "term";
+	}
 	
-	// TODO : 5. 개인정보보호 페이지 생성 및 페이지 이동 Controller 작성
+	@GetMapping("/privacy")
+	public String privacy() {
+		return "privacy";
+	}
 	
 }
