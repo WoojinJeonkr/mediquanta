@@ -6,5 +6,5 @@ import com.application.mediquanta.hospital.dto.HospitalDTO;
 
 @Mapper
 public interface HospitalDAO {
-	
+	public void saveHospital(HospitalDTO hospitalDTO);
 }

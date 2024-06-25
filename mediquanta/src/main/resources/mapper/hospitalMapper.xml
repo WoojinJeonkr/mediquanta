@@ -3,7 +3,7 @@
 <mapper namespace="com.application.mediquanta.hospital.dao.HospitalDAO">
 
 	<!-- 병원 목록 DB 저장 -->
-	<insert id="" parameterType="HospitalDTO">
+	<insert id="saveHospital" parameterType="HospitalDTO">
 		INSERT INTO HOSPITAL (
 			HOSPITAL_ID,
 			HOSPITAL_NAME,

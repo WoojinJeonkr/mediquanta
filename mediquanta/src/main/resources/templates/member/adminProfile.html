@@ -15,9 +15,8 @@
 			
 			$.ajax({
 				
-				url : "/hospital/saveHospital",
+				url : "/hospital/findList",
 				type : "get",
-				contentType: "application/xml",
 				success : function() {
 			        document.getElementById("hospitalBtn").innerHTML = "성공";
 				}
