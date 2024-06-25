@@ -15,5 +15,8 @@ public class HospitalResponse {
 	private String sgguCdNm;
 	private String address;
 	private String phone;
+	private double latitude;
+	private double longitude;
+	private String hospitalUrl;
 	
 }

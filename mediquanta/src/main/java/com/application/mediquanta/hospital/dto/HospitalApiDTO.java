@@ -15,6 +15,9 @@ public class HospitalApiDTO {
 	private String sgguCdNm;
 	private String address;
 	private String phone;
+	private double latitude;
+	private double longitude;
+	private String hospitalUrl;
 	
 	public HospitalResponse toResponse() {
         return HospitalResponse.builder()
@@ -24,6 +27,9 @@ public class HospitalApiDTO {
                 .sgguCdNm(sgguCdNm)
                 .address(address)
                 .phone(phone)
+                .latitude(latitude)
+                .longitude(longitude)
+                .hospitalUrl(hospitalUrl)
                 .build();
     }
 	

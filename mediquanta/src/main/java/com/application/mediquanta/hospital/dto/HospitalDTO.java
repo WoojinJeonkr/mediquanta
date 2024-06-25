@@ -14,6 +14,9 @@ public class HospitalDTO {
 	private String sgguCdNm;
 	private String address;
 	private String phone;
+	private double latitude;
+	private double longitude;
+	private String hospitalUrl;
 	private Date createdAt;
 	private Date updatedAt;
 	

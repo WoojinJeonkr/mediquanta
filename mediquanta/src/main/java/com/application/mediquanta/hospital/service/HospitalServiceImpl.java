@@ -10,40 +10,67 @@ import org.springframework.stereotype.Service;
 import com.application.mediquanta.hospital.dao.HospitalDAO;
 import com.application.mediquanta.hospital.dto.HospitalApiDTO;
 import com.application.mediquanta.hospital.dto.HospitalDTO;
+import com.application.mediquanta.hospital.dto.SgguCd;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class HospitalServiceImpl implements HospitalService {
 
-	@Autowired
+    @Autowired
     private HospitalApiManager hospitalApiManager;
-    
+
     @Autowired
     private HospitalDAO hospitalDAO;
-    
-    private final int DEFAULT_PAGE_NO = 7778;
-	private final int DEFAULT_NUM_OF_ROWS = 10;
+
+    private final int DEFAULT_NUM_OF_ROWS = 100;
+
+    private int dataCnt = 0;
 
     @Override
     public void saveHospitalsToDatabase() {
         try {
-            List<HospitalApiDTO> hospitals = hospitalApiManager.fetchByCode(DEFAULT_PAGE_NO, DEFAULT_NUM_OF_ROWS);
-            for (HospitalApiDTO hospital : hospitals) {
-            	HospitalDTO hospitalDTO = new HospitalDTO();
-            	hospitalDTO.setHospitalName(hospital.getHospitalName());
-            	hospitalDTO.setType(hospital.getType());
-            	hospitalDTO.setSidoCdNm(hospital.getSidoCdNm());
-            	hospitalDTO.setSgguCdNm(hospital.getSgguCdNm());
-            	hospitalDTO.setAddress(hospital.getAddress());
-            	hospitalDTO.setPhone(hospital.getPhone());
-            	hospitalDTO.setCreatedAt(new Date());
-            	hospitalDTO.setUpdatedAt(null);
-            	
-                hospitalDAO.saveHospital(hospitalDTO);
+            for (SgguCd sgguCd : SgguCd.values()) {
+                int currentPage = 1;
+                boolean hasNextPage = true;
+
+                while (hasNextPage) {
+                    List<HospitalApiDTO> hospitals = hospitalApiManager.fetchByCode(currentPage, DEFAULT_NUM_OF_ROWS, sgguCd);
+
+                    if (hospitals.isEmpty()) {
+                        hasNextPage = false;
+                        continue;
+                    }
+
+                    for (HospitalApiDTO hospital : hospitals) {
+                        HospitalDTO hospitalDTO = new HospitalDTO();
+                        hospitalDTO.setHospitalName(hospital.getHospitalName());
+                        hospitalDTO.setType(hospital.getType());
+                        hospitalDTO.setSidoCdNm(hospital.getSidoCdNm());
+                        hospitalDTO.setSgguCdNm(hospital.getSgguCdNm());
+                        hospitalDTO.setAddress(hospital.getAddress());
+                        hospitalDTO.setPhone(hospital.getPhone());
+                        hospitalDTO.setLatitude(hospital.getLatitude());
+                        hospitalDTO.setLongitude(hospital.getLongitude());
+                        hospitalDTO.setHospitalUrl(hospital.getHospitalUrl());
+                        hospitalDTO.setCreatedAt(new Date());
+                        hospitalDTO.setUpdatedAt(null);
+
+                        hospitalDAO.saveHospital(hospitalDTO);
+
+                        dataCnt++;
+                    }
+
+                    log.info(sgguCd.toString() + " 지역코드 " + currentPage + "페이지의 병원 데이터 저장");
+                    log.info("현재 저장된 데이터 개수: " + dataCnt + "개");
+
+                    currentPage++;
+                }
             }
-            System.out.println("병원 데이터 저장 완료");
         } catch (ParseException e) {
-            System.err.println("병원 데이터 가져오기 실패: " + e.getMessage());
+            log.warn("병원 데이터 가져오기 실패: " + e.getMessage());
         }
     }
-	
+
 }

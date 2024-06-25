@@ -12,6 +12,9 @@
 			SGGUCDNM,
 			ADDRESS,
 			PHONE,
+			LATITUDE,
+			LONGITUDE,
+			HOSPITAL_URL,
 			CREATED_AT,
 			UPDATED_AT
 		) 
@@ -23,6 +26,9 @@
 			#{sgguCdNm},
 			#{address},
 			#{phone},
+			#{latitude},
+			#{longitude},
+			#{hospitalUrl},
 			#{createdAt},
 			#{updatedAt}
 		 )
