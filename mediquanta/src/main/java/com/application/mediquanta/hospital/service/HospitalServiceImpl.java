@@ -1,5 +1,6 @@
 package com.application.mediquanta.hospital.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -79,8 +80,10 @@ public class HospitalServiceImpl implements HospitalService {
 	}
 
 	@Override
-	public HospitalDTO searchHospitalByName(String name) {
-		return hospitalDAO.searchHospitalByName(name);
+	public List<HospitalDTO> searchHospitalByName(String name) {
+		List<HospitalDTO> hospitalList = new ArrayList<HospitalDTO>();
+		hospitalList.add(hospitalDAO.searchHospitalByName(name));
+		return hospitalList;
 	}
 
 	@Override
@@ -91,6 +94,11 @@ public class HospitalServiceImpl implements HospitalService {
 	@Override
 	public List<HospitalDTO> searchHospitalByType(String type) {
 		return hospitalDAO.searchHospitalByType(type);
+	}
+
+	@Override
+	public HospitalDTO getHospitalDetails(long hospitalId) {
+		return hospitalDAO.getHospitalDetails(hospitalId);
 	}
 
 }

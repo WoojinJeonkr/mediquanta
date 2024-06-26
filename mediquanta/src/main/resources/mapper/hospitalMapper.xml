@@ -49,7 +49,7 @@
 				CREATED_AT,
 				UPDATED_AT
 		FROM	HOSPITAL
-		LIMIT 20;
+		ORDER BY SIDOCDNM
 	</select>
 	
 	<!-- 이름에 대해 병원 조회하기 -->
@@ -86,6 +86,7 @@
 				UPDATED_AT
 		FROM	HOSPITAL
 		WHERE	SIDOCDNM = #{sidoCdNm}
+		ORDER BY HOSPITAL_NAME;
 	</select>
 	
 	<!-- 병원 유형에 대해 병원 목록 조회하기 -->
@@ -104,6 +105,25 @@
 				UPDATED_AT
 		FROM	HOSPITAL
 		WHERE	TYPE = #{type}
+		ORDER BY HOSPITAL_NAME;
+	</select>
+	
+	<!-- 병원 상세 정보 조회하기 -->
+	<select id="getHospitalDetails" parameterType="long" resultType="HospitalDTO">
+		SELECT 	HOSPITAL_ID,
+				HOSPITAL_NAME,
+				TYPE,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				HOSPITAL_URL,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	HOSPITAL
+		WHERE	HOSPITAL_ID = #{hospitalId}
 	</select>
 	
 </mapper>

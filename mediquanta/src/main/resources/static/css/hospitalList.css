@@ -215,10 +215,6 @@ body {
 	}
 }
 
-.card-margin {
-	margin-bottom: 1.875rem;
-}
-
 @media (min-width: 992px) {
 	.col-lg-2 {
 		flex: 0 0 16.66667%;

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta || 병원 상세 화면</title>
+<link th:href="@{/css/hospitalDetail.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+        <main class="main-content site-wrapper-reveal">
+        	<section>
+                <div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+            </section>
+            <section style="background-color: gainsboro;">
+				<div class="container py-4">
+					<div class="row">
+				      <div class="col mb-2">
+				        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+				          <ol class="breadcrumb mb-0">
+				            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+				            <li class="breadcrumb-item"><a th:href="@{/hospital}">병원 목록</a></li>
+				            <li class="breadcrumb-item active" aria-current="page" th:text="${hospital.hospitalName}"></li>
+				          </ol>
+				        </nav>
+				      </div>
+				    </div>
+					<div class="row">
+						<div class="col-lg-4 card-margin">
+							<div class="card mb-0">
+			          			<div class="card-body">
+			          				이미지 영역
+			          			</div>
+		          			</div>
+						 </div>
+						<div class="col-lg-8 card-margin">
+							<div class="card mb-0">
+			          			<div class="card-body">
+								    <h1 class="hospital-name" th:text="${hospital.hospitalName}"></h1>
+								    <p class="contact-info" th:text="|전화번호 : ${hospital.phone}|"></p>
+								    <p class="address" th:text="|주소: ${hospital.address}|"></p>
+								    <p class="type" th:text="|병원 종류 : ${hospital.type}|"></p>
+								</div>
+							</div>
+						 </div>
+					</div>
+				    <div class="row">
+						<div class="col-lg-4 card-margin">
+							<div class="card mb-4">
+			          			<div class="card-body">
+			          				지도 영역
+			          			</div>
+			          		</div>
+						 </div>
+						<div class="col-lg-8 card-margin">
+							<div class="card mb-4">
+			          			<div class="card-body">
+			          				근처 약국 목록 영역
+			          			</div>
+			          		</div>
+						 </div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

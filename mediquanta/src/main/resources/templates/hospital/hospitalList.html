@@ -4,12 +4,20 @@
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<title>병원 조회</title>
+<title>Mediquanta | 병원 목록</title>
 <link th:href="@{/css/hospitalList.css}" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
 <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
 <script>
+	var hospitalData = [];
+	var rowOfNums = 20;
+	var pagesToShow = 5;
+    var currentGroup = 0;
+
     $(document).ready(function() {
+    	
+    	searchHospList();
+    	
     	$("#searchOption").change(function() {
     		
     		var selectedOption = $(this).children("option:selected").attr('id');
@@ -38,38 +46,77 @@
             
             switch (searchOption) {
 	            case 'name':
-	            	searchData = {
-	            		"name" : $('#nameInput').val()
-	                };
-	            	searchHospByName(searchData);
+	            	if ($('#nameInput').val() === "") {
+	            		searchHospList();
+	            	} else {
+	            		searchData = {
+    	            		"name" : $('#nameInput').val()
+    	                };
+    	            	searchHospByName(searchData);
+	            	}
 	                break;
 	            case 'sidoCdNm':
-	                searchData = {
-	            		"sidoCdNm" : $('#addressOption').val()
-	                };
-	                searchHospBySidoCdNm(searchData);
+	            	if ($('#addressOption').val() === "") {
+	            		searchHospList();
+	            	} else {
+	            		searchData = {
+    	            		"sidoCdNm" : $('#addressOption').val()
+    	                };
+    	                searchHospBySidoCdNm(searchData);
+	            	}
 	                break;
 	            case 'type':
-	                searchData = {
-	                    "type" : $('#typeOption').val()
-	                };
-	                searchHospByType(searchData);
+	            	if ($('#typeOption').val() === "") {
+	            		searchHospList();
+	            	} else {
+	            		searchData = {
+    	                    "type" : $('#typeOption').val()
+    	                };
+    	                searchHospByType(searchData);
+	            	}
 	                break;
-	           	default:
-	           		console.log("검색 없음");
             }
             console.log(searchData);
         });
+        
+        $(".pagination").on("click", "a", function(event) {
+            event.preventDefault();
+            var page = $(this).data('page');
+            if (page) {
+                displayHospitalList(page);
+                updatePagination(page);
+                
+                $('html, body').animate({
+                    scrollTop: $(".main-content").offset().top
+                }, 500);
+            }
+        });
     });
+    
+    
+    
+    function searchHospList() {
+        $.ajax({
+        	url : "/hospital/findHospitalList",
+        	type : "POST",
+        	success : function(data) {
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
+        	}
+    	});
+    }
     
     function searchHospByName(searchData) {
         $.ajax({
         	url : "/hospital/searchHospitalByName",
         	type : "POST",
-        	data : searchData,
+        	contentType : "application/json",
+        	data : JSON.stringify(searchData),
         	success : function(data) {
-        		// ajax 통신 성공 시 넘어오는 데이터 테이블에 뿌리기
-        		console.log(data);
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
         	}
     	});
     }
@@ -78,10 +125,12 @@
     	$.ajax({
         	url : "/hospital/searchHospitalBySidoCdNm",
         	type : "POST",
-        	data : searchData,
+        	contentType : "application/json",
+        	data : JSON.stringify(searchData),
         	success : function(data) {
-        		// ajax 통신 성공 시 넘어오는 데이터 테이블에 뿌리기
-        		console.log(data);
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
         	}
 		
         });
@@ -91,13 +140,58 @@
     	$.ajax({
         	url : "/hospital/searchHospitalByType",
         	type : "POST",
-        	data : searchData,
+        	contentType : "application/json",
+        	data : JSON.stringify(searchData),
         	success : function(data) {
-        		// ajax 통신 성공 시 넘어오는 데이터 테이블에 뿌리기
-        		console.log(data);
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
         	}
 		
         });
+    }
+    
+    function displayHospitalList(page) {
+        var startIndex = (page - 1) * rowOfNums;
+        var endIndex = startIndex + rowOfNums;
+        var pagedData = hospitalData.slice(startIndex, endIndex);
+
+        var tbody = $("table tbody");
+        tbody.empty();
+        $.each(pagedData, function(index, hospital) {
+            var row = $("<tr></tr>");
+            var updatedAt = hospital.updatedAt ? new Date(hospital.updatedAt) : new Date(hospital.createdAt);
+            var formattedDate = updatedAt.toLocaleDateString('ko-KR');
+            row.append($("<td></td>").html('<div class="widget-26-hospital-title"><a href="/hospital/details?hospitalId=' + hospital.hospitalId + '">' + hospital.hospitalName + '</a></div>'));
+            row.append($("<td></td>").html('<div class="widget-26-hospital-info"><p class="m-0"><span class="address">' + hospital.address + '</span></p></div>'));
+            row.append($("<td></td>").html('<div class="widget-26-hospital-type"><span>' + hospital.type + '</span></div>'));
+            row.append($("<td></td>").html('<div class="widget-26-hospital-update"><span class="text-muted time">' + formattedDate + '</span></div>'));
+            row.append($("<td></td>").html('<div class="widget-26-hospital-starred" style="text-align: center;"><a href="#"><i class="far fa-star"></i></a></div>'));
+            tbody.append(row);
+        });
+    }
+    
+    function updatePagination(currentPage) {
+        var totalPages = Math.ceil(hospitalData.length / rowOfNums);
+        var pagination = $(".pagination");
+        pagination.empty();
+
+        if (totalPages <= pagesToShow) {
+            for (var i = 1; i <= totalPages; i++) {
+                pagination.append('<li class="page-item' + (i === currentPage ? ' active' : '') + '"><a class="page-link no-border" href="#" data-page="' + i + '">' + i + '</a></li>');
+            }
+        } else {
+            var startPage = Math.floor((currentPage - 1) / pagesToShow) * pagesToShow + 1;
+            var endPage = Math.min(startPage + pagesToShow - 1, totalPages);
+
+            pagination.append('<li class="page-item' + (currentPage === 1 ? ' disabled' : '') + '"><a class="page-link no-border" href="#" data-page="' + (currentPage - 1) + '">«</a></li>');
+
+            for (var i = startPage; i <= endPage; i++) {
+                pagination.append('<li class="page-item' + (i === currentPage ? ' active' : '') + '"><a class="page-link no-border" href="#" data-page="' + i + '">' + i + '</a></li>');
+            }
+
+            pagination.append('<li class="page-item' + (currentPage === totalPages ? ' disabled' : '') + '"><a class="page-link no-border" href="#" data-page="' + (currentPage + 1) + '">»</a></li>');
+        }
     }
 </script>
 </head>
@@ -108,7 +202,7 @@
                 <div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
             </section>
             <section style="background-color: #eee;">
-				<div class="container">
+				<div class="container py-4">
 					<div class="row">
 						<div class="col-lg-12 card-margin">
 							<div class="card search-form">
@@ -154,7 +248,7 @@
 												    <div class="col-lg-8 col-md-6 col-sm-12 p-0" id="typeSelectWrapper" style="display: none;">
 												        <select class="form-control" id="typeOption" name="typeOption">
 												            <option id="allType" value="">유형을 선택하세요...</option>
-												            <option id="상급종합병원" value="상급종합병원">상급종합병원</option>
+												            <option id="상급종합" value="상급종합">상급종합병원</option>
 												            <option id="종합병원" value="종합병원">종합병원</option>
 												            <option id="병원" value="병원">병원</option>
 												            <option id="요양병원" value="요양병원">요양병원</option>
@@ -194,15 +288,6 @@
 									<div class="row search-body">
 										<div class="col-lg-12">
 											<div class="search-result">
-												<div class="result-header">
-													<div class="row">
-														<div class="col-lg-7">
-															<div class="records">
-																Showing: <b>1-10</b> of <b><span th:text="${hospitalList.size()}"></span></b> result
-															</div>
-														</div>
-													</div>
-												</div>
 												<div class="result-body">
 													<div class="table-responsive">
 														<table class="table widget-26">
@@ -211,43 +296,11 @@
 														            <th style="width: 15%;">병원 이름</th>
 														            <th style="width: 45%;">주소</th>
 														            <th style="width: 10%;">병원 유형</th>
-														            <th style="width: 5%;">갱신 날짜</th>
+														            <th style="width: 10%;">갱신 날짜</th>
 														            <th style="width: 5%; text-align: center;">북마크</th>
 														        </tr>
 														    </thead>
-														    <tbody>
-														        <tr th:each="hospital : ${hospitalList}">
-															        <td>
-															            <div class="widget-26-hospital-title">
-															                <a th:href="@{'/hospital/details/' + ${hospital.hospitalId}}" th:text="${hospital.hospitalName}"></a>
-															            </div>
-															        </td>
-															        <td>
-															            <div class="widget-26-hospital-info">
-															                <p class="m-0">
-															                    <span class="address" th:text="${hospital.address}"></span>
-															                </p>
-															            </div>
-															        </td>
-															        <td>
-															            <div class="widget-26-hospital-type">
-															                <span th:text="${hospital.type}"></span>
-															            </div>
-															        </td>
-															        <td>
-															            <div class="widget-26-hospital-update">
-															                <!-- <span class="text-muted time" th:text="${hospital.createdAt}">1 days ago</span> -->
-															            </div>
-															        </td>
-															        <td style="text-align: center;">
-															            <div class="widget-26-hospital-starred">
-															                <a href="#">
-															                    <i class="far fa-star"></i>
-															                </a>
-															            </div>
-															        </td>
-															    </tr>
-														    </tbody>
+														    <tbody></tbody>
 														</table>
 													</div>
 												</div>
@@ -255,25 +308,7 @@
 										</div>
 									</div>
 									<nav class="d-flex justify-content-center">
-										<ul
-											class="pagination pagination-base pagination-boxed pagination-square mb-0">
-											<li class="page-item"><a class="page-link no-border"
-												href="#"> <span aria-hidden="true">«</span> <span
-													class="sr-only">Previous</span>
-											</a></li>
-											<li class="page-item active"><a
-												class="page-link no-border" href="#">1</a></li>
-											<li class="page-item"><a class="page-link no-border"
-												href="#">2</a></li>
-											<li class="page-item"><a class="page-link no-border"
-												href="#">3</a></li>
-											<li class="page-item"><a class="page-link no-border"
-												href="#">4</a></li>
-											<li class="page-item"><a class="page-link no-border"
-												href="#"> <span aria-hidden="true">»</span> <span
-													class="sr-only">Next</span>
-											</a></li>
-										</ul>
+										<ul class="pagination pagination-base pagination-boxed pagination-square mb-0"></ul>
 									</nav>
 								</div>
 							</div>
