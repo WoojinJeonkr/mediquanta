@@ -73,4 +73,24 @@ public class HospitalServiceImpl implements HospitalService {
         }
     }
 
+	@Override
+	public List<HospitalDTO> getHospitalList() {
+		return hospitalDAO.getHospitalList();
+	}
+
+	@Override
+	public HospitalDTO searchHospitalByName(String name) {
+		return hospitalDAO.searchHospitalByName(name);
+	}
+
+	@Override
+	public List<HospitalDTO> searchHospitalBySidoCdNm(String sidoCdNm) {
+		return hospitalDAO.searchHospitalBySidoCdNm(sidoCdNm);
+	}
+
+	@Override
+	public List<HospitalDTO> searchHospitalByType(String type) {
+		return hospitalDAO.searchHospitalByType(type);
+	}
+
 }

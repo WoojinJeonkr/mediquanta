@@ -74,7 +74,7 @@
 		$.ajax({
 		
 			url : "/member/validNickname",
-			type : "post",
+			type : "POST",
 			data : param,
 			success : function(isValid) {
 				if (isValid === 'y') {
@@ -99,7 +99,7 @@
 		$.ajax({
 		
 			url : "/member/validEmail",
-			type : "post",
+			type : "POST",
 			data : param,
 			success : function(isValid) {
 				if (isValid === 'y') {

@@ -8,6 +8,98 @@
 <link th:href="@{/css/hospitalList.css}" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
 <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+    $(document).ready(function() {
+    	$("#searchOption").change(function() {
+    		
+    		var selectedOption = $(this).children("option:selected").attr('id');
+            
+            if (selectedOption === 'sidoCdNm') {
+                $("#nameWrapper").hide();
+                $("#typeSelectWrapper").hide();
+                $("#addressSelectWrapper").show();
+            } else if (selectedOption === 'type'){
+            	$("#nameWrapper").hide();
+            	$("#addressSelectWrapper").hide();
+                $("#typeSelectWrapper").show();
+            } else {
+                $("#addressSelectWrapper").hide();
+                $("#typeSelectWrapper").hide();
+                $("#nameWrapper").show();
+            }
+        });
+    	
+    	
+        $("#search-form").submit(function(event) {
+            event.preventDefault();
+            
+            var searchOption = $("#searchOption").val();
+            var searchData = {};
+            
+            switch (searchOption) {
+	            case 'name':
+	            	searchData = {
+	            		"name" : $('#nameInput').val()
+	                };
+	            	searchHospByName(searchData);
+	                break;
+	            case 'sidoCdNm':
+	                searchData = {
+	            		"sidoCdNm" : $('#addressOption').val()
+	                };
+	                searchHospBySidoCdNm(searchData);
+	                break;
+	            case 'type':
+	                searchData = {
+	                    "type" : $('#typeOption').val()
+	                };
+	                searchHospByType(searchData);
+	                break;
+	           	default:
+	           		console.log("검색 없음");
+            }
+            console.log(searchData);
+        });
+    });
+    
+    function searchHospByName(searchData) {
+        $.ajax({
+        	url : "/hospital/searchHospitalByName",
+        	type : "POST",
+        	data : searchData,
+        	success : function(data) {
+        		// ajax 통신 성공 시 넘어오는 데이터 테이블에 뿌리기
+        		console.log(data);
+        	}
+    	});
+    }
+    
+    function searchHospBySidoCdNm(searchData) {
+    	$.ajax({
+        	url : "/hospital/searchHospitalBySidoCdNm",
+        	type : "POST",
+        	data : searchData,
+        	success : function(data) {
+        		// ajax 통신 성공 시 넘어오는 데이터 테이블에 뿌리기
+        		console.log(data);
+        	}
+		
+        });
+    }
+    
+    function searchHospByType(searchData) {
+    	$.ajax({
+        	url : "/hospital/searchHospitalByType",
+        	type : "POST",
+        	data : searchData,
+        	success : function(data) {
+        		// ajax 통신 성공 시 넘어오는 데이터 테이블에 뿌리기
+        		console.log(data);
+        	}
+		
+        });
+    }
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -17,7 +109,6 @@
             </section>
             <section style="background-color: #eee;">
 				<div class="container">
-					<!-- Search section -->
 					<div class="row">
 						<div class="col-lg-12 card-margin">
 							<div class="card search-form">
@@ -26,17 +117,63 @@
 										<div class="row">
 											<div class="col-12">
 												<div class="row no-gutters">
-													<div class="col-lg-3 col-md-3 col-sm-12 p-0">
-														<select class="form-control" id="exampleFormControlSelect1">
-															<option>Name</option>
-															<option>Location</option>
-															<option>Type</option>
+													<div class="col-lg-3 col-md-3 col-sm-12">
+														<select class="form-control" id="searchOption">
+															<option id="name" value="name">이름</option>
+															<option id="sidoCdNm" value="sidoCdNm">지역</option>
+															<option id="type" value="type">유형</option>
 														</select>
 													</div>
-													<div class="col-lg-8 col-md-6 col-sm-12 p-0">
-														<input type="text" placeholder="Search..."
-															class="form-control" id="search" name="search">
+													<div class="col-lg-8 col-md-6 col-sm-12 p-0" id="nameWrapper">
+														<input type="text" placeholder="병원 이름을 입력하세요"
+															class="form-control" id="nameInput" name="nameInput">
 													</div>
+													<div class="col-lg-8 col-md-6 col-sm-12 p-0" id="addressSelectWrapper" style="display: none;">
+												        <select class="form-control" id="addressOption" name="addressOption">
+														  <option id="allAddress" value="">지역을 선택하세요...</option>
+														  <option id="서울" value="서울">서울</option>
+														  <option id="부산" value="부산">부산</option>
+														  <option id="인천" value="인천">인천</option>
+														  <option id="대구" value="대구">대구</option>
+														  <option id="광주" value="광주">광주</option>
+														  <option id="대전" value="대전">대전</option>
+														  <option id="광주" value="광주">광주</option>
+														  <option id="울산" value="울산">울산</option>
+														  <option id="경기" value="경기">경기</option>
+														  <option id="강원" value="강원">강원</option>
+														  <option id="충북" value="충북">충북</option>
+														  <option id="충남" value="충남">충남</option>
+														  <option id="전북" value="전북">전북</option>
+														  <option id="전남" value="전남">전남</option>
+														  <option id="경북" value="경북">경북</option>
+														  <option id="경남" value="경남">경남</option>
+														  <option id="제주" value="제주">제주</option>
+														  <option id="세종시" value="세종시">세종시</option>
+														</select>
+												    </div>
+												    <div class="col-lg-8 col-md-6 col-sm-12 p-0" id="typeSelectWrapper" style="display: none;">
+												        <select class="form-control" id="typeOption" name="typeOption">
+												            <option id="allType" value="">유형을 선택하세요...</option>
+												            <option id="상급종합병원" value="상급종합병원">상급종합병원</option>
+												            <option id="종합병원" value="종합병원">종합병원</option>
+												            <option id="병원" value="병원">병원</option>
+												            <option id="요양병원" value="요양병원">요양병원</option>
+												            <option id="정신병원" value="정신병원">정신병원</option>
+												            <option id="치과병원" value="치과병원">치과병원</option>
+												            <option id="치과의원" value="치과의원">치과의원</option>
+												            <option id="조산원" value="조산원">조산원</option>
+												            <option id="보건소" value="보건소">보건소</option>
+												            <option id="보건지소" value="보건지소">보건지소</option>
+												            <option id="보건진료소" value="보건진료소">보건진료소</option>
+												            <option id="모자보건센타" value="모자보건센타">모자보건센타</option>
+												            <option id="보건의료원" value="보건의료원">보건의료원</option>
+												            <option id="한방종합병원" value="한방종합병원">한방종합병원</option>
+												            <option id="한방병원" value="한방병원">한방병원</option>
+												            <option id="한의원" value="한의원">한의원</option>
+												            <option id="한약방" value="한약방">한약방</option>
+												            <option id="병의원" value="병의원">병의원</option>
+												        </select>
+												    </div>
 													<div class="col-lg-1 col-md-3 col-sm-12 p-0">
 														<button type="submit" class="btn btn-base">
 															<i class="fas fa-search"></i>
@@ -50,7 +187,6 @@
 							</div>
 						</div>
 					</div>
-					<!-- Hospital List section -->
 					<div class="row">
 						<div class="col-12">
 							<div class="card card-margin">
@@ -62,7 +198,7 @@
 													<div class="row">
 														<div class="col-lg-7">
 															<div class="records">
-																Showing: <b>1-10</b> of <b>200</b> result
+																Showing: <b>1-10</b> of <b><span th:text="${hospitalList.size()}"></span></b> result
 															</div>
 														</div>
 													</div>
@@ -72,45 +208,45 @@
 														<table class="table widget-26">
 														    <thead>
 														        <tr>
-														            <th style="width: 15%;">HOSPITAL_NAME</th>
-														            <th style="width: 25%;">ADDRESS</th>
-														            <th style="width: 15%;">TYPE</th>
-														            <th style="width: 10%;">UPDATE</th>
-														            <th style="width: 5%; text-align: center;">Favorite</th>
+														            <th style="width: 15%;">병원 이름</th>
+														            <th style="width: 45%;">주소</th>
+														            <th style="width: 10%;">병원 유형</th>
+														            <th style="width: 5%;">갱신 날짜</th>
+														            <th style="width: 5%; text-align: center;">북마크</th>
 														        </tr>
 														    </thead>
 														    <tbody>
-														        <tr>
-														            <td>
-														                <div class="widget-26-job-title">
-														                    <a href="#">강남삼성병원</a>
-														                </div>
-														            </td>
-														            <td>
-														                <div class="widget-26-job-info">
-														                    <p class="m-0">
-																			    Full-Time in <span class="location">London, UK</span>
-																			</p>
-														                </div>
-														            </td>
-														            <td>
-														                <div class="widget-26-hospital-type">
-														                    <span>종합 병원</span>
-														                </div>
-														            </td>
-														            <td>
-														                <div class="widget-26-job-update">
-														                    <span class="text-muted time">1 days ago</span>
-														                </div>
-														            </td>
-														            <td style="text-align: center;">
-														                <div class="widget-26-job-starred">
-														                    <a href="#">
-														                        <i class="far fa-star"></i>
-														                    </a>
-														                </div>
-														            </td>
-														        </tr>
+														        <tr th:each="hospital : ${hospitalList}">
+															        <td>
+															            <div class="widget-26-hospital-title">
+															                <a th:href="@{'/hospital/details/' + ${hospital.hospitalId}}" th:text="${hospital.hospitalName}"></a>
+															            </div>
+															        </td>
+															        <td>
+															            <div class="widget-26-hospital-info">
+															                <p class="m-0">
+															                    <span class="address" th:text="${hospital.address}"></span>
+															                </p>
+															            </div>
+															        </td>
+															        <td>
+															            <div class="widget-26-hospital-type">
+															                <span th:text="${hospital.type}"></span>
+															            </div>
+															        </td>
+															        <td>
+															            <div class="widget-26-hospital-update">
+															                <!-- <span class="text-muted time" th:text="${hospital.createdAt}">1 days ago</span> -->
+															            </div>
+															        </td>
+															        <td style="text-align: center;">
+															            <div class="widget-26-hospital-starred">
+															                <a href="#">
+															                    <i class="far fa-star"></i>
+															                </a>
+															            </div>
+															        </td>
+															    </tr>
 														    </tbody>
 														</table>
 													</div>
@@ -118,7 +254,6 @@
 											</div>
 										</div>
 									</div>
-									<!-- Pagination section -->
 									<nav class="d-flex justify-content-center">
 										<ul
 											class="pagination pagination-base pagination-boxed pagination-square mb-0">
