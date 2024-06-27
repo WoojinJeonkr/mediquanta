@@ -4,10 +4,30 @@
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<title>Mediquanta || 병원 상세 화면</title>
+<title>Mediquanta | 병원 상세 화면</title>
 <link th:href="@{/css/hospitalDetail.css}" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dd02e1af86e8604c26e796a10b9093e4&libraries=services,clusterer,drawing"></script>
 <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+	$(document).ready(function () {
+	    var mapContainer = document.getElementById('map');
+	    var mapOption = { 
+	        center: new kakao.maps.LatLng($("#latitude").val(), $("#longitude").val()),
+	        level: 3,
+	        draggable : false
+	    };
+	
+	    var map = new kakao.maps.Map(mapContainer, mapOption);
+	    var markerPosition  = new kakao.maps.LatLng($("#latitude").val(), $("#longitude").val()); 
+
+		 var marker = new kakao.maps.Marker({
+		     position: markerPosition
+		 });
+	
+		 marker.setMap(map);
+	});
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -29,33 +49,58 @@
 				      </div>
 				    </div>
 					<div class="row">
-						<div class="col-lg-4 card-margin">
+						<div class="col-lg-12 card-margin">
 							<div class="card mb-0">
 			          			<div class="card-body">
-			          				이미지 영역
-			          			</div>
-		          			</div>
-						 </div>
-						<div class="col-lg-8 card-margin">
-							<div class="card mb-0">
-			          			<div class="card-body">
-								    <h1 class="hospital-name" th:text="${hospital.hospitalName}"></h1>
-								    <p class="contact-info" th:text="|전화번호 : ${hospital.phone}|"></p>
-								    <p class="address" th:text="|주소: ${hospital.address}|"></p>
-								    <p class="type" th:text="|병원 종류 : ${hospital.type}|"></p>
+								    <h1 class="hospital-name mb-4" th:text="${hospital.hospitalName}"></h1>
+							    	<table>
+									    <tbody>
+									        <tr>
+									            <td>전화번호</td>
+									            <td>
+						                            <span th:text="${hospital.phone}"></span>
+						                        </td>
+									        </tr>
+									        <tr>
+									            <td>주소</td>
+									            <td>
+						                            <span th:text="${hospital.address}"></span>
+						                        </td>
+									        </tr>
+									        <tr>
+									            <td>병원 종류</td>
+									            <td>
+						                            <span th:text="${hospital.type}"></span>
+						                        </td>
+									        </tr>
+									        <tr>
+									            <td>홈페이지</td>
+									            <td>
+									            	<span th:if="${hospital.hospitalUrl == 'https://' || hospital.hospitalUrl == 'http://'}">
+									            		<span>홈페이지 정보가 없습니다.</span>
+									            	</span>
+									            	<span th:unless="${hospital.hospitalUrl == 'https://' || hospital.hospitalUrl == 'http://'}">
+					                                	<a th:href="${hospital.hospitalUrl}" th:text="${hospital.hospitalUrl}" target="_blank"></a>
+					                                </span>
+						                        </td>
+									        </tr>
+									    </tbody>
+									</table>
+									<input id="latitude" th:value="${hospital.latitude}" type="hidden">
+						        	<input id="longitude" th:value="${hospital.longitude}" type="hidden">
 								</div>
 							</div>
 						 </div>
 					</div>
 				    <div class="row">
-						<div class="col-lg-4 card-margin">
+						<div class="col-lg-6 card-margin">
 							<div class="card mb-4">
 			          			<div class="card-body">
-			          				지도 영역
+			          				<div id="map" style="width:100%; height:400px;"></div>
 			          			</div>
 			          		</div>
 						 </div>
-						<div class="col-lg-8 card-margin">
+						<div class="col-lg-6 card-margin">
 							<div class="card mb-4">
 			          			<div class="card-body">
 			          				근처 약국 목록 영역

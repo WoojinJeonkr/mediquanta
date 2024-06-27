@@ -11,4 +11,5 @@ public interface HospitalService {
 	public List<HospitalDTO> searchHospitalBySidoCdNm(String sidoCdNm);
 	public List<HospitalDTO> searchHospitalByType(String type);
 	public HospitalDTO getHospitalDetails(long hospitalId);
+	public HospitalDTO udpateHospInfo(long hospitalId);
 }

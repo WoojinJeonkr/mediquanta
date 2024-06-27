@@ -58,15 +58,23 @@ public class HospitalController {
 		return hospitalService.searchHospitalByType(searchData.getType());
 	}
 	
-	// TODO : 1. 병원 상세 목록 기능 개발
 	@GetMapping("/details")
     public String viewHospitalDetails(@RequestParam("hospitalId") long hospitalId, Model model) {
         HospitalDTO hospitalDTO = hospitalService.getHospitalDetails(hospitalId);
         model.addAttribute("hospital", hospitalDTO);
+        model.addAttribute("editMode", false);
         return "hospital/hospitalDetail";
     }
 	
 	// TODO : 2. 병원 정보 수정 기능 개발 (관리자인 경우)
+	@PostMapping("/updateHospInfo")
+	@ResponseBody
+	public String updateHospInfo(@RequestBody HospitalDTO hospitalDTO) {
+		String isUpdated = "n";
+		HospitalDTO hospital = hospitalService.udpateHospInfo(hospitalDTO.getHospitalId());
+		if (hospital != null) isUpdated = "y";
+		return isUpdated;
+	}
 	
 	// TODO : 3. 병원 정보 삭제 기능 개발 (관리자인 경우)
 	

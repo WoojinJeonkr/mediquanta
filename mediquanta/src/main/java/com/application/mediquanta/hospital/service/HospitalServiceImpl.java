@@ -101,4 +101,10 @@ public class HospitalServiceImpl implements HospitalService {
 		return hospitalDAO.getHospitalDetails(hospitalId);
 	}
 
+	@Override
+	public HospitalDTO udpateHospInfo(long hospitalId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

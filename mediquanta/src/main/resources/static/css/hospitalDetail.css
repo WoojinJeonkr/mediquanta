@@ -82,3 +82,7 @@ body {
 	border: 1px solid #e6e4e9;
 	border-radius: 8px;
 }
+
+th, td {
+	padding: 4px 10px 0 0;
+}
