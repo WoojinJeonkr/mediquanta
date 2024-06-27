@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.pharmacy.dao.PharmacyDAO">
+
+	<!-- 약국 목록 DB 저장 -->
+	<insert id="savePharmacy" parameterType="PharmacyDTO">
+		INSERT INTO PHARMACY (
+			PHARMACY_NAME,
+			TYPE,
+			SIDOCDNM,
+			SGGUCDNM,
+			ADDRESS,
+			PHONE,
+			LATITUDE,
+			LONGITUDE,
+			CREATED_AT,
+			UPDATED_AT
+		) 
+		VALUES (
+			#{pharmacyName},
+			#{type},
+			#{sidoCdNm},
+			#{sgguCdNm},
+			#{address},
+			#{phone},
+			#{latitude},
+			#{longitude},
+			#{createdAt},
+			#{updatedAt}
+		 )
+	</insert>
+	
+	<!-- 약국 목록 가져오기 -->
+	<select id="getPharmacyList" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		ORDER BY SIDOCDNM
+	</select>
+	
+	<!-- 이름에 대해 약국 조회하기 -->
+	<select id="searchPharmacyByName" parameterType="String" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		WHERE	PHARMACY_NAME = #{name}
+	</select>
+
+	<!-- 지역에 대해 약국 목록 조회하기 -->
+	<select id="searchPharmacyBySidoCdNm" parameterType="String" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		WHERE	SIDOCDNM = #{sidoCdNm}
+		ORDER BY PHARMACY_NAME
+	</select>
+	
+	<!-- 약국 상세 정보 조회하기 -->
+	<select id="getPharmacyDetails" parameterType="long" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		WHERE	PHARMACY_ID = #{pharmacyId}
+	</select>
+	
+</mapper>

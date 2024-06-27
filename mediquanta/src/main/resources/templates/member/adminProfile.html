@@ -10,11 +10,8 @@
 <script>
 
 	$().ready(function() {
-	
 		$("#hospitalBtn").click(function() {
-			
 			$.ajax({
-				
 				url : "/hospital/saveList",
 				type : "GET",
 				success : function() {
@@ -23,11 +20,21 @@
                     	.addClass("btn-secondary")
                     	.text("성공");
 				}
-					
 			});
-			
 		});
 		
+		$("#pharmacyBtn").click(function() {
+			$.ajax({
+				url : "/pharmacy/saveList",
+				type : "GET",
+				success : function() {
+					$("#pharmacyBtn")
+	                	.removeClass("btn-outline-secondary")
+	                	.addClass("btn-secondary")
+	                	.text("성공");
+				}
+			});
+		});
 	});
 	
 </script>
@@ -74,7 +81,7 @@
 			          	<!-- a태그는 Get 요청만 가능하다 -->
 			          	<p class="mb-4"><span class="font-italic me-1"><a class="text-muted" th:href="@{/member/memberList}">회원 관리</a></span></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">병원 현황</span><button id="hospitalBtn" class="btn btn-sm btn-outline-secondary float-end">불러오기</button></p><hr>
-     				    <p class="mb-4"><span class="font-italic me-1">약국 현황</span></p><hr>
+     				    <p class="mb-4"><span class="font-italic me-1">약국 현황</span><button id="pharmacyBtn" class="btn btn-sm btn-outline-secondary float-end">불러오기</button></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">커뮤니티 현황</span></p>
 			          </div>
 			        </div>

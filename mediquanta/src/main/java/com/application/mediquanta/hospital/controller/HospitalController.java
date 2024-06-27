@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.application.mediquanta.hospital.dto.HospitalDTO;
-import com.application.mediquanta.hospital.dto.SearchData;
 import com.application.mediquanta.hospital.service.HospitalService;
+import com.application.mediquanta.util.SearchData;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/hospital")
@@ -30,13 +32,14 @@ public class HospitalController {
 	}
 	
 	@GetMapping
-	public String viewHospitalList(Model model) {
+	public String viewHospitalList(Model model, HttpSession session) {
+		model.addAttribute("role", (String)session.getAttribute("role"));
 		return "hospital/hospitalList";
 	}
 	
-	@PostMapping("/findHospitalList")
+	@PostMapping("/getHospitalList")
 	@ResponseBody
-	public List<HospitalDTO> findHospitalList() {
+	public List<HospitalDTO> getHospitalList(Model model, HttpSession session) {
 		return hospitalService.getHospitalList();
 	}
 	

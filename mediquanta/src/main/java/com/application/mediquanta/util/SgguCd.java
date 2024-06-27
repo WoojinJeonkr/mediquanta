@@ -1,4 +1,4 @@
-package com.application.mediquanta.hospital.dto;
+package com.application.mediquanta.util;
 
 public enum SgguCd {
 

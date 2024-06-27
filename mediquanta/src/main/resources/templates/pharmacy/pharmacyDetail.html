@@ -4,8 +4,8 @@
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<title>Mediquanta | 병원 상세 화면</title>
-<link th:href="@{/css/hospital/hospitalDetail.css}" type="text/css" rel="stylesheet" />
+<title>Mediquanta | 약국 상세 화면</title>
+<link th:href="@{/css/pharmacy/pharmacyDetail.css}" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dd02e1af86e8604c26e796a10b9093e4&libraries=services,clusterer,drawing"></script>
 <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
@@ -42,8 +42,8 @@
 				        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
 				          <ol class="breadcrumb mb-0">
 				            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
-				            <li class="breadcrumb-item"><a th:href="@{/hospital}">병원 목록</a></li>
-				            <li class="breadcrumb-item active" aria-current="page" th:text="${hospital.hospitalName}"></li>
+				            <li class="breadcrumb-item"><a th:href="@{/pharmacy}">약국 목록</a></li>
+				            <li class="breadcrumb-item active" aria-current="page" th:text="${pharmacy.pharmacyName}"></li>
 				          </ol>
 				        </nav>
 				      </div>
@@ -52,42 +52,25 @@
 						<div class="col-lg-12 card-margin">
 							<div class="card mb-0">
 			          			<div class="card-body">
-								    <h1 class="hospital-name mb-4" th:text="${hospital.hospitalName}"></h1>
+								    <h1 class="pharmacy-name mb-4" th:text="${pharmacy.pharmacyName}"></h1>
 							    	<table>
 									    <tbody>
 									        <tr>
 									            <td>전화번호</td>
 									            <td>
-						                            <span th:text="${hospital.phone}"></span>
+						                            <span th:text="${pharmacy.phone}"></span>
 						                        </td>
 									        </tr>
 									        <tr>
 									            <td>주소</td>
 									            <td>
-						                            <span th:text="${hospital.address}"></span>
-						                        </td>
-									        </tr>
-									        <tr>
-									            <td>병원 종류</td>
-									            <td>
-						                            <span th:text="${hospital.type}"></span>
-						                        </td>
-									        </tr>
-									        <tr>
-									            <td>홈페이지</td>
-									            <td>
-									            	<span th:if="${hospital.hospitalUrl == 'https://' || hospital.hospitalUrl == 'http://'}">
-									            		<span>홈페이지 정보가 없습니다.</span>
-									            	</span>
-									            	<span th:unless="${hospital.hospitalUrl == 'https://' || hospital.hospitalUrl == 'http://'}">
-					                                	<a th:href="${hospital.hospitalUrl}" th:text="${hospital.hospitalUrl}" target="_blank"></a>
-					                                </span>
+						                            <span th:text="${pharmacy.address}"></span>
 						                        </td>
 									        </tr>
 									    </tbody>
 									</table>
-									<input id="latitude" th:value="${hospital.latitude}" type="hidden">
-						        	<input id="longitude" th:value="${hospital.longitude}" type="hidden">
+									<input id="latitude" th:value="${pharmacy.latitude}" type="hidden">
+						        	<input id="longitude" th:value="${pharmacy.longitude}" type="hidden">
 								</div>
 							</div>
 						 </div>
@@ -103,7 +86,7 @@
 						<div class="col-lg-6 card-margin">
 							<div class="card mb-4">
 			          			<div class="card-body">
-			          				근처 약국 목록 영역
+			          				근처 병원 목록 영역
 			          			</div>
 			          		</div>
 						 </div>

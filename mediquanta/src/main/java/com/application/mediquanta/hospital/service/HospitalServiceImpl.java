@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.application.mediquanta.hospital.dao.HospitalDAO;
 import com.application.mediquanta.hospital.dto.HospitalApiDTO;
 import com.application.mediquanta.hospital.dto.HospitalDTO;
-import com.application.mediquanta.hospital.dto.SgguCd;
+import com.application.mediquanta.util.SgguCd;
 
 import lombok.extern.slf4j.Slf4j;
 
