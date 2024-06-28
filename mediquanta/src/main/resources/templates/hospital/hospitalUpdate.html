@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 병원 정보 수정</title>
+<link th:href="@{/css/hospital/hospitalDetail.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+        <main class="main-content site-wrapper-reveal">
+        	<section>
+                <div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+            </section>
+            <section style="background-color: gainsboro;">
+				<div class="container py-4">
+					<div class="row">
+				      <div class="col mb-2">
+				        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+				          <ol class="breadcrumb mb-0">
+				            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+				            <li class="breadcrumb-item"><a th:href="@{/hospital}">병원 목록</a></li>
+				            <li class="breadcrumb-item active" aria-current="page" th:text="${hospital.hospitalName}"></li>
+				          </ol>
+				        </nav>
+				      </div>
+				    </div>
+					<div class="row">
+						<div class="col-lg-12 card-margin">
+							<div class="card mb-0">
+			          			<div class="card-body">
+								    <h1 class="hospital-name mb-4" th:text="${hospital.hospitalName}"></h1>
+								    <form th:object="${hospital}">
+								    	<table>
+										    <tbody>
+										    	<tr>
+										            <td>병원 유형</td>
+										            <td>
+							                            <input class="text-muted form-control col-md-6" th:field="*{phone}"/>
+							                        </td>
+										        </tr>
+										        <tr>
+										            <td>주소 (시, 도)</td>
+										            <td>
+							                            <input class="text-muted form-control col-md-6" th:field="*{phone}"/>
+							                        </td>
+										        </tr>
+										        <tr>
+										            <td>주소 (구, 동)</td>
+										            <td>
+							                            <input class="text-muted form-control col-md-6" th:field="*{phone}"/>
+							                        </td>
+										        </tr>
+										        <tr>
+										            <td>주소 (전체 주소)</td>
+										            <td>
+							                            <input class="text-muted form-control col-md-6" th:field="*{address}"/>
+							                        </td>
+										        </tr>
+										        <tr>
+										            <td>전화번호</td>
+										            <td>
+							                            <input class="text-muted form-control col-md-6" th:field="*{phone}"/>
+							                        </td>
+										        </tr>
+										        <tr>
+										            <td>위도</td>
+										            <td>
+							                            <input class="text-muted form-control col-md-6" th:field="*{latitude}"/>
+							                        </td>
+										        </tr>
+										        <tr>
+										            <td>경도</td>
+										            <td>
+							                            <input class="text-muted form-control col-md-6" th:field="*{longitude}"/>
+							                        </td>
+										        </tr>
+										        <tr>
+										            <td>홈페이지</td>
+										            <td>
+										            	<input class="text-muted form-control col-md-6" th:field="*{hospitalUrl}"/>
+							                        </td>
+										        </tr>
+										    </tbody>
+										</table>
+									</form>
+								</div>
+							</div>
+						 </div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

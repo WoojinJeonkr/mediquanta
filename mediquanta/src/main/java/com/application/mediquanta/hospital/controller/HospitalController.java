@@ -65,11 +65,17 @@ public class HospitalController {
     public String viewHospitalDetails(@RequestParam("hospitalId") long hospitalId, Model model) {
         HospitalDTO hospitalDTO = hospitalService.getHospitalDetails(hospitalId);
         model.addAttribute("hospital", hospitalDTO);
-        model.addAttribute("editMode", false);
         return "hospital/hospitalDetail";
     }
 	
 	// TODO : 2. 병원 정보 수정 기능 개발 (관리자인 경우)
+	@GetMapping("/viewHospitalUpdate")
+	public String viewHospitalUpdate(@RequestParam("hospitalId") long hospitalId, Model model) {
+		HospitalDTO hospitalDTO = hospitalService.getHospitalDetails(hospitalId);
+		model.addAttribute("hospital", hospitalDTO);
+		return "hospital/hospitalUpdate";
+	}
+	
 	@PostMapping("/updateHospInfo")
 	@ResponseBody
 	public String updateHospInfo(@RequestBody HospitalDTO hospitalDTO) {

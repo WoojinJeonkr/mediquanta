@@ -91,7 +91,7 @@ body {
 
 .widget-26 .widget-26-hospital-starred {
 	fill: #fd8b2c;
-	text-align : center;
+	text-align: center;
 }
 
 .bg-soft-base {
@@ -244,4 +244,11 @@ body {
 	background-clip: border-box;
 	border: 1px solid #e6e4e9;
 	border-radius: 8px;
+}
+
+.icon-button {
+	border: none;
+	background: none;
+	padding: 0;
+	cursor: pointer;
 }

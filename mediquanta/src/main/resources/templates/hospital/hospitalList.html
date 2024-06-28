@@ -90,6 +90,7 @@
                 }, 500);
             }
         });
+        
     });
     
     function searchHospList() {
@@ -163,7 +164,7 @@
             row.append($("<td></td>").html('<div class="widget-26-hospital-type"><span id="type">' + hospital.type + '</span></div>'));
             row.append($("<td></td>").html('<div class="widget-26-hospital-update"><span class="text-muted time" id="formattedDate">' + formattedDate + '</span></div>'));
             if ($("#role").val() === 'ADMIN') {
-                row.append($("<td></td>").html('<div class="widget-26-hospital-edit" style="text-align: center;"><a href="#" class="editHospitalBtn" data-hospitalid="' + hospital.hospitalId + '"><i class="fas fa-pen"></i></a></div>'));
+                row.append($("<td></td>").html('<div class="widget-26-hospital-edit" style="text-align: center;"><a href="/hospital/viewHospitalUpdate?hospitalId=' + hospital.hospitalId + '"><i class="fas fa-pen"></i></a></div>'));
                 row.append($("<td></td>").html('<div class="widget-26-hospital-delete" style="text-align: center;"><a href="#" onclick="deleteHospital(' + hospital.hospitalId + ')"><i class="fas fa-trash"></i></a></div>'));
             } else {
                 row.append($("<td></td>").html('<div class="widget-26-hospital-starred" style="text-align: center;"><a href="#"><i class="far fa-star"></i></a></div>'));
