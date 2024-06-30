@@ -70,6 +70,17 @@
 		WHERE  MEMBER_ID = #{memberId}
 	</select>
 	
+	<!-- 로그인 시간 최신화 -->
+	<update id="updateLastLogin" parameterType="UpdateLastLoginRequest">
+        UPDATE MEMBER
+        <set>
+        	<if test="lastLogin != null">
+	        	LAST_LOGIN = #{lastLogin}
+	        </if>
+        </set>
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+	
 	<!-- 로그인 -->
 	<select id="login" parameterType="String" resultType="MemberDTO">
 		SELECT	PASSWD,
@@ -198,4 +209,5 @@
 		SET		PASSWD = #{authNum}
 		WHERE	EMAIL = #{email}
 	</update>
+	
 </mapper>

@@ -11,5 +11,6 @@ public interface PharmacyService {
 	public List<PharmacyDTO> searchPharmacyByName(String name);
 	public List<PharmacyDTO> searchPharmacyBySidoCdNm(String sidoCdNm);
 	public PharmacyDTO getPharmacyDetails(long pharmacyId);
+	public List<PharmacyDTO> selectNearestPharmacies(double latitude, double longitude);
 	
 }

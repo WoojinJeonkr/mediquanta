@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,7 +69,7 @@ public class HospitalController {
         return "hospital/hospitalDetail";
     }
 	
-	// TODO : 2. 병원 정보 수정 기능 개발 (관리자인 경우)
+	// TODO : 1.hospitalUpdate.html script 부분 수정하기 - controller부터 mapper까지의 로직 제대로 작성했는지 확인하기
 	@GetMapping("/viewHospitalUpdate")
 	public String viewHospitalUpdate(@RequestParam("hospitalId") long hospitalId, Model model) {
 		HospitalDTO hospitalDTO = hospitalService.getHospitalDetails(hospitalId);
@@ -78,13 +79,11 @@ public class HospitalController {
 	
 	@PostMapping("/updateHospInfo")
 	@ResponseBody
-	public String updateHospInfo(@RequestBody HospitalDTO hospitalDTO) {
-		String isUpdated = "n";
-		HospitalDTO hospital = hospitalService.udpateHospInfo(hospitalDTO.getHospitalId());
-		if (hospital != null) isUpdated = "y";
-		return isUpdated;
+	public String updateHospInfo(@ModelAttribute HospitalDTO hospitalDTO) {
+		hospitalService.udpateHospInfo(hospitalDTO);
+		return "hospital/details/" + hospitalDTO.getHospitalId();
 	}
 	
-	// TODO : 3. 병원 정보 삭제 기능 개발 (관리자인 경우)
+	// TODO : 2. 병원 정보 삭제 기능 개발 (관리자인 경우)
 	
 }

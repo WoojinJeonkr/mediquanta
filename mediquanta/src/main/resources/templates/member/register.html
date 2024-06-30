@@ -147,8 +147,8 @@
 	            }
 	            
 	            document.getElementById('zipcode').value = data.zonecode;
-	            document.getElementById('roadAddress').value = fullRoadAddr;
-	            document.getElementById('landAddress').value = data.jibunAddress;
+	            document.getElementById('roadAddress').value = fullRoadAddr ? fullRoadAddr : "-";
+	            document.getElementById('landAddress').value = data.jibunAddress ? data.jibunAddress : "-";
 	            
 	        }
 	    }).open();

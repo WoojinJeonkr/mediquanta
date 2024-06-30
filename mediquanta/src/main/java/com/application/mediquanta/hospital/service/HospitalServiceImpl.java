@@ -2,7 +2,9 @@ package com.application.mediquanta.hospital.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,11 +102,29 @@ public class HospitalServiceImpl implements HospitalService {
 	public HospitalDTO getHospitalDetails(long hospitalId) {
 		return hospitalDAO.getHospitalDetails(hospitalId);
 	}
+	
+	@Override
+	public List<HospitalDTO> selectNearestHospitals(double latitude, double longitude) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("latitude", latitude);
+        params.put("longitude", longitude);
+		return hospitalDAO.selectNearestHospitals(params);
+	}
+	
+	@Override
+	 public List<Map<String, Object>> getHospitalTypeCounts() {
+		return hospitalDAO.getHospitalTypeCounts();
+    }
 
 	@Override
-	public HospitalDTO udpateHospInfo(long hospitalId) {
-		// TODO Auto-generated method stub
-		return null;
+	public void udpateHospInfo(HospitalDTO hospitalDTO) {
+		try {
+			hospitalDTO.setUpdatedAt(new Date());
+			hospitalDAO.udpateHospInfo(hospitalDTO);
+			log.info("병원 정보 업데이트 완료");
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+		}
 	}
 
 }

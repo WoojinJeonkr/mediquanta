@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
 <script>
-
 	$().ready(function() {
 		$("#hospitalBtn").click(function() {
 			$.ajax({
@@ -36,7 +35,6 @@
 			});
 		});
 	});
-	
 </script>
 </head>
 <body>
@@ -78,7 +76,6 @@
 			        </div>
 			        <div class="card mb-4 mb-lg-0">
 			          <div class="card-body">
-			          	<!-- a태그는 Get 요청만 가능하다 -->
 			          	<p class="mb-4"><span class="font-italic me-1"><a class="text-muted" th:href="@{/member/memberList}">회원 관리</a></span></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">병원 현황</span><button id="hospitalBtn" class="btn btn-sm btn-outline-secondary float-end">불러오기</button></p><hr>
      				    <p class="mb-4"><span class="font-italic me-1">약국 현황</span><button id="pharmacyBtn" class="btn btn-sm btn-outline-secondary float-end">불러오기</button></p><hr>
@@ -146,14 +143,23 @@
 			        </div>
 			        <div class="row">
 			          <div class="col-md-6">
-			            <div class="card mb-4 mb-md-0">
+			            <div class="card mb-md-0">
 			              <div class="card-body">
 			                <p class="mb-4"><span class="text-primary font-italic me-1">현재 등록된 병원 현황</span></p>
-			                <!-- <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div> -->
+			                <table>
+						        <thead>
+						            <tr>
+						                <th>TYPE</th>
+						                <th>COUNT</th>
+						            </tr>
+						        </thead>
+						        <tbody>
+						            <tr th:each="item : ${hospitalTypeCounts}">
+						                <td th:text="${item.TYPE}"></td>
+						                <td th:text="${item.COUNT}"></td>
+						            </tr>
+						        </tbody>
+						    </table>
 			              </div>
 			            </div>
 			          </div>

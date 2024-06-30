@@ -62,4 +62,8 @@ public class PharmacyController {
         model.addAttribute("editMode", false);
         return "pharmacy/pharmacyDetail";
     }
+	
+	// TODO : 3. 약국 정보 수정 기능 개발 (관리자인 경우)
+	
+	// TODO : 4. 약국 정보 삭제 기능 개발 (관리자인 경우)
 }

@@ -1,6 +1,7 @@
 package com.application.mediquanta.pharmacy.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,4 +15,5 @@ public interface PharmacyDAO {
 	public PharmacyDTO searchPharmacyByName(String name);
 	public List<PharmacyDTO> searchPharmacyBySidoCdNm(String sidoCdNm);
 	public PharmacyDTO getPharmacyDetails(long pharmacyId);
+	public List<PharmacyDTO> selectNearestPharmacies(Map<String, Object> params);
 }

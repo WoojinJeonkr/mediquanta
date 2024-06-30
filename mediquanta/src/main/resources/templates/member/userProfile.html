@@ -136,31 +136,16 @@
 			            <div class="card mb-4 mb-md-0">
 			              <div class="card-body">
 			                <p class="mb-4"><span class="text-primary font-italic me-1">근처 병원 현황</span></p>
-			                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-			                <div class="progress rounded mb-2" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
+			                <div class="col-md-12 mb-3" th:each="hospital : ${hospitals}">
+                                <a th:href="@{/hospital/details(hospitalId=${hospital.hospitalId})}">
+                                	<span class="card-title" th:text="${hospital.hospitalName}" style="font-size: 1.25rem; font-weight: bold;"></span>
+                                </a>
+                                <p class="card-text">
+                                    <strong>병원 타입:</strong> <span th:text="${hospital.type}"></span> <br>
+                                    <strong>주소:</strong> <span th:text="${hospital.address}"></span> <br>
+                                    <strong>전화번호:</strong> <span th:text="${hospital.phone}"></span> <br>
+                                </p>
+                            </div>
 			              </div>
 			            </div>
 			          </div>
@@ -168,31 +153,15 @@
 			            <div class="card mb-4 mb-md-0">
 			              <div class="card-body">
 			                <p class="mb-4"><span class="text-primary font-italic me-1">근처 약국 현황</span></p>
-			                <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">Website Markup</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">One Page</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">Mobile Template</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
-			                <p class="mt-4 mb-1" style="font-size: .77rem;">Backend API</p>
-			                <div class="progress rounded mb-2" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div>
+			                <div class="col-md-12 mb-3" th:each="pharmacy : ${pharmacies}">
+                                <a th:href="@{/pharmacy/details(pharmacyId=${pharmacy.pharmacyId})}">
+                                	<span class="card-title" th:text="${pharmacy.pharmacyName}" style="font-size: 1.25rem; font-weight: bold;"></span>
+                                </a>
+                                <p class="card-text">
+                                    <strong>주소:</strong> <span th:text="${pharmacy.address}"></span> <br>
+                                    <strong>전화번호:</strong> <span th:text="${pharmacy.phone}"></span> <br>
+                                </p>
+                            </div>
 			              </div>
 			            </div>
 			          </div>

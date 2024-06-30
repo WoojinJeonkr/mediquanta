@@ -2,7 +2,8 @@ package com.application.mediquanta.member.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.application.mediquanta.email.entity.EmailMessage;
 import com.application.mediquanta.email.service.EmailService;
+import com.application.mediquanta.hospital.dto.HospitalDTO;
+import com.application.mediquanta.hospital.service.HospitalService;
 import com.application.mediquanta.member.dto.MemberDTO;
 import com.application.mediquanta.member.service.MemberService;
+import com.application.mediquanta.pharmacy.dto.PharmacyDTO;
+import com.application.mediquanta.pharmacy.service.PharmacyService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +44,12 @@ public class MemberController {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private HospitalService hospitalService;
+	
+	@Autowired
+	private PharmacyService pharmacyService;
 	
 	@GetMapping("/register")
 	public String register() {
@@ -89,8 +100,6 @@ public class MemberController {
 			session.setAttribute("memberId", memberDTO.getMemberId());
 			session.setAttribute("role", checkRole(memberDTO.getMemberId()));
 			isValidMember = "y";
-			memberDTO.setLastLogin(new Date());
-			
 		}
 		return isValidMember;
 	}
@@ -137,7 +146,16 @@ public class MemberController {
 		String role = (String)session.getAttribute("role");
 		String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
 		String memberId = (String)session.getAttribute("memberId");
-		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
+		MemberDTO memberDTO = memberService.getUserInfo(memberId);
+		Map<String, Double> location = memberService.kakaoLocalAPI(memberDTO.getRoadAddress());
+		List<HospitalDTO> hospitals = hospitalService.selectNearestHospitals(location.get("latitude").doubleValue(), location.get("longitude").doubleValue());
+		List<PharmacyDTO> pharmacies = pharmacyService.selectNearestPharmacies(location.get("latitude").doubleValue(), location.get("longitude").doubleValue());
+		List<Map<String, Object>> hospitalTypeCounts = hospitalService.getHospitalTypeCounts();
+        
+		model.addAttribute("memberDTO", memberDTO);
+		model.addAttribute("hospitals", hospitals);
+		model.addAttribute("pharmacies", pharmacies);
+		model.addAttribute("hospitalTypeCounts", hospitalTypeCounts);
 		return "member/" + profilePage;
 	}
 	

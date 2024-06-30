@@ -124,4 +124,69 @@
 		WHERE	HOSPITAL_ID = #{hospitalId}
 	</select>
 	
+	<!-- 근처 병원 조회하기 -->
+	<select id="selectNearestHospitals" parameterType="map" resultType="HospitalDTO">
+	    <![CDATA[
+		    SELECT *
+		    FROM (
+		        SELECT
+		            HOSPITAL.*,
+		            6371 * ACOS(
+		                COS(RADIANS(#{latitude})) * 
+		                COS(RADIANS(HOSPITAL.LATITUDE)) * 
+		                COS(RADIANS(HOSPITAL.LONGITUDE) - RADIANS(#{longitude})) + 
+		                SIN(RADIANS(#{latitude})) * 
+		                SIN(RADIANS(HOSPITAL.LATITUDE))
+		            ) AS DISTANCE
+		        FROM HOSPITAL
+		    ) DATA
+		    WHERE DATA.DISTANCE < 5
+		    ORDER BY DATA.DISTANCE
+		    LIMIT 3;
+	    ]]>
+	</select>
+	
+	<!-- 등록된 병원 현황 조회 -->
+	<select id="getHospitalTypeCounts" resultType="map">
+        SELECT TYPE, COUNT(*) AS COUNT
+		FROM HOSPITAL
+		GROUP BY TYPE
+		ORDER BY COUNT DESC
+    </select>
+	
+	<!-- 병원 정보 수정 -->
+	<update id="udpateHospInfo" parameterType="HospitalDTO">
+	    UPDATE
+	    		HOSPITAL
+	    <set>
+			<if test="hospitalName != null and hospitalName != ''">
+				HOSPITAL_NAME = #{hospitalName},
+			</if>
+			<if test="email != null and email != ''">
+				TYPE = #{type}, 
+			</if>
+				SIDOCDNM = #{sidoCdNm},
+				SGGUCDNM = #{sgguCdNm},
+			<if test="address != null and adress != ''">
+				ADDRESS = #{address},
+			</if>
+			<if test="phone != null and phone != ''">
+				PHONE = #{phone},
+			</if>
+			<if test="latitude != null and latitude != ''">
+				LATITUDE = #{latitude},
+			</if>
+			<if test="longitude != null and longitude != ''">
+				LONGITUDE = #{longitude},
+			</if>
+			<if test="hospitalUrl != null and hospitalUrl != ''">
+				HOSPITAL_URL = #{hospitalUrl}
+			</if>
+			<if test="updateAt != null">
+				UPDATED_AT = #{updateAt}
+			</if>
+	    </set>
+	    WHERE HOSPITAL_ID = #{hospitalId}
+	</update>
+	
 </mapper>

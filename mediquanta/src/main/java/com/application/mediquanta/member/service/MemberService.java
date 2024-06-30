@@ -16,6 +16,7 @@ public interface MemberService {
 	public String checkValidEmail(String email);
 	public String checkRole(String memberId);
 	public boolean login(MemberDTO memberDTO);
+	public Map<String, Double> kakaoLocalAPI(String query);
 	public MemberDTO getUserInfo(String memberId);
 	public void updateMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException;
 	public void signOut(String memberId);

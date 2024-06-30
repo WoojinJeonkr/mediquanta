@@ -2,7 +2,9 @@ package com.application.mediquanta.pharmacy.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,6 +95,14 @@ public class PharmacyServiceImpl implements PharmacyService {
 	@Override
 	public PharmacyDTO getPharmacyDetails(long pharmacyId) {
 		return pharmacyDAO.getPharmacyDetails(pharmacyId);
+	}
+
+	@Override
+	public List<PharmacyDTO> selectNearestPharmacies(double latitude, double longitude) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("latitude", latitude);
+        params.put("longitude", longitude);
+		return pharmacyDAO.selectNearestPharmacies(params);
 	}
     
 }

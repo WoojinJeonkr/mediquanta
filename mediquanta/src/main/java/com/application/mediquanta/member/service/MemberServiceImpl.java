@@ -3,24 +3,36 @@ package com.application.mediquanta.member.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.mediquanta.address.dto.Documents;
+import com.application.mediquanta.address.dto.LocationInfoRes;
 import com.application.mediquanta.member.dao.MemberDAO;
 import com.application.mediquanta.member.dto.MemberDTO;
+import com.application.mediquanta.member.dto.UpdateLastLoginRequest;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 
 	@Value("${file.repo.path}")
     private String fileRepositoryPath;
+	
+	@Value("${kakao.rest-api.key}")
+	private String kakaoApiKey;
 	
 	@Autowired
 	private MemberDAO memberDAO;
@@ -64,7 +76,8 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public String checkValidNickname(String nickname) {
 		String isValidNickname = "n";
-		if (memberDAO.checkValidNickname(nickname) == null) {
+		String checkNickname = memberDAO.checkValidNickname(nickname);
+		if (checkNickname == null || checkNickname.equals(nickname)) {
 			isValidNickname = "y";
 		}
 		return isValidNickname;
@@ -73,7 +86,8 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public String checkValidEmail(String email) {
 		String isValidEmail = "n";
-		if (memberDAO.checkValidEmail(email) == null) {
+		String checkEmail = memberDAO.checkValidEmail(email);
+		if (checkEmail == null || checkEmail.equals(email)) {
 			isValidEmail = "y";
 		}
 		return isValidEmail;
@@ -83,7 +97,7 @@ public class MemberServiceImpl implements MemberService {
 	public String checkRole(String memberId) {
 		return memberDAO.checkRole(memberId);
 	}
-
+	
 	@Override
 	public boolean login(MemberDTO memberDTO) {
 		
@@ -91,6 +105,10 @@ public class MemberServiceImpl implements MemberService {
 		if (validateData != null) {
 			if (passwordEncoder.matches(memberDTO.getPasswd(), validateData.getPasswd())
 					&& validateData.getActiveYn().equals("y")) {
+				UpdateLastLoginRequest loginRequest = new UpdateLastLoginRequest();
+				loginRequest.setMemberId(memberDTO.getMemberId());
+				loginRequest.setLastLogin(new Date());
+				memberDAO.updateLastLogin(loginRequest);
 				return true;
 			}
 		}
@@ -102,6 +120,23 @@ public class MemberServiceImpl implements MemberService {
 	public MemberDTO getUserInfo(String memberId) {
 		return memberDAO.getUserInfo(memberId);
 	}
+	
+	@Override
+	public Map<String, Double> kakaoLocalAPI(String query) {
+        String url = "https://dapi.kakao.com/v2/local/search/address.json?query=" + query;
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "KakaoAK "+ kakaoApiKey);
+        headers.set("content-type", "application/json;charset=UTF-8");
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ResponseEntity<LocationInfoRes> responseLocationInfo = restTemplate.exchange(url, HttpMethod.GET, entity, LocationInfoRes.class);
+        Documents[] locationDoc = responseLocationInfo.getBody().getDocuments().clone();
+        Map<String, Double> location = new HashMap<String, Double>();
+        location.put("latitude", locationDoc[0].getY());
+        location.put("longitude", locationDoc[0].getX());
+        return location;
+	}
+
 
 	@Override
 	public void updateMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException {
