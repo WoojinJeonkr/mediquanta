@@ -1,6 +1,7 @@
 package com.application.mediquanta.hospital.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.application.mediquanta.hospital.dto.HospitalDTO;
 import com.application.mediquanta.hospital.service.HospitalService;
+import com.application.mediquanta.pharmacy.dto.PharmacyDTO;
+import com.application.mediquanta.pharmacy.service.PharmacyService;
 import com.application.mediquanta.util.SearchData;
 
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +28,9 @@ public class HospitalController {
 	
 	@Autowired
 	private HospitalService hospitalService;
+	
+	@Autowired
+	private PharmacyService pharmacyService;
 	
 	@GetMapping("/saveList")
 	@ResponseBody
@@ -65,11 +71,12 @@ public class HospitalController {
 	@GetMapping("/details")
     public String viewHospitalDetails(@RequestParam("hospitalId") long hospitalId, Model model) {
         HospitalDTO hospitalDTO = hospitalService.getHospitalDetails(hospitalId);
+        List<PharmacyDTO> pharmacies = pharmacyService.selectNearestPharmacies(hospitalDTO.getLatitude(), hospitalDTO.getLongitude());
         model.addAttribute("hospital", hospitalDTO);
+        model.addAttribute("pharmacies", pharmacies);
         return "hospital/hospitalDetail";
     }
 	
-	// TODO : 1.hospitalUpdate.html script 부분 수정하기 - controller부터 mapper까지의 로직 제대로 작성했는지 확인하기
 	@GetMapping("/viewHospitalUpdate")
 	public String viewHospitalUpdate(@RequestParam("hospitalId") long hospitalId, Model model) {
 		HospitalDTO hospitalDTO = hospitalService.getHospitalDetails(hospitalId);
@@ -77,8 +84,14 @@ public class HospitalController {
 		return "hospital/hospitalUpdate";
 	}
 	
-	@PostMapping("/updateHospInfo")
+	@GetMapping("/findLoc")
 	@ResponseBody
+    public Map<String, Double> getLatitudeLongitude(@RequestParam("address") String address) {
+        return hospitalService.kakaoLocalAPI(address);
+    }
+	
+	// TODO : 1. 병원 정보 update 기능 확인하기 (back에서 로직 성공 후 주소 이동 시 실패)
+	@PostMapping("/updateHospInfo")
 	public String updateHospInfo(@ModelAttribute HospitalDTO hospitalDTO) {
 		hospitalService.udpateHospInfo(hospitalDTO);
 		return "hospital/details/" + hospitalDTO.getHospitalId();

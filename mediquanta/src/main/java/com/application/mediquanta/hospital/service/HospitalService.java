@@ -12,6 +12,7 @@ public interface HospitalService {
 	public List<HospitalDTO> searchHospitalBySidoCdNm(String sidoCdNm);
 	public List<HospitalDTO> searchHospitalByType(String type);
 	public HospitalDTO getHospitalDetails(long hospitalId);
+	public Map<String, Double> kakaoLocalAPI(String query);
 	public List<HospitalDTO> selectNearestHospitals(double latitude, double longitude);
 	public List<Map<String, Object>> getHospitalTypeCounts();
 	public void udpateHospInfo(HospitalDTO hospitalDTO);

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.application.mediquanta.hospital.dto.HospitalDTO;
+import com.application.mediquanta.hospital.service.HospitalService;
 import com.application.mediquanta.pharmacy.dto.PharmacyDTO;
 import com.application.mediquanta.pharmacy.service.PharmacyService;
 import com.application.mediquanta.util.SearchData;
@@ -22,6 +24,9 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/pharmacy")
 public class PharmacyController {
 
+	@Autowired
+	private HospitalService hospitalService;
+	
 	@Autowired
 	private PharmacyService pharmacyService;
 	
@@ -58,8 +63,9 @@ public class PharmacyController {
 	@GetMapping("/details")
     public String viewPharmacyDetails(@RequestParam("pharmacyId") long pharmacyId, Model model) {
 		PharmacyDTO pharmacyDTO = pharmacyService.getPharmacyDetails(pharmacyId);
+		List<HospitalDTO> hospitals = hospitalService.selectNearestHospitals(pharmacyDTO.getLatitude(), pharmacyDTO.getLongitude());
         model.addAttribute("pharmacy", pharmacyDTO);
-        model.addAttribute("editMode", false);
+        model.addAttribute("hospitals", hospitals);
         return "pharmacy/pharmacyDetail";
     }
 	

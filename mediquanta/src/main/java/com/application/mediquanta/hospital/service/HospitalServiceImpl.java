@@ -8,8 +8,16 @@ import java.util.Map;
 
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.application.mediquanta.address.dto.Documents;
+import com.application.mediquanta.address.dto.LocationInfoRes;
 import com.application.mediquanta.hospital.dao.HospitalDAO;
 import com.application.mediquanta.hospital.dto.HospitalApiDTO;
 import com.application.mediquanta.hospital.dto.HospitalDTO;
@@ -26,6 +34,9 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Autowired
     private HospitalDAO hospitalDAO;
+    
+    @Value("${kakao.rest-api.key}")
+	private String kakaoApiKey;
 
     private final int DEFAULT_NUM_OF_ROWS = 100;
 
@@ -115,6 +126,22 @@ public class HospitalServiceImpl implements HospitalService {
 	 public List<Map<String, Object>> getHospitalTypeCounts() {
 		return hospitalDAO.getHospitalTypeCounts();
     }
+	
+	@Override
+	public Map<String, Double> kakaoLocalAPI(String query) {
+		String url = "https://dapi.kakao.com/v2/local/search/address.json?query=" + query;
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "KakaoAK "+ kakaoApiKey);
+        headers.set("content-type", "application/json;charset=UTF-8");
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ResponseEntity<LocationInfoRes> responseLocationInfo = restTemplate.exchange(url, HttpMethod.GET, entity, LocationInfoRes.class);
+        Documents[] locationDoc = responseLocationInfo.getBody().getDocuments().clone();
+        Map<String, Double> location = new HashMap<String, Double>();
+        location.put("latitude", locationDoc[0].getY());
+        location.put("longitude", locationDoc[0].getX());
+        return location;
+	}
 
 	@Override
 	public void udpateHospInfo(HospitalDTO hospitalDTO) {

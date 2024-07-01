@@ -140,7 +140,7 @@
 		            ) AS DISTANCE
 		        FROM HOSPITAL
 		    ) DATA
-		    WHERE DATA.DISTANCE < 5
+		    WHERE DATA.DISTANCE < 3
 		    ORDER BY DATA.DISTANCE
 		    LIMIT 3;
 	    ]]>
