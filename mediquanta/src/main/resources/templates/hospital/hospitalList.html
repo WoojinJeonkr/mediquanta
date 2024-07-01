@@ -149,7 +149,27 @@
         });
     }
     
+    function deleteHospital(button) {
+        var hospitalId = $(button).data('hospital-id');
+
+        if (confirm('정말로 병원 정보를 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/hospital/deleteHospital',
+                method: 'POST',
+                data: { hospitalId: hospitalId },
+                success: function() {
+                    location.reload(true);
+                },
+            });
+        }
+    }
+    
     function displayHospitalList(page) {
+    	if (!hospitalData || hospitalData[0] === null) {
+            $("table tbody").empty().append('<tr><td colspan="5" style="text-align: center;">검색하신 병원이 존재하지 않습니다.</td></tr>');
+            return;
+        }
+    	
         var startIndex = (page - 1) * rowOfNums;
         var endIndex = startIndex + rowOfNums;
         var pagedData = hospitalData.slice(startIndex, endIndex);
@@ -165,7 +185,7 @@
             row.append($("<td></td>").html('<div class="widget-26-hospital-update"><span class="text-muted time" id="formattedDate">' + formattedDate + '</span></div>'));
             if ($("#role").val() === 'ADMIN') {
                 row.append($("<td></td>").html('<div class="widget-26-hospital-edit" style="text-align: center;"><a href="/hospital/viewHospitalUpdate?hospitalId=' + hospital.hospitalId + '"><i class="fas fa-pen"></i></a></div>'));
-                row.append($("<td></td>").html('<div class="widget-26-hospital-delete" style="text-align: center;"><a href="#" onclick="deleteHospital(' + hospital.hospitalId + ')"><i class="fas fa-trash"></i></a></div>'));
+                row.append($("<td></td>").html('<div class="widget-26-hospital-delete" style="text-align: center;"><button class="delete-hospital" data-hospital-id="' + hospital.hospitalId + '" onclick="deleteHospital(this)"><i class="fas fa-trash"></i></button></div>'));
             } else {
                 row.append($("<td></td>").html('<div class="widget-26-hospital-starred" style="text-align: center;"><a href="#"><i class="far fa-star"></i></a></div>'));
             }

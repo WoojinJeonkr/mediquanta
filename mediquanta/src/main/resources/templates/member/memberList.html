@@ -50,9 +50,9 @@
 											<input type="button" value="회원 정보 수정" data-mdb-button-init
 												data-mdb-ripple-init class="btn btn-secondary btn-sm ms-1"
 												th:onclick="|location.href='@{/member/updateProfile}'|">
-											<input type="button" value="회원 탈퇴" data-mdb-button-init data-mdb-ripple-init
+											<input type="button" value="회원 삭제" data-mdb-button-init data-mdb-ripple-init
 												class="btn btn-danger btn-sm ms-1"
-												th:onclick="|location.href='@{/member/signOut}'|">
+												th:onclick="|location.href='@{/member/deleteMember}'|">
 										</span>
 										<button type="button" data-mdb-button-init data-mdb-ripple-init
 											class="btn btn-primary btn-sm ms-1">Message</button>
@@ -117,9 +117,9 @@
 													<tr>
 														<th><span>User</span></th>
 														<th><span>Created</span></th>
+														<th><span>Last Login</span></th>
 														<th class="text-center"><span>Status</span></th>
 														<th><span>Email</span></th>
-														<th>&nbsp;</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -134,6 +134,8 @@
 														</td>
 														<td th:text="${#dates.format(member.createdAt, 'yyyy-MM-dd')}"
 															id="createdAt"></td>
+														<td th:text="${#dates.format(member.lastLogin, 'yyyy-MM-dd')}"
+														id="lastLogin"></td>
 														<td class="text-center">
 															<span class="label label-default">
 																<span class="fa-stack"
@@ -149,20 +151,6 @@
 														<td>
 															<a href="#" th:href="${'mailto:' + member.email}"
 																th:text="${member.email}"></a>
-														</td>
-														<td style="width: 10%;" class="table-actions" th:if="${member.role != 'ADMIN'}">
-															<a href="#" class="table-link danger">
-																<span class="fa-stack">
-																	<i class="fas fa-trash-alt"></i>
-																</span>
-															</a>
-														</td>
-														<td style="width: 10%;" class="table-actions" th:unless="${member.role != 'ADMIN'}">
-															<a href="#" class="table-link danger">
-																<span class="fa-stack">
-																	&emsp;
-																</span>
-															</a>
 														</td>
 													</tr>
 												</tbody>

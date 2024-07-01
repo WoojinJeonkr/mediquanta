@@ -210,4 +210,12 @@
 		WHERE	EMAIL = #{email}
 	</update>
 	
+	<!-- 회원 삭제 -->
+	<delete id="deleteMember" parameterType="map">
+		<![CDATA[
+	        DELETE FROM MEMBER
+	        WHERE last_login < DATE_SUB(#{date}, INTERVAL 1 YEAR) AND ACTIVE_YN = 'n'
+	    ]]>
+    </delete>
+	
 </mapper>

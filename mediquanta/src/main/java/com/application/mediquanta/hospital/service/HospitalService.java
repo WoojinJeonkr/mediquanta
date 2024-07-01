@@ -15,5 +15,6 @@ public interface HospitalService {
 	public Map<String, Double> kakaoLocalAPI(String query);
 	public List<HospitalDTO> selectNearestHospitals(double latitude, double longitude);
 	public List<Map<String, Object>> getHospitalTypeCounts();
-	public void udpateHospInfo(HospitalDTO hospitalDTO);
+	public void updateHospInfo(HospitalDTO hospitalDTO);
+	public void deleteHospital(long hospitalId);
 }

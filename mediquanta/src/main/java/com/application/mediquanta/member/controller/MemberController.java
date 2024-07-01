@@ -193,4 +193,11 @@ public class MemberController {
 		return "member/memberList";
 	}
 	
+	
+	@GetMapping("/deleteMember")
+	public String deleteMember() {
+		memberService.deleteMember();
+		return "redirect:/member/memberList";
+	}
+	
 }

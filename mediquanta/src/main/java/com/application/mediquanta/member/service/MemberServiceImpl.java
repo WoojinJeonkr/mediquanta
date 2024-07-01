@@ -194,4 +194,9 @@ public class MemberServiceImpl implements MemberService {
 		memberDAO.setTempPassword(email, passwordEncoder.encode(passwd));
 	}
 
+	@Override
+	public void deleteMember() {
+		memberDAO.deleteMember(new Date());
+	}
+
 }

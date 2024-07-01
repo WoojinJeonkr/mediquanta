@@ -4,8 +4,8 @@
 	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
-<title>Mediquanta | 병원 정보 수정</title>
-<link th:href="@{/css/hospital/hospitalDetail.css}" type="text/css" rel="stylesheet" />
+<title>Mediquanta | 약국 정보 수정</title>
+<link th:href="@{/css/pharmacy/pharmacyDetail.css}" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
 <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
 <script>
@@ -103,7 +103,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: '/hospital/findLoc',
+                url: '/pharmacy/findLoc',
                 data: {
                     address: address
                 },
@@ -135,14 +135,12 @@
     }
 	
 	function checkUpdateForm() {
-	    var type = $("#type").val();
 	    var address = $("#address").val();
 	    var phone = $("#phone").val();
 	    var latitude = $("#latitude").val();
 	    var longitude = $("#longitude").val();
-	    var hospitalUrl = $("#hospitalUrl").val();
 
-	    if (type === '' || address === '' || phone === '' || latitude === '' || longitude === '' || hospitalUrl === '') {
+	    if (address === '' || phone === '' || latitude === '' || longitude === '') {
 	        alert('모든 필수 입력 필드를 채워주세요.');
 	        return false;
 	    }
@@ -157,12 +155,6 @@
 	    var sgguCdNm = document.getElementById('sgguCdNm').value;
 	    if (sidoCdNm === '' || sgguCdNm === '') {
 	        alert('주소를 선택해주세요.');
-	        return false;
-	    }
-
-	    var urlRegex = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;
-	    if (hospitalUrl !== '' && !hospitalUrl.match(urlRegex)) {
-	        alert('유효한 홈페이지 URL 형식이 아닙니다.');
 	        return false;
 	    }
 
@@ -184,8 +176,8 @@
 				        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
 				          <ol class="breadcrumb mb-0">
 				            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
-				            <li class="breadcrumb-item"><a th:href="@{/hospital}">병원 목록</a></li>
-				            <li class="breadcrumb-item active" aria-current="page" th:text="${hospital.hospitalName}"></li>
+				            <li class="breadcrumb-item"><a th:href="@{/pharmacy}">약국 목록</a></li>
+				            <li class="breadcrumb-item active" aria-current="page" th:text="${pharmacy.pharmacyName}"></li>
 				          </ol>
 				        </nav>
 				      </div>
@@ -194,33 +186,10 @@
 						<div class="col-lg-12 card-margin">
 							<div class="card mb-0">
 			          			<div class="card-body">
-			          				<h1 class="hospital-name mb-4" th:text="${hospital.hospitalName}"></h1>
-								    <form th:object="${hospital}" th:action="@{/hospital/updateHospInfo}" th:onsubmit="return checkUpdateForm();" method="post" enctype="multipart/form-data" novalidate>
-										<input type="hidden" th:field="*{hospitalId}" class="form-control form-control-lg" readonly />
-										<input type="hidden" th:field="*{hospitalName}" class="form-control form-control-lg" readonly />
-										<div data-mdb-input-init class="form-outline mb-4">
-											<label class="form-label" for="type">병원 유형</label>
-											<select class="form-control" th:field="*{type}">
-									            <option id="상급종합" value="상급종합">상급종합병원</option>
-									            <option id="종합병원" value="종합병원">종합병원</option>
-									            <option id="병원" value="병원">병원</option>
-									            <option id="요양병원" value="요양병원">요양병원</option>
-									            <option id="정신병원" value="정신병원">정신병원</option>
-									            <option id="치과병원" value="치과병원">치과병원</option>
-									            <option id="치과의원" value="치과의원">치과의원</option>
-									            <option id="조산원" value="조산원">조산원</option>
-									            <option id="보건소" value="보건소">보건소</option>
-									            <option id="보건지소" value="보건지소">보건지소</option>
-									            <option id="보건진료소" value="보건진료소">보건진료소</option>
-									            <option id="모자보건센타" value="모자보건센타">모자보건센타</option>
-									            <option id="보건의료원" value="보건의료원">보건의료원</option>
-									            <option id="한방종합병원" value="한방종합병원">한방종합병원</option>
-									            <option id="한방병원" value="한방병원">한방병원</option>
-									            <option id="한의원" value="한의원">한의원</option>
-									            <option id="한약방" value="한약방">한약방</option>
-									            <option id="병의원" value="병의원">병의원</option>
-									        </select>
-										</div>
+			          				<h1 class="pharmacy-name mb-4" th:text="${pharmacy.pharmacyName}"></h1>
+								    <form th:object="${pharmacy}" th:action="@{/pharmacy/updatePharmacyInfo}" th:onsubmit="return checkUpdateForm();" method="post" enctype="multipart/form-data" novalidate>
+										<input type="hidden" th:field="*{pharmacyId}" class="form-control form-control-lg" readonly />
+										<input type="hidden" th:field="*{pharmacyName}" class="form-control form-control-lg" readonly />
 										<div data-mdb-input-init class="form-outline mb-4">
 											<label class="form-label" for="sidoCdNm">주소 (시, 도)</label>
 											<select class="form-control" id="sidoCdNm" name="sidoCdNm" onchange="updateSubRegions(this)">
@@ -250,13 +219,9 @@
 											<label class="form-label" for="longitude">경도</label>
 											<input type="text"th:field="*{longitude}" placeholder="경도를 입력하세요" class="form-control form-control-lg" readonly />
 										</div>
-										<div data-mdb-input-init class="form-outline mb-4">
-											<label class="form-label" for="hospitalUrl">홈페이지</label>
-											<input type="text"th:field="*{hospitalUrl}" placeholder="홈페이지를 입력하세요" class="form-control form-control-lg" />
-										</div>
 										<div class="mb-4"></div>
 										<button class="btn btn-primary btn-sm btn-block" style="float:right;" type="submit">수정</button>
-										<a th:href="@{/hospital}">취소</a>
+										<a th:href="@{/pharmacy}">취소</a>
 									</form>
 								</div>
 							</div>

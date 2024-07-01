@@ -119,7 +119,27 @@
         });
     }
     
+    function deletePharmacy(button) {
+        var pharmacyId = $(button).data('pharmacy-id');
+
+        if (confirm('정말로 약국 정보를 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/pharmacy/deletePharmacy',
+                method: 'POST',
+                data: { pharmacyId: pharmacyId },
+                success: function() {
+                    location.reload(true);
+                },
+            });
+        }
+    }
+    
     function displayPharmacyList(page) {
+    	if (!pharmacyData || pharmacyData[0] === null) {
+            $("table tbody").empty().append('<tr><td colspan="5" style="text-align: center;">검색하신 약국이 존재하지 않습니다.</td></tr>');
+            return;
+        }
+    	
         var startIndex = (page - 1) * rowOfNums;
         var endIndex = startIndex + rowOfNums;
         var pagedData = pharmacyData.slice(startIndex, endIndex);
@@ -134,8 +154,8 @@
             row.append($("<td></td>").html('<div class="widget-26-hospital-info"><p class="m-0"><span class="address">' + pharmacy.address + '</span></p></div>'));
             row.append($("<td></td>").html('<div class="widget-26-hospital-update"><span class="text-muted time">' + formattedDate + '</span></div>'));
             if ($("#role").val() === 'ADMIN') {
-            	row.append($("<td></td>").html('<div class="widget-26-hospital-edit" style="text-align: center;"><a href="#" class="editParmacyBtn" data-pharmacyid="' + pharmacy.pharmacyId + '"><i class="fas fa-pen"></i></a></div>'));
-                row.append($("<td></td>").html('<div class="widget-26-hospital-delete" style="text-align: center;"><a href="#" onclick="deletePharmacy(' + pharmacy.pharmacyId + ')"><i class="fas fa-trash"></i></a></div>'));
+            	row.append($("<td></td>").html('<div class="widget-26-hospital-edit" style="text-align: center;"><a href="/pharmacy/viewPharmacyUpdate?pharmacyId=' + pharmacy.pharmacyId + '"><i class="fas fa-pen"></i></a></div>'));
+                row.append($("<td></td>").html('<div class="widget-26-hospital-delete" style="text-align: center;"><button class="delete-pharmacy" data-pharmacy-id="' + pharmacy.pharmacyId + '" onclick="deletePharmacy(this)"><i class="fas fa-trash"></i></button></div>'));
             } else {
             	row.append($("<td></td>").html('<div class="widget-26-hospital-starred" style="text-align: center;"><a href="#"><i class="far fa-star"></i></a></div>'));
             }

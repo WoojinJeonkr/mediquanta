@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -90,13 +91,15 @@ public class HospitalController {
         return hospitalService.kakaoLocalAPI(address);
     }
 	
-	// TODO : 1. 병원 정보 update 기능 확인하기 (back에서 로직 성공 후 주소 이동 시 실패)
 	@PostMapping("/updateHospInfo")
 	public String updateHospInfo(@ModelAttribute HospitalDTO hospitalDTO) {
-		hospitalService.udpateHospInfo(hospitalDTO);
-		return "hospital/details/" + hospitalDTO.getHospitalId();
+		hospitalService.updateHospInfo(hospitalDTO);
+		return "redirect:/hospital";
 	}
 	
-	// TODO : 2. 병원 정보 삭제 기능 개발 (관리자인 경우)
-	
+	@PostMapping("/deleteHospital")
+	public ResponseEntity<?> deleteHospital(@RequestParam("hospitalId") long hospitalId) {
+		hospitalService.deleteHospital(hospitalId);
+		return ResponseEntity.ok().build();
+	}
 }

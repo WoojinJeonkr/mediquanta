@@ -116,4 +116,36 @@
 	    ]]>
 	</select>
 	
+	<!-- 약국 정보 수정 -->
+	<update id="updatePharmacyInfo" parameterType="PharmacyDTO">
+	    UPDATE
+	    		PHARMACY
+	    <set>
+				SIDOCDNM = #{sidoCdNm},
+				SGGUCDNM = #{sgguCdNm},
+			<if test="address != null and address != ''">
+				ADDRESS = #{address},
+			</if>
+			<if test="phone != null and phone != ''">
+				PHONE = #{phone},
+			</if>
+			<if test="latitude != null and latitude != ''">
+				LATITUDE = #{latitude},
+			</if>
+			<if test="longitude != null and longitude != ''">
+				LONGITUDE = #{longitude},
+			</if>
+			<if test="updatedAt != null">
+				UPDATED_AT = #{updatedAt}
+			</if>
+	    </set>
+	    WHERE PHARMACY_ID = #{pharmacyId}
+	</update>
+	
+	<!-- 약국 삭제 -->
+	<delete id="deletePharmacy" parameterType="long">
+        DELETE FROM PHARMACY
+        WHERE PHARMACY_ID = #{pharmacyId}
+	</delete>
+	
 </mapper>

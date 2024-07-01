@@ -17,5 +17,6 @@ public interface HospitalDAO {
 	public HospitalDTO getHospitalDetails(long hospitalId);
 	public List<HospitalDTO> selectNearestHospitals(Map<String, Object> params);
 	public List<Map<String, Object>> getHospitalTypeCounts();
-	public void udpateHospInfo(HospitalDTO hospitalDTO);
+	public void updateHospInfo(HospitalDTO hospitalDTO);
+	public void deleteHospital(long hospitalId);
 }

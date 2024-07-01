@@ -1,11 +1,14 @@
 package com.application.mediquanta.pharmacy.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,7 +72,29 @@ public class PharmacyController {
         return "pharmacy/pharmacyDetail";
     }
 	
-	// TODO : 3. 약국 정보 수정 기능 개발 (관리자인 경우)
+	// TODO : 2. 약국 정보 수정 기능 개발 (관리자인 경우)
+	@GetMapping("/viewPharmacyUpdate")
+	public String viewPharmacyUpdate(@RequestParam("pharmacyId") long pharmacyId, Model model) {
+		PharmacyDTO pharmacyDTO = pharmacyService.getPharmacyDetails(pharmacyId);
+		model.addAttribute("pharmacy", pharmacyDTO);
+		return "pharmacy/pharmacyUpdate";
+	}
 	
-	// TODO : 4. 약국 정보 삭제 기능 개발 (관리자인 경우)
+	@GetMapping("/findLoc")
+	@ResponseBody
+    public Map<String, Double> getLatitudeLongitude(@RequestParam("address") String address) {
+        return pharmacyService.kakaoLocalAPI(address);
+    }
+	
+	@PostMapping("/updatePharmacyInfo")
+	public String updatePharmacyInfo(@ModelAttribute PharmacyDTO pharmacyDTO) {
+		pharmacyService.updatePharmacyInfo(pharmacyDTO);
+		return "redirect:/pharmacy";
+	}
+	
+	@PostMapping("/deletePharmacy")
+	public ResponseEntity<?> deletePharmacy(@RequestParam("pharmacyId") long pharmacyId) {
+		pharmacyService.deletePharmacy(pharmacyId);
+		return ResponseEntity.ok().build();
+	}
 }

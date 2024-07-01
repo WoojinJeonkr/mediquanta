@@ -144,14 +144,15 @@ public class HospitalServiceImpl implements HospitalService {
 	}
 
 	@Override
-	public void udpateHospInfo(HospitalDTO hospitalDTO) {
-		try {
-			hospitalDTO.setUpdatedAt(new Date());
-			hospitalDAO.udpateHospInfo(hospitalDTO);
-			log.info("병원 정보 업데이트 완료");
-		} catch (Exception e) {
-			log.warn(e.getMessage());
-		}
+	public void updateHospInfo(HospitalDTO hospitalDTO) {
+		hospitalDTO.setUpdatedAt(new Date());
+		log.info("hospitalDTO -> {}", hospitalDTO);
+		hospitalDAO.updateHospInfo(hospitalDTO);
 	}
 
+	@Override
+	public void deleteHospital(long hospitalId) {
+		hospitalDAO.deleteHospital(hospitalId);
+	}
+	
 }

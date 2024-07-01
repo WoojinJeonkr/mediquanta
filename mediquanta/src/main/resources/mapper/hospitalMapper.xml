@@ -155,19 +155,19 @@
     </select>
 	
 	<!-- 병원 정보 수정 -->
-	<update id="udpateHospInfo" parameterType="HospitalDTO">
+	<update id="updateHospInfo" parameterType="HospitalDTO">
 	    UPDATE
 	    		HOSPITAL
 	    <set>
 			<if test="hospitalName != null and hospitalName != ''">
 				HOSPITAL_NAME = #{hospitalName},
 			</if>
-			<if test="email != null and email != ''">
+			<if test="type != null and type != ''">
 				TYPE = #{type}, 
 			</if>
 				SIDOCDNM = #{sidoCdNm},
 				SGGUCDNM = #{sgguCdNm},
-			<if test="address != null and adress != ''">
+			<if test="address != null and address != ''">
 				ADDRESS = #{address},
 			</if>
 			<if test="phone != null and phone != ''">
@@ -180,13 +180,19 @@
 				LONGITUDE = #{longitude},
 			</if>
 			<if test="hospitalUrl != null and hospitalUrl != ''">
-				HOSPITAL_URL = #{hospitalUrl}
+				HOSPITAL_URL = #{hospitalUrl},
 			</if>
-			<if test="updateAt != null">
-				UPDATED_AT = #{updateAt}
+			<if test="updatedAt != null">
+				UPDATED_AT = #{updatedAt}
 			</if>
 	    </set>
 	    WHERE HOSPITAL_ID = #{hospitalId}
 	</update>
+	
+	<!-- 병원 삭제 -->
+	<delete id="deleteHospital" parameterType="long">
+        DELETE FROM HOSPITAL
+        WHERE HOSPITAL_ID = #{hospitalId}
+	</delete>
 	
 </mapper>
