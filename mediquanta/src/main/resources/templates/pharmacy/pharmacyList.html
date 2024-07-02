@@ -74,6 +74,33 @@
                 }, 500);
             }
         });
+        
+        $(".widget-26-pharmacy-starred a").on("click", function(e) {
+            e.preventDefault();
+            var $icon = $(this).find("i");
+            var pharmacyId = $(this).data("pharmacy-id");
+            if ($icon.hasClass("far")) {
+                $.ajax({
+                    url: '/api/bookmark/pharmacy/add',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ memberId: "MEMBER_ID", pharmacyId: pharmacyId }),
+                    success: function(response) {
+                        $icon.removeClass("far").addClass("fas");
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '/api/bookmark/pharmacy/remove',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ memberId: "MEMBER_ID", pharmacyId: pharmacyId }),
+                    success: function(response) {
+                        $icon.removeClass("fas").addClass("far");
+                    }
+                });
+            }
+        });
     });
     
     

@@ -13,10 +13,12 @@
 	var rowOfNums = 20;
 	var pagesToShow = 5;
     var currentGroup = 0;
+    var hospitalBookmarks = [];
 
     $(document).ready(function() {
     	
     	searchHospList();
+     	getHospitalBookmarks();
     	
     	$("#searchOption").change(function() {
     		
@@ -90,8 +92,40 @@
                 }, 500);
             }
         });
-        
     });
+    
+    function getHospitalBookmarks() {
+        $.ajax({
+            url: '/bookmark/hospital/getHospitalBookmarks',
+            type: "POST",
+            success: function(data) {
+                hospitalBookmarks = data;
+                searchHospList();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error.message);
+            }
+        });
+    }
+    
+    function toggleHospitalBookmark(button) {
+        var $icon = $(button).find("i");
+        var hospitalId = $(button).data('hospital-id');
+        var url = $icon.hasClass("far") ? '/bookmark/hospital/addHospitalBookmark' : '/bookmark/hospital/removeHospitalBookmark';
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: 'application/json',
+            data: JSON.stringify({ hospitalId: hospitalId }),
+            success: function(response) {
+                $icon.toggleClass("far fas");
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', status, error);
+            }
+        });
+    }
     
     function searchHospList() {
         $.ajax({
@@ -187,7 +221,8 @@
                 row.append($("<td></td>").html('<div class="widget-26-hospital-edit" style="text-align: center;"><a href="/hospital/viewHospitalUpdate?hospitalId=' + hospital.hospitalId + '"><i class="fas fa-pen"></i></a></div>'));
                 row.append($("<td></td>").html('<div class="widget-26-hospital-delete" style="text-align: center;"><button class="delete-hospital" data-hospital-id="' + hospital.hospitalId + '" onclick="deleteHospital(this)"><i class="fas fa-trash"></i></button></div>'));
             } else {
-                row.append($("<td></td>").html('<div class="widget-26-hospital-starred" style="text-align: center;"><a href="#"><i class="far fa-star"></i></a></div>'));
+            	var isBookmarked = hospitalBookmarks.includes(hospital.hospitalId);
+            	row.append($("<td></td>").html('<div class="widget-26-hospital-starred" style="text-align: center;"><button class="toggle-bookmark" data-hospital-id="' + hospital.hospitalId + '" onclick="toggleHospitalBookmark(this)"><i class="' + (isBookmarked ? 'fas' : 'far') + ' fa-star"></i></button></div>'));
             }
             tbody.append(row);
         });

@@ -32,12 +32,14 @@ public class BookmarkServiceImpl implements BookmarkService {
 			bookmarkDAO.addHospitalBookmark(bookmarkDTO);
 		} else {
 			List<Long> hospitalBookmarkList = existingBookmarkDTO.getHospitalBookmarks();
-			hospitalBookmarkList.add(hospitalId);
-			existingBookmarkDTO.setHospitalBookmarks(hospitalBookmarkList);
-			bookmarkDAO.addHospitalBookmark(existingBookmarkDTO);
+			if (!hospitalBookmarkList.contains(hospitalId)) {
+	            hospitalBookmarkList.add(hospitalId);
+	            existingBookmarkDTO.setHospitalBookmarks(hospitalBookmarkList);
+	            bookmarkDAO.addHospitalBookmark(existingBookmarkDTO);
+	        }
 		}
 	}
-
+	
 	@Override
 	public void addPharmacyBookmark(String memberId, long pharmacyId) {
 		BookmarkDTO existingBookmarkDTO = bookmarkDAO.findByMemberId(memberId);
@@ -66,7 +68,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 						        .filter(id -> !id.equals(hospitalId))
 						        .collect(Collectors.toList());
 			existingBookmarkDTO.setHospitalBookmarks(hospitalBookmarkList);
-			bookmarkDAO.updateBookmark(existingBookmarkDTO);
+			bookmarkDAO.removeHospitalBookmark(existingBookmarkDTO);
 		}
 	}
 
@@ -80,7 +82,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 						        .filter(id -> !id.equals(pharmacyId))
 						        .collect(Collectors.toList());
 			existingBookmarkDTO.setPharmacyBookmarks(pharmacyBookmarkList);
-			bookmarkDAO.updateBookmark(existingBookmarkDTO);
+			bookmarkDAO.removePharmacyBookmark(existingBookmarkDTO);
 		}
 	}
 	

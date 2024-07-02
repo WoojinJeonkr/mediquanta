@@ -47,7 +47,7 @@ public class HospitalController {
 	
 	@PostMapping("/getHospitalList")
 	@ResponseBody
-	public List<HospitalDTO> getHospitalList(Model model, HttpSession session) {
+	public List<HospitalDTO> getHospitalList() {
 		return hospitalService.getHospitalList();
 	}
 	
