@@ -72,7 +72,6 @@ public class PharmacyController {
         return "pharmacy/pharmacyDetail";
     }
 	
-	// TODO : 2. 약국 정보 수정 기능 개발 (관리자인 경우)
 	@GetMapping("/viewPharmacyUpdate")
 	public String viewPharmacyUpdate(@RequestParam("pharmacyId") long pharmacyId, Model model) {
 		PharmacyDTO pharmacyDTO = pharmacyService.getPharmacyDetails(pharmacyId);
