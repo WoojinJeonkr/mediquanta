@@ -3,39 +3,38 @@
 <mapper namespace="com.application.mediquanta.bookmark.dao.BookmarkDAO">
 
 	<!-- 회원 ID로 병원 즐겨찾기 및 약국 즐겨찾기 정보 조회 -->
-    <select id="findByMemberId" parameterType="String" resultType="BookmarkDTO">
-        SELECT MEMBER_ID as memberId, 
-               GROUP_CONCAT(DISTINCT HOSPITAL_ID) as hospitalBookmarks,
-               GROUP_CONCAT(DISTINCT PHARMACY_ID) as pharmacyBookmarks
-        FROM BOOKMARK
-        WHERE MEMBER_ID = #{memberId}
-        GROUP BY MEMBER_ID
-    </select>
+    <select id="findByMemberIdx" parameterType="long" resultType="BookmarkDTO">
+	    SELECT 	BOOKMARK_ID,
+	    		MEMBER_IDX, 
+	           	HOSPITAL_ID,
+	           	PHARMACY_ID
+	    FROM 	BOOKMARK
+	    WHERE 	MEMBER_IDX = #{memberIdx}
+	</select>
 
     <!-- 병원 즐겨찾기 추가 -->
-    <insert id="addHospitalBookmark" parameterType="map">
-        INSERT INTO BOOKMARK (MEMBER_ID, HOSPITAL_ID)
-        VALUES (#{memberId}, #{hospitalId})
-        ON DUPLICATE KEY UPDATE HOSPITAL_ID = VALUES(HOSPITAL_ID)
-    </insert>
+    <insert id="addHospitalBookmark" parameterType="BookmarkDTO">
+	   	INSERT INTO BOOKMARK (MEMBER_IDX, HOSPITAL_ID)
+        VALUES (#{memberIdx}, #{hospitalId})
+	</insert>
 
     <!-- 약국 즐겨찾기 추가 -->
     <insert id="addPharmacyBookmark" parameterType="map">
-        INSERT INTO BOOKMARK (MEMBER_ID, PHARMACY_ID)
-        VALUES (#{memberId}, #{pharmacyId})
+        INSERT INTO BOOKMARK (MEMBER_IDX, PHARMACY_ID)
+        VALUES (#{memberIdx}, #{pharmacyId})
         ON DUPLICATE KEY UPDATE PHARMACY_ID = VALUES(PHARMACY_ID)
     </insert>
     
     <!-- 병원 즐겨찾기 삭제 -->
-    <delete id="removeHospitalBookmark" parameterType="map">
+    <delete id="removeHospitalBookmark" parameterType="long">
         DELETE FROM BOOKMARK
-        WHERE MEMBER_ID = #{memberId} AND HOSPITAL_ID = #{hospitalId}
+        WHERE BOOKMARK_ID = #{bookmarkId}
     </delete>
 
     <!-- 약국 즐겨찾기 삭제 -->
     <delete id="removePharmacyBookmark" parameterType="map">
         DELETE FROM BOOKMARK
-        WHERE MEMBER_ID = #{memberId} AND PHARMACY_ID = #{pharmacyId}
+        WHERE MEMBER_IDX = #{memberIdx} AND PHARMACY_ID = #{pharmacyId}
     </delete>
 
 </mapper>

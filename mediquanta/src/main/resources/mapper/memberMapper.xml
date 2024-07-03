@@ -91,7 +91,8 @@
 	
 	<!-- 회원 정보 조회 -->
 	<select id="getUserInfo" parameterType="String" resultType="MemberDTO">
-		SELECT 	MEMBER_ID,
+		SELECT 	MEMBER_IDX,
+				MEMBER_ID,
 				PASSWD,
 			    NICKNAME,
 			    PROFILE_ORIGINAL_NAME,
