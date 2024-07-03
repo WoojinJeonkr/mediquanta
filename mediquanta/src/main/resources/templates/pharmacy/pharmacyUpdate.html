@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 약국 정보 수정</title>
+<link th:href="@{/css/pharmacy/pharmacyDetail.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+
+	var sgguSelect;
+	
+	const subRegions = {
+		"서울": [
+	        "강서구", "관악구", "구로구", "도봉구", "동대문구", "동작구", "마포구", 
+	        "서대문구", "성동구", "성북구", "영등포구", "용산구", "은평구", "종로구", 
+	        "중구", "송파구", "중랑구", "양천구", "서초구", "노원구", "광진구", "강북구", 
+	        "금천구"
+	    ],
+	    "부산": [
+	        "남구", "동구", "동래구", "북구", "사하구", "사상구", "서구", "수영구", 
+	        "연제구", "중구", "해운대구", "금정구", "강서구", "기장군"
+	    ],
+	    "인천": [
+	        "미추홀구", "동구", "부평구", "중구", "서구", "남동구", "연수구", "계양구"
+	    ],
+	    "대구": [
+	        "남구", "동구", "북구", "서구", "수성구", "중구", "달서구", "달성군"
+	    ],
+	    "광주": [
+	        "동구", "북구", "서구", "광산구", "남구"
+	    ],
+	    "대전": [
+	        "유성구", "대덕구", "서구", "동구", "중구"
+	    ],
+	    "울산": [
+	        "남구", "동구", "중구", "북구", "울주군"
+	    ],
+	    "경기": [
+	        "가평군", "양평군", "연천군", "광명시", "동두천시", "소사구", "오정구", "원미구", 
+	        "수정구", "중원구", "분당구", "권선구", "장안구", "팔달구", "영통구", "만안구", 
+	        "동안구", "의정부시", "과천시", "구리시", "단원구", "상록구", "평택시", "하남시", 
+	        "군포시", "남양주시", "의왕시", "시흥시", "오산시", "덕양구", "일산서구", "일산동구", 
+	        "기흥구", "수지구", "처인구", "이천시", "파주시", "김포시", "안성시", "화성시", 
+	        "광주시", "양주시", "포천시", "여주시"
+	    ],
+	    "강원": [
+	        "고성군", "영월군", "정선군", "평창군", "홍천군", "화천군", "횡성군", 
+	        "강릉시", "동해시", "속초시", "원주시", "춘천시", "태백시", "삼척시"
+	    ],
+	    "충북": [
+	        "괴산군", "보은군", "영동군", "옥천군", "음성군", "진천군", "증평군", 
+	        "청주상당구", "청주흥덕구", "청주청원구", "청주서원구", "충주시", "제천시"
+	    ],
+	    "충남": [
+	        "부여군", "서천군", "예산군", "청양군", "홍성군", "태안군", 
+	        "천안서북구", "천안동남구", "공주시", "보령시", "아산시", "서산시", 
+	        "논산시", "계룡시", "당진시"
+	    ],
+	    "전북": [
+	        "고창군", "무주군", "부안군", "순창군", "완주군", "임실군", "장수군", 
+	        "진안군", "군산시", "남원시", "익산시", "전주완산구", "전주덕진구"
+	    ],
+	    "전남": [
+	        "강진군", "고흥군", "곡성군", "구례군", "담양군", "무안군", "보성군", 
+	        "영광군", "영암군", "완도군", "장흥군", "함평군", "해남군", "화순군", 
+	        "나주시", "목포시", "순천시", "여수시", "광양시"
+	    ],
+	    "경북": [
+	        "고령군", "봉화군", "영양군", "예천군", "울릉군", "울진군", "의성군", 
+	        "청도군", "청송군", "칠곡군", "경주시", "구미시", "김천시", "안동시", 
+	        "영주시", "영천시", "포항남구", "포항북구"
+	    ],
+	    "경남": [
+	        "거창군", "남해군", "산청군", "창녕군", "하동군", "함안군", "함양군", 
+	        "김해시", "사천시", "진주시", "마산회원구", "마산합포구", "진해구", "의창구", 
+	        "성산구", "양산시"
+	    ],
+	    "제주": [
+	        "제주시", "서귀포시"
+	    ],
+	    "세종시": ["세종시"]
+	};
+	
+	$(document).ready(function() {
+	
+		var sidoSelect = document.getElementById('sidoCdNm');
+        sgguSelect = document.getElementById('sgguCdNm');
+
+        for (var key in subRegions) {
+            if (subRegions.hasOwnProperty(key)) {
+                var option = document.createElement('option');
+                option.value = key;
+                option.textContent = key;
+                sidoSelect.appendChild(option);
+            }
+        }
+        
+        $('#findLoc').click(function() {
+            var address = $('#address').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/pharmacy/findLoc',
+                data: {
+                    address: address
+                },
+                success: function(data) {
+                    $('#latitude').val(data.latitude.toFixed(7));
+                    $('#longitude').val(data.longitude.toFixed(7));
+                },
+            });
+        });
+        
+    });
+
+	function updateSubRegions(select, selectedSggu = null) {
+        var selectedSido = select.value;
+        var sgguSelect = document.getElementById('sgguCdNm');
+
+        sgguSelect.innerHTML = '';
+
+        subRegions[selectedSido].forEach(function(sggu) {
+            var option = document.createElement('option');
+            option.value = sggu;
+            option.textContent = sggu;
+            sgguSelect.appendChild(option);
+        });
+
+        if (selectedSggu) {
+            sgguSelect.value = selectedSggu;
+        }
+    }
+	
+	function checkUpdateForm() {
+	    var address = $("#address").val();
+	    var phone = $("#phone").val();
+	    var latitude = $("#latitude").val();
+	    var longitude = $("#longitude").val();
+
+	    if (address === '' || phone === '' || latitude === '' || longitude === '') {
+	        alert('모든 필수 입력 필드를 채워주세요.');
+	        return false;
+	    }
+
+	    var phoneRegex = /^\d{2,3}-\d{3,4}-\d{4}$/;
+	    if (!phone.match(phoneRegex)) {
+	        alert('유효한 전화번호 형식이 아닙니다.');
+	        return false;
+	    }
+
+	    var sidoCdNm = document.getElementById('sidoCdNm').value;
+	    var sgguCdNm = document.getElementById('sgguCdNm').value;
+	    if (sidoCdNm === '' || sgguCdNm === '') {
+	        alert('주소를 선택해주세요.');
+	        return false;
+	    }
+
+	    return true;
+	}
+	
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+        <main class="main-content site-wrapper-reveal">
+        	<section>
+                <div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+            </section>
+            <section style="background-color: gainsboro;">
+				<div class="container py-4">
+					<div class="row">
+				      <div class="col mb-2">
+				        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+				          <ol class="breadcrumb mb-0">
+				            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+				            <li class="breadcrumb-item"><a th:href="@{/pharmacy}">약국 목록</a></li>
+				            <li class="breadcrumb-item active" aria-current="page" th:text="${pharmacy.pharmacyName}"></li>
+				          </ol>
+				        </nav>
+				      </div>
+				    </div>
+					<div class="row">
+						<div class="col-lg-12 card-margin">
+							<div class="card mb-0">
+			          			<div class="card-body">
+			          				<h1 class="pharmacy-name mb-4" th:text="${pharmacy.pharmacyName}"></h1>
+								    <form th:object="${pharmacy}" th:action="@{/pharmacy/updatePharmacyInfo}" th:onsubmit="return checkUpdateForm();" method="post" enctype="multipart/form-data" novalidate>
+										<input type="hidden" th:field="*{pharmacyId}" class="form-control form-control-lg" readonly />
+										<input type="hidden" th:field="*{pharmacyName}" class="form-control form-control-lg" readonly />
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="sidoCdNm">주소 (시, 도)</label>
+											<select class="form-control" id="sidoCdNm" name="sidoCdNm" onchange="updateSubRegions(this)">
+												<option value="">시/도 선택</option>
+											</select>
+										</div>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="sgguCdNm">주소 (구, 동)</label>
+											<select class="form-control" id="sgguCdNm" name="sgguCdNm">
+												<option value="">구/군 선택</option>
+											</select>
+										</div>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="address">주소 (전체 주소)</label>
+											<input type="text"th:field="*{address}" placeholder="전체 주소를 입력하세요" class="form-control form-control-lg" />
+										</div>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="phone">전화번호</label>
+											<input type="text"th:field="*{phone}" placeholder="전화번호를 입력하세요" class="form-control form-control-lg" />
+										</div>
+										<span><button id="findLoc" class="btn btn-primary btn-sm mb-2 ml-auto" type="button" style="float: right;">위도 / 경도 조회</button></span>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="latitude">위도</label>
+											<input type="text"th:field="*{latitude}" placeholder="위도를 입력하세요" class="form-control form-control-lg" readonly />
+										</div>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="longitude">경도</label>
+											<input type="text"th:field="*{longitude}" placeholder="경도를 입력하세요" class="form-control form-control-lg" readonly />
+										</div>
+										<div class="mb-4"></div>
+										<button class="btn btn-primary btn-sm btn-block" style="float:right;" type="submit">수정</button>
+										<a th:href="@{/pharmacy}">취소</a>
+									</form>
+								</div>
+							</div>
+						 </div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.hospital.dao.HospitalDAO">
+
+	<!-- 병원 목록 DB 저장 -->
+	<insert id="saveHospital" parameterType="HospitalDTO">
+		INSERT INTO HOSPITAL (
+			HOSPITAL_NAME,
+			TYPE,
+			SIDOCDNM,
+			SGGUCDNM,
+			ADDRESS,
+			PHONE,
+			LATITUDE,
+			LONGITUDE,
+			HOSPITAL_URL,
+			CREATED_AT,
+			UPDATED_AT
+		) 
+		VALUES (
+			#{hospitalName},
+			#{type},
+			#{sidoCdNm},
+			#{sgguCdNm},
+			#{address},
+			#{phone},
+			#{latitude},
+			#{longitude},
+			#{hospitalUrl},
+			#{createdAt},
+			#{updatedAt}
+		 )
+	</insert>
+	
+	<!-- 병원 목록 가져오기 -->
+	<select id="getHospitalList" resultType="HospitalDTO">
+		SELECT 	HOSPITAL_ID,
+				HOSPITAL_NAME,
+				TYPE,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				HOSPITAL_URL,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	HOSPITAL
+		ORDER BY SIDOCDNM
+	</select>
+	
+	<!-- 이름에 대해 병원 조회하기 -->
+	<select id="searchHospitalByName" parameterType="String" resultType="HospitalDTO">
+		SELECT 	HOSPITAL_ID,
+				HOSPITAL_NAME,
+				TYPE,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				HOSPITAL_URL,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	HOSPITAL
+		WHERE	HOSPITAL_NAME = #{name}
+	</select>
+
+	<!-- 지역에 대해 병원 목록 조회하기 -->
+	<select id="searchHospitalBySidoCdNm" parameterType="String" resultType="HospitalDTO">
+		SELECT 	HOSPITAL_ID,
+				HOSPITAL_NAME,
+				TYPE,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				HOSPITAL_URL,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	HOSPITAL
+		WHERE	SIDOCDNM = #{sidoCdNm}
+		ORDER BY HOSPITAL_NAME
+	</select>
+	
+	<!-- 병원 유형에 대해 병원 목록 조회하기 -->
+	<select id="searchHospitalByType" parameterType="String" resultType="HospitalDTO">
+		SELECT 	HOSPITAL_ID,
+				HOSPITAL_NAME,
+				TYPE,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				HOSPITAL_URL,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	HOSPITAL
+		WHERE	TYPE = #{type}
+		ORDER BY HOSPITAL_NAME;
+	</select>
+	
+	<!-- 병원 상세 정보 조회하기 -->
+	<select id="getHospitalDetails" parameterType="long" resultType="HospitalDTO">
+		SELECT 	HOSPITAL_ID,
+				HOSPITAL_NAME,
+				TYPE,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				HOSPITAL_URL,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	HOSPITAL
+		WHERE	HOSPITAL_ID = #{hospitalId}
+	</select>
+	
+	<!-- 근처 병원 조회하기 -->
+	<select id="selectNearestHospitals" parameterType="map" resultType="HospitalDTO">
+	    <![CDATA[
+		    SELECT *
+		    FROM (
+		        SELECT
+		            HOSPITAL.*,
+		            6371 * ACOS(
+		                COS(RADIANS(#{latitude})) * 
+		                COS(RADIANS(HOSPITAL.LATITUDE)) * 
+		                COS(RADIANS(HOSPITAL.LONGITUDE) - RADIANS(#{longitude})) + 
+		                SIN(RADIANS(#{latitude})) * 
+		                SIN(RADIANS(HOSPITAL.LATITUDE))
+		            ) AS DISTANCE
+		        FROM HOSPITAL
+		    ) DATA
+		    WHERE DATA.DISTANCE < 3
+		    ORDER BY DATA.DISTANCE
+		    LIMIT 3;
+	    ]]>
+	</select>
+	
+	<!-- 등록된 병원 현황 조회 -->
+	<select id="getHospitalTypeCounts" resultType="map">
+        SELECT SIDOCDNM, COUNT(*) AS COUNT
+		FROM HOSPITAL
+		GROUP BY SIDOCDNM
+		ORDER BY COUNT DESC
+    </select>
+	
+	<!-- 병원 정보 수정 -->
+	<update id="updateHospInfo" parameterType="HospitalDTO">
+	    UPDATE
+	    		HOSPITAL
+	    <set>
+			<if test="hospitalName != null and hospitalName != ''">
+				HOSPITAL_NAME = #{hospitalName},
+			</if>
+			<if test="type != null and type != ''">
+				TYPE = #{type}, 
+			</if>
+				SIDOCDNM = #{sidoCdNm},
+				SGGUCDNM = #{sgguCdNm},
+			<if test="address != null and address != ''">
+				ADDRESS = #{address},
+			</if>
+			<if test="phone != null and phone != ''">
+				PHONE = #{phone},
+			</if>
+			<if test="latitude != null and latitude != ''">
+				LATITUDE = #{latitude},
+			</if>
+			<if test="longitude != null and longitude != ''">
+				LONGITUDE = #{longitude},
+			</if>
+			<if test="hospitalUrl != null and hospitalUrl != ''">
+				HOSPITAL_URL = #{hospitalUrl},
+			</if>
+			<if test="updatedAt != null">
+				UPDATED_AT = #{updatedAt}
+			</if>
+	    </set>
+	    WHERE HOSPITAL_ID = #{hospitalId}
+	</update>
+	
+	<!-- 병원 삭제 -->
+	<delete id="deleteHospital" parameterType="long">
+        DELETE FROM HOSPITAL
+        WHERE HOSPITAL_ID = #{hospitalId}
+	</delete>
+	
+</mapper>

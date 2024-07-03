@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.pharmacy.dao.PharmacyDAO">
+
+	<!-- 약국 목록 DB 저장 -->
+	<insert id="savePharmacy" parameterType="PharmacyDTO">
+		INSERT INTO PHARMACY (
+			PHARMACY_NAME,
+			TYPE,
+			SIDOCDNM,
+			SGGUCDNM,
+			ADDRESS,
+			PHONE,
+			LATITUDE,
+			LONGITUDE,
+			CREATED_AT,
+			UPDATED_AT
+		) 
+		VALUES (
+			#{pharmacyName},
+			#{type},
+			#{sidoCdNm},
+			#{sgguCdNm},
+			#{address},
+			#{phone},
+			#{latitude},
+			#{longitude},
+			#{createdAt},
+			#{updatedAt}
+		 )
+	</insert>
+	
+	<!-- 약국 목록 가져오기 -->
+	<select id="getPharmacyList" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		ORDER BY SIDOCDNM
+	</select>
+	
+	<!-- 이름에 대해 약국 조회하기 -->
+	<select id="searchPharmacyByName" parameterType="String" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		WHERE	PHARMACY_NAME = #{name}
+	</select>
+
+	<!-- 지역에 대해 약국 목록 조회하기 -->
+	<select id="searchPharmacyBySidoCdNm" parameterType="String" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		WHERE	SIDOCDNM = #{sidoCdNm}
+		ORDER BY PHARMACY_NAME
+	</select>
+	
+	<!-- 약국 상세 정보 조회하기 -->
+	<select id="getPharmacyDetails" parameterType="long" resultType="PharmacyDTO">
+		SELECT 	PHARMACY_ID,
+				PHARMACY_NAME,
+				SIDOCDNM,
+				SGGUCDNM,
+				ADDRESS,
+				PHONE,
+				LATITUDE,
+				LONGITUDE,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	PHARMACY
+		WHERE	PHARMACY_ID = #{pharmacyId}
+	</select>
+	
+	<select id="selectNearestPharmacies" parameterType="map" resultType="PharmacyDTO">
+	    <![CDATA[
+		    SELECT *
+		    FROM (
+		        SELECT
+		            PHARMACY.*,
+		            6371 * ACOS(
+		                COS(RADIANS(#{latitude})) * 
+		                COS(RADIANS(PHARMACY.LATITUDE)) * 
+		                COS(RADIANS(PHARMACY.LONGITUDE) - RADIANS(#{longitude})) + 
+		                SIN(RADIANS(#{latitude})) * 
+		                SIN(RADIANS(PHARMACY.LATITUDE))
+		            ) AS DISTANCE
+		        FROM PHARMACY
+		    ) DATA
+		    WHERE DATA.DISTANCE < 3
+		    ORDER BY DATA.DISTANCE
+		    LIMIT 3;
+	    ]]>
+	</select>
+	
+	<!-- 등록된 약국 현황 조회 -->
+	<select id="getPharmacyTypeCounts" resultType="map">
+        SELECT SIDOCDNM, COUNT(*) AS COUNT
+		FROM PHARMACY
+		GROUP BY SIDOCDNM
+		ORDER BY COUNT DESC
+    </select>
+	
+	<!-- 약국 정보 수정 -->
+	<update id="updatePharmacyInfo" parameterType="PharmacyDTO">
+	    UPDATE
+	    		PHARMACY
+	    <set>
+				SIDOCDNM = #{sidoCdNm},
+				SGGUCDNM = #{sgguCdNm},
+			<if test="address != null and address != ''">
+				ADDRESS = #{address},
+			</if>
+			<if test="phone != null and phone != ''">
+				PHONE = #{phone},
+			</if>
+			<if test="latitude != null and latitude != ''">
+				LATITUDE = #{latitude},
+			</if>
+			<if test="longitude != null and longitude != ''">
+				LONGITUDE = #{longitude},
+			</if>
+			<if test="updatedAt != null">
+				UPDATED_AT = #{updatedAt}
+			</if>
+	    </set>
+	    WHERE PHARMACY_ID = #{pharmacyId}
+	</update>
+	
+	<!-- 약국 삭제 -->
+	<delete id="deletePharmacy" parameterType="long">
+        DELETE FROM PHARMACY
+        WHERE PHARMACY_ID = #{pharmacyId}
+	</delete>
+	
+</mapper>
