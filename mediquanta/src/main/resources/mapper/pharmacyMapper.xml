@@ -116,6 +116,14 @@
 	    ]]>
 	</select>
 	
+	<!-- 등록된 약국 현황 조회 -->
+	<select id="getPharmacyTypeCounts" resultType="map">
+        SELECT SIDOCDNM, COUNT(*) AS COUNT
+		FROM PHARMACY
+		GROUP BY SIDOCDNM
+		ORDER BY COUNT DESC
+    </select>
+	
 	<!-- 약국 정보 수정 -->
 	<update id="updatePharmacyInfo" parameterType="PharmacyDTO">
 	    UPDATE

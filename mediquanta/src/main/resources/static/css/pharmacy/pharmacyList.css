@@ -15,17 +15,17 @@ body {
 	border: 0;
 }
 
-.widget-26 .widget-26-hospital-emp-img img {
+.widget-26 .widget-26-pharmacy-emp-img img {
 	width: 35px;
 	height: 35px;
 	border-radius: 50%;
 }
 
-.widget-26 .widget-26-hospital-title {
+.widget-26 .widget-26-pharmacy-title {
 	min-width: 200px;
 }
 
-.widget-26 .widget-26-hospital-title a {
+.widget-26 .widget-26-pharmacy-title a {
 	font-weight: 400;
 	font-size: 0.875rem;
 	color: #3c4142;
@@ -33,12 +33,12 @@ body {
 	text-decoration: none;
 }
 
-.widget-26 .widget-26-hospital-title a:hover {
+.widget-26 .widget-26-pharmacy-title a:hover {
 	color: #68CBD7;
 	text-decoration: none;
 }
 
-.widget-26 .widget-26-hospital-title .employer-name {
+.widget-26 .widget-26-pharmacy-title .employer-name {
 	margin: 0;
 	line-height: 1.5;
 	font-weight: 400;
@@ -47,49 +47,49 @@ body {
 	color: #3c4142;
 }
 
-.widget-26 .widget-26-hospital-title .employer-name:hover {
+.widget-26 .widget-26-pharmacy-title .employer-name:hover {
 	color: #68CBD7;
 	text-decoration: none;
 }
 
-.widget-26 .widget-26-hospital-title .time {
+.widget-26 .widget-26-pharmacy-title .time {
 	font-size: 12px;
 	font-weight: 400;
 }
 
-.widget-26 .widget-26-hospital-info {
+.widget-26 .widget-26-pharmacy-info {
 	min-width: 100px;
 	font-weight: 400;
 }
 
-.widget-26 .widget-26-hospital-info p {
+.widget-26 .widget-26-pharmacy-info p {
 	line-height: 1.5;
 	color: #3c4142;
 	font-size: 0.8125rem;
 }
 
-.widget-26 .widget-26-hospital-info .location {
+.widget-26 .widget-26-pharmacy-info .location {
 	color: #3c4142;
 }
 
-.widget-26 .widget-26-hospital-update {
+.widget-26 .widget-26-pharmacy-update {
 	min-width: 70px;
 	font-weight: 400;
 	color: #3c4142;
 	font-size: 0.8125rem;
 }
 
-.widget-26 .widget-26-hospital-type {
+.widget-26 .widget-26-pharmacy-type {
 	display: inline-flex;
 }
 
-.widget-26 .widget-26-hospital-category span {
+.widget-26 .widget-26-pharmacy-category span {
 	font-size: 0.8125rem;
 	color: #3c4142;
 	font-weight: 600;
 }
 
-.widget-26 .widget-26-hospital-starred {
+.widget-26 .widget-26-pharmacy-starred {
 	fill: #fd8b2c;
 	text-align : center;
 }
@@ -256,4 +256,16 @@ body {
 
 .delete-pharmacy i {
 	color: #dc3545;
+}
+
+.toogle-star {
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	outline: none;
+}
+
+.toogle-star i {
+	color: #fd8b2c;
 }

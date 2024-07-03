@@ -148,9 +148,9 @@
 	
 	<!-- 등록된 병원 현황 조회 -->
 	<select id="getHospitalTypeCounts" resultType="map">
-        SELECT TYPE, COUNT(*) AS COUNT
+        SELECT SIDOCDNM, COUNT(*) AS COUNT
 		FROM HOSPITAL
-		GROUP BY TYPE
+		GROUP BY SIDOCDNM
 		ORDER BY COUNT DESC
     </select>
 	

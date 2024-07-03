@@ -107,6 +107,11 @@ public class PharmacyServiceImpl implements PharmacyService {
 	public PharmacyDTO getPharmacyDetails(long pharmacyId) {
 		return pharmacyDAO.getPharmacyDetails(pharmacyId);
 	}
+	
+	@Override
+	public List<Map<String, Object>> getPharmacyTypeCounts() {
+		return pharmacyDAO.getPharmacyTypeCounts();
+	}
 
 	@Override
 	public List<PharmacyDTO> selectNearestPharmacies(double latitude, double longitude) {

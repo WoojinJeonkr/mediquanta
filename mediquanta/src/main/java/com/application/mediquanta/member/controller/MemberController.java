@@ -151,11 +151,13 @@ public class MemberController {
 		List<HospitalDTO> hospitals = hospitalService.selectNearestHospitals(location.get("latitude").doubleValue(), location.get("longitude").doubleValue());
 		List<PharmacyDTO> pharmacies = pharmacyService.selectNearestPharmacies(location.get("latitude").doubleValue(), location.get("longitude").doubleValue());
 		List<Map<String, Object>> hospitalTypeCounts = hospitalService.getHospitalTypeCounts();
+		List<Map<String, Object>> pharmacyTypeCounts = pharmacyService.getPharmacyTypeCounts();
         
 		model.addAttribute("memberDTO", memberDTO);
 		model.addAttribute("hospitals", hospitals);
 		model.addAttribute("pharmacies", pharmacies);
 		model.addAttribute("hospitalTypeCounts", hospitalTypeCounts);
+		model.addAttribute("pharmacyTypeCounts", pharmacyTypeCounts);
 		return "member/" + profilePage;
 	}
 	

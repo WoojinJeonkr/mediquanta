@@ -14,6 +14,7 @@ public interface PharmacyService {
 	public PharmacyDTO getPharmacyDetails(long pharmacyId);
 	public List<PharmacyDTO> selectNearestPharmacies(double latitude, double longitude);
 	public Map<String, Double> kakaoLocalAPI(String query);
+	public List<Map<String, Object>> getPharmacyTypeCounts();
 	public void updatePharmacyInfo(PharmacyDTO pharmacyDTO);
 	public void deletePharmacy(long pharmacyId);
 }

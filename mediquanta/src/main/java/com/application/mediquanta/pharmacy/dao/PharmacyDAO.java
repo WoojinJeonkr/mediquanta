@@ -16,6 +16,7 @@ public interface PharmacyDAO {
 	public List<PharmacyDTO> searchPharmacyBySidoCdNm(String sidoCdNm);
 	public PharmacyDTO getPharmacyDetails(long pharmacyId);
 	public List<PharmacyDTO> selectNearestPharmacies(Map<String, Object> params);
+	public List<Map<String, Object>> getPharmacyTypeCounts();
 	public void updatePharmacyInfo(PharmacyDTO pharmacyDTO);
 	public void deletePharmacy(long pharmacyId);
 }
