@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 401 Unauthorized</title>
+<link th:href="@{/css/error/401.css}" type="text/css" rel="stylesheet" />
+</head>
+<body>
+	<div layout:fragment="content">
+        <main class="main-content site-wrapper-reveal">
+        	<section style="background-color: #666666;">
+			    <div style="height: 142px; z-index: 8;">&emsp;</div>
+			</section>
+			<section class="d-flex align-items-center min-vh-100 py-5" style="background-color: #f0f0f0">
+				<div class="container py-4">
+					<div class="main"> 
+						<div class="error-middle">
+							<h1>Error 401 - 권한 없음</h1>
+							<p>해당 페이지에 접근 권한이 없습니다.</p>
+							<a th:href="@{/}">메인 화면으로 돌아가기</a>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

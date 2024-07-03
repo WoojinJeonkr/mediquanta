@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 병원 목록</title>
+<link th:href="@{/css/hospital/hospitalList.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+	var hospitalData = [];
+	var rowOfNums = 20;
+	var pagesToShow = 5;
+    var currentGroup = 0;
+    var hospitalBookmarks = [];
+
+    $(document).ready(function() {
+    	
+    	searchHospList();
+     	getHospitalBookmarks();
+    	
+    	$("#searchOption").change(function() {
+    		
+    		var selectedOption = $(this).children("option:selected").attr('id');
+            
+            if (selectedOption === 'sidoCdNm') {
+                $("#nameWrapper").hide();
+                $("#typeSelectWrapper").hide();
+                $("#addressSelectWrapper").show();
+            } else if (selectedOption === 'type'){
+            	$("#nameWrapper").hide();
+            	$("#addressSelectWrapper").hide();
+                $("#typeSelectWrapper").show();
+            } else {
+                $("#addressSelectWrapper").hide();
+                $("#typeSelectWrapper").hide();
+                $("#nameWrapper").show();
+            }
+        });
+    	
+    	
+        $("#search-form").submit(function(event) {
+            event.preventDefault();
+            
+            var searchOption = $("#searchOption").val();
+            var searchData = {};
+            
+            switch (searchOption) {
+	            case 'name':
+	            	if ($('#nameInput').val() === "") {
+	            		searchHospList();
+	            	} else {
+	            		searchData = {
+    	            		"name" : $('#nameInput').val()
+    	                };
+    	            	searchHospByName(searchData);
+	            	}
+	                break;
+	            case 'sidoCdNm':
+	            	if ($('#addressOption').val() === "") {
+	            		searchHospList();
+	            	} else {
+	            		searchData = {
+    	            		"sidoCdNm" : $('#addressOption').val()
+    	                };
+    	                searchHospBySidoCdNm(searchData);
+	            	}
+	                break;
+	            case 'type':
+	            	if ($('#typeOption').val() === "") {
+	            		searchHospList();
+	            	} else {
+	            		searchData = {
+    	                    "type" : $('#typeOption').val()
+    	                };
+    	                searchHospByType(searchData);
+	            	}
+	                break;
+            }
+        });
+        
+        $(".pagination").on("click", "a", function(event) {
+            event.preventDefault();
+            var page = $(this).data('page');
+            if (page) {
+                displayHospitalList(page);
+                updatePagination(page);
+                
+                $('html, body').animate({
+                    scrollTop: $(".main-content").offset().top
+                }, 500);
+            }
+        });
+    });
+    
+    function getHospitalBookmarks() {
+        $.ajax({
+            url: '/bookmark/hospital/getHospitalBookmarks',
+            type: "POST",
+            success: function(data) {
+           		hospitalBookmarks = data;
+                console.log(hospitalBookmarks);
+                searchHospList();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error.message);
+            }
+        });
+    }
+    
+    function toggleHospitalBookmark(button) {
+        var $icon = $(button).find("i");
+        var hospitalId = $(button).data('hospital-id');
+        var url = $icon.hasClass("far") ? '/bookmark/hospital/addHospitalBookmark' : '/bookmark/hospital/removeHospitalBookmark';
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: 'application/json',
+            data: JSON.stringify({ hospitalId: hospitalId }),
+            success: function(response) {
+                $icon.toggleClass("far fas");
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', status, error);
+            }
+        });
+    }
+    
+    function searchHospList() {
+        $.ajax({
+        	url : "/hospital/getHospitalList",
+        	type : "POST",
+        	success : function(data) {
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
+        	}
+    	});
+    }
+    
+    function searchHospByName(searchData) {
+        $.ajax({
+        	url : "/hospital/searchHospitalByName",
+        	type : "POST",
+        	contentType : "application/json",
+        	data : JSON.stringify(searchData),
+        	success : function(data) {
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
+        	}
+    	});
+    }
+    
+    function searchHospBySidoCdNm(searchData) {
+    	$.ajax({
+        	url : "/hospital/searchHospitalBySidoCdNm",
+        	type : "POST",
+        	contentType : "application/json",
+        	data : JSON.stringify(searchData),
+        	success : function(data) {
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
+        	}
+		
+        });
+    }
+    
+    function searchHospByType(searchData) {
+    	$.ajax({
+        	url : "/hospital/searchHospitalByType",
+        	type : "POST",
+        	contentType : "application/json",
+        	data : JSON.stringify(searchData),
+        	success : function(data) {
+        		hospitalData = data;
+                displayHospitalList(1);
+                updatePagination(1);
+        	}
+		
+        });
+    }
+    
+    function deleteHospital(button) {
+        var hospitalId = $(button).data('hospital-id');
+
+        if (confirm('정말로 병원 정보를 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/hospital/deleteHospital',
+                method: 'POST',
+                data: { hospitalId: hospitalId },
+                success: function() {
+                    location.reload(true);
+                },
+            });
+        }
+    }
+    
+    function displayHospitalList(page) {
+    	if (!hospitalData || hospitalData[0] === null) {
+            $("table tbody").empty().append('<tr><td colspan="5" style="text-align: center;">검색하신 병원이 존재하지 않습니다.</td></tr>');
+            return;
+        }
+    	
+        var startIndex = (page - 1) * rowOfNums;
+        var endIndex = startIndex + rowOfNums;
+        var pagedData = hospitalData.slice(startIndex, endIndex);
+        var tbody = $("table tbody");
+        tbody.empty();
+        $.each(pagedData, function(index, hospital) {
+            var row = $("<tr></tr>");
+            var updatedAt = hospital.updatedAt ? new Date(hospital.updatedAt) : new Date(hospital.createdAt);
+            var formattedDate = updatedAt.toLocaleDateString('ko-KR');
+            row.append($("<td></td>").html('<div class="widget-26-hospital-title"><a href="/hospital/details?hospitalId=' + hospital.hospitalId + '" id="hospitalName">' + hospital.hospitalName + '</a></div>'));
+            row.append($("<td></td>").html('<div class="widget-26-hospital-info"><p class="m-0"><span class="address" id="address">' + hospital.address + '</span></p></div>'));
+            row.append($("<td></td>").html('<div class="widget-26-hospital-type"><span id="type">' + hospital.type + '</span></div>'));
+            row.append($("<td></td>").html('<div class="widget-26-hospital-update"><span class="text-muted time" id="formattedDate">' + formattedDate + '</span></div>'));
+            if ($("#role").val() === 'ADMIN') {
+                row.append($("<td></td>").html('<div class="widget-26-hospital-edit" style="text-align: center;"><a href="/hospital/viewHospitalUpdate?hospitalId=' + hospital.hospitalId + '"><i class="fas fa-pen"></i></a></div>'));
+                row.append($("<td></td>").html('<div class="widget-26-hospital-delete" style="text-align: center;"><button class="delete-hospital" data-hospital-id="' + hospital.hospitalId + '" onclick="deleteHospital(this)"><i class="fas fa-trash"></i></button></div>'));
+            } else if ($("#role").val() === 'USER') {
+            	var isBookmarked = hospitalBookmarks.some(bookmark => bookmark.hospitalId === hospital.hospitalId);
+            	row.append($("<td></td>").html('<div class="widget-26-hospital-starred" style="text-align: center;"><button class="toogle-star" data-hospital-id="' + hospital.hospitalId + '" onclick="toggleHospitalBookmark(this)"><i class="' + (isBookmarked ? 'fas' : 'far') + ' fa-star"></i></button></div>'));
+            }
+            tbody.append(row);
+        });
+    }
+    
+    function updatePagination(currentPage) {
+        var totalPages = Math.ceil(hospitalData.length / rowOfNums);
+        var pagination = $(".pagination");
+        pagination.empty();
+
+        if (totalPages <= pagesToShow) {
+            for (var i = 1; i <= totalPages; i++) {
+                pagination.append('<li class="page-item' + (i === currentPage ? ' active' : '') + '"><a class="page-link no-border" href="#" data-page="' + i + '">' + i + '</a></li>');
+            }
+        } else {
+            var startPage = Math.floor((currentPage - 1) / pagesToShow) * pagesToShow + 1;
+            var endPage = Math.min(startPage + pagesToShow - 1, totalPages);
+
+            pagination.append('<li class="page-item' + (currentPage === 1 ? ' disabled' : '') + '"><a class="page-link no-border" href="#" data-page="' + (currentPage - 1) + '">«</a></li>');
+
+            for (var i = startPage; i <= endPage; i++) {
+                pagination.append('<li class="page-item' + (i === currentPage ? ' active' : '') + '"><a class="page-link no-border" href="#" data-page="' + i + '">' + i + '</a></li>');
+            }
+
+            pagination.append('<li class="page-item' + (currentPage === totalPages ? ' disabled' : '') + '"><a class="page-link no-border" href="#" data-page="' + (currentPage + 1) + '">»</a></li>');
+        }
+    }
+    
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+        <main class="main-content site-wrapper-reveal">
+        	<section>
+                <div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+            </section>
+            <section style="background-color: #eee;">
+				<div class="container py-4">
+					<div class="row">
+						<div class="col-lg-12 card-margin">
+							<div class="card search-form">
+								<div class="card-body p-0">
+									<form id="search-form">
+										<div class="row">
+											<div class="col-12">
+												<div class="row no-gutters">
+													<div class="col-lg-3 col-md-3 col-sm-12">
+														<select class="form-control" id="searchOption">
+															<option id="name" value="name">이름</option>
+															<option id="sidoCdNm" value="sidoCdNm">지역</option>
+															<option id="type" value="type">유형</option>
+														</select>
+													</div>
+													<div class="col-lg-8 col-md-6 col-sm-12 p-0" id="nameWrapper">
+														<input type="text" placeholder="병원 이름을 입력하세요"
+															class="form-control" id="nameInput" name="nameInput">
+													</div>
+													<div class="col-lg-8 col-md-6 col-sm-12 p-0" id="addressSelectWrapper" style="display: none;">
+												        <select class="form-control" id="addressOption" name="addressOption">
+														  <option id="allAddress" value="">지역을 선택하세요...</option>
+														  <option id="서울" value="서울">서울</option>
+														  <option id="부산" value="부산">부산</option>
+														  <option id="인천" value="인천">인천</option>
+														  <option id="대구" value="대구">대구</option>
+														  <option id="광주" value="광주">광주</option>
+														  <option id="대전" value="대전">대전</option>
+														  <option id="광주" value="광주">광주</option>
+														  <option id="울산" value="울산">울산</option>
+														  <option id="경기" value="경기">경기</option>
+														  <option id="강원" value="강원">강원</option>
+														  <option id="충북" value="충북">충북</option>
+														  <option id="충남" value="충남">충남</option>
+														  <option id="전북" value="전북">전북</option>
+														  <option id="전남" value="전남">전남</option>
+														  <option id="경북" value="경북">경북</option>
+														  <option id="경남" value="경남">경남</option>
+														  <option id="제주" value="제주">제주</option>
+														  <option id="세종시" value="세종시">세종시</option>
+														</select>
+												    </div>
+												    <div class="col-lg-8 col-md-6 col-sm-12 p-0" id="typeSelectWrapper" style="display: none;">
+												        <select class="form-control" id="typeOption" name="typeOption">
+												            <option id="allType" value="">유형을 선택하세요...</option>
+												            <option id="상급종합" value="상급종합">상급종합병원</option>
+												            <option id="종합병원" value="종합병원">종합병원</option>
+												            <option id="병원" value="병원">병원</option>
+												            <option id="요양병원" value="요양병원">요양병원</option>
+												            <option id="정신병원" value="정신병원">정신병원</option>
+												            <option id="치과병원" value="치과병원">치과병원</option>
+												            <option id="치과의원" value="치과의원">치과의원</option>
+												            <option id="조산원" value="조산원">조산원</option>
+												            <option id="보건소" value="보건소">보건소</option>
+												            <option id="보건지소" value="보건지소">보건지소</option>
+												            <option id="보건진료소" value="보건진료소">보건진료소</option>
+												            <option id="모자보건센타" value="모자보건센타">모자보건센타</option>
+												            <option id="보건의료원" value="보건의료원">보건의료원</option>
+												            <option id="한방종합병원" value="한방종합병원">한방종합병원</option>
+												            <option id="한방병원" value="한방병원">한방병원</option>
+												            <option id="한의원" value="한의원">한의원</option>
+												            <option id="한약방" value="한약방">한약방</option>
+												            <option id="병의원" value="병의원">병의원</option>
+												        </select>
+												    </div>
+													<div class="col-lg-1 col-md-3 col-sm-12 p-0">
+														<button type="submit" class="btn btn-base">
+															<i class="fas fa-search"></i>
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="card card-margin">
+								<div class="card-body">
+									<div class="row search-body">
+										<div class="col-lg-12">
+											<div class="search-result">
+												<div class="result-body">
+													<div class="table-responsive">
+														<table class="table widget-26">
+														    <thead th:if="${session.role == 'ADMIN'}">
+														        <tr>
+														            <th style="width: 15%;">병원 이름</th>
+														            <th style="width: 35%;">주소</th>
+														            <th style="width: 10%;">병원 유형</th>
+														            <th style="width: 10%;">갱신 날짜</th>
+														            <th style="width: 5%; text-align: center;">수정</th>
+														            <th style="width: 5%; text-align: center;">삭제</th>
+														        </tr>
+														    </thead>
+														    <thead th:if="${session.role == 'USER'}">
+														        <tr>
+														            <th style="width: 15%;">병원 이름</th>
+														            <th style="width: 45%;">주소</th>
+														            <th style="width: 10%;">병원 유형</th>
+														            <th style="width: 10%;">갱신 날짜</th>
+														            <th style="width: 5%; text-align: center;">북마크</th>
+														        </tr>
+														    </thead>
+														    <thead th:unless="${session.role == 'USER' || session.role == 'ADMIN'}">
+														        <tr>
+														            <th style="width: 15%;">병원 이름</th>
+														            <th style="width: 45%;">주소</th>
+														            <th style="width: 10%;">병원 유형</th>
+														            <th style="width: 10%;">갱신 날짜</th>
+														        </tr>
+														    </thead>
+														    <tbody></tbody>
+														</table>
+														<input type="hidden" id="role" th:value="${role}" />
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<nav class="d-flex justify-content-center">
+										<ul class="pagination pagination-base pagination-boxed pagination-square mb-0"></ul>
+									</nav>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+	
+</body>
+</html>

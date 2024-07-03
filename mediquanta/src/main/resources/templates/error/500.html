@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 500 INTERNAL SERVER ERROR</title>
+<link th:href="@{/css/error/500.css}" type="text/css" rel="stylesheet" />
+</head>
+<body>
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section style="background-color: #666666;">
+				<div style="height: 142px; z-index: 8;">&emsp;</div>
+			</section>
+			<section class="d-flex align-items-center min-vh-100 py-5" style="font-family: Open Sans;">
+				<div class="container py-4">
+					<div class="main"> 
+						<div class="error-middle">
+							<h1>Error 500 - 인터넷 서버 오류</h1>
+							<p>요청을 처리하는 동안 예기치 않는 오류가 발생하였습니다.</p>
+							<a th:href="@{/}">메인 화면으로 돌아가기</a>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

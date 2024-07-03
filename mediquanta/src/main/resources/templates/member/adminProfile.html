@@ -1,13 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout.html}">
+	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
 <title th:text="|${memberDTO.nickname}님의 프로필|"></title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+	$().ready(function() {
+		$("#hospitalBtn").click(function() {
+			$.ajax({
+				url : "/hospital/saveList",
+				type : "GET",
+				success : function() {
+					$("#hospitalBtn")
+                    	.removeClass("btn-outline-secondary")
+                    	.addClass("btn-secondary")
+                    	.text("성공");
+				}
+			});
+		});
+		
+		$("#pharmacyBtn").click(function() {
+			$.ajax({
+				url : "/pharmacy/saveList",
+				type : "GET",
+				success : function() {
+					$("#pharmacyBtn")
+	                	.removeClass("btn-outline-secondary")
+	                	.addClass("btn-secondary")
+	                	.text("성공");
+				}
+			});
+		});
+	});
+</script>
 </head>
-<script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
 <body>
 	<div layout:fragment="content">
 		<main class="main-content site-wrapper-reveal">
@@ -15,7 +44,7 @@
 				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
 			</section>
 			<section style="background-color: #eee;">
-			  <div class="container py-5">
+			  <div class="container py-4">
 			    <div class="row">
 			      <div class="col">
 			        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
@@ -47,10 +76,10 @@
 			        </div>
 			        <div class="card mb-4 mb-lg-0">
 			          <div class="card-body">
-			          	<p class="mb-4"><span class="font-italic me-1">회원 관리</span></p><hr>
-     				    <p class="mb-4"><span class="font-italic me-1">병원 현황</span></p><hr>
-     				    <p class="mb-4"><span class="font-italic me-1">약국 현황</span></p><hr>
-     				    <p class="mb-4"><span class="font-italic me-1">커뮤니티 현황</span></p>
+			          	<p class="mb-4"><span class="font-italic me-1"><a class="text-muted" th:href="@{/member/memberList}">회원 관리</a></span></p><hr>
+     				    <p class="mb-4"><span class="font-italic me-1">병원 현황</span><button id="hospitalBtn" class="btn btn-sm btn-outline-secondary float-end">불러오기</button></p><hr>
+     				    <p class="mb-4"><span class="font-italic me-1">약국 현황</span><button id="pharmacyBtn" class="btn btn-sm btn-outline-secondary float-end">불러오기</button></p><hr>
+     				    <!-- <p class="mb-4"><span class="font-italic me-1">커뮤니티 현황</span></p> -->
 			          </div>
 			        </div>
 			      </div>
@@ -114,14 +143,23 @@
 			        </div>
 			        <div class="row">
 			          <div class="col-md-6">
-			            <div class="card mb-4 mb-md-0">
+			            <div class="card mb-md-0">
 			              <div class="card-body">
 			                <p class="mb-4"><span class="text-primary font-italic me-1">현재 등록된 병원 현황</span></p>
-			                <!-- <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div> -->
+			                <table>
+						        <thead>
+						            <tr>
+						                <th>시/도</th>
+						                <th>개수</th>
+						            </tr>
+						        </thead>
+						        <tbody>
+						            <tr th:each="item : ${hospitalTypeCounts}">
+						                <td th:text="${item.SIDOCDNM}"></td>
+						                <td th:text="${item.COUNT}"></td>
+						            </tr>
+						        </tbody>
+						    </table>
 			              </div>
 			            </div>
 			          </div>
@@ -129,11 +167,20 @@
 			            <div class="card mb-4 mb-md-0">
 			              <div class="card-body">
 			                <p class="mb-4"><span class="text-primary font-italic me-1">현재 등록된 약국 현황</span></p>
-			                <!-- <p class="mb-1" style="font-size: .77rem;">Web Design</p>
-			                <div class="progress rounded" style="height: 5px;">
-			                  <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-			                    aria-valuemin="0" aria-valuemax="100"></div>
-			                </div> -->
+			              	<table>
+						        <thead>
+						            <tr>
+						                <th>시/도</th>
+						                <th>개수</th>
+						            </tr>
+						        </thead>
+						        <tbody>
+						            <tr th:each="item : ${pharmacyTypeCounts}">
+						                <td th:text="${item.SIDOCDNM}"></td>
+						                <td th:text="${item.COUNT}"></td>
+						            </tr>
+						        </tbody>
+						    </table>
 			              </div>
 			            </div>
 			          </div>

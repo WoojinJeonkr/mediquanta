@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout.html}">
+	layout:decorate="~{layout}">
 <head>
 <meta charset="UTF-8">
 <title th:text="|${memberDTO.nickname}님의 프로필|"></title>
-<script th:src="@{/js/jquery-3.7.1.slim.js}"></script>
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
 <script th:src="@{http://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js}"></script>
 <script>
 
@@ -56,8 +56,8 @@
 	            }
 	            
 	            document.getElementById('zipcode').value = data.zonecode;
-	            document.getElementById('roadAddress').value = fullRoadAddr;
-	            document.getElementById('landAddress').value = data.jibunAddress;
+	            document.getElementById('roadAddress').value = fullRoadAddr ? fullRoadAddr : "-";
+	            document.getElementById('landAddress').value = data.jibunAddress ? data.jibunAddress : "-";
 	            
 	        }
 	    }).open();
@@ -74,7 +74,7 @@
 		$.ajax({
 		
 			url : "/member/validNickname",
-			type : "post",
+			type : "POST",
 			data : param,
 			success : function(isValid) {
 				if (isValid === 'y') {
@@ -99,7 +99,7 @@
 		$.ajax({
 		
 			url : "/member/validEmail",
-			type : "post",
+			type : "POST",
 			data : param,
 			success : function(isValid) {
 				if (isValid === 'y') {
@@ -197,7 +197,7 @@ function checkFormValidation() {
 				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
 			</section>
 			<section style="background-color: #eee;">
-			  <div class="container py-5">
+			  <div class="container py-4">
 			    <div class="row">
 			      <div class="col">
 			        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">

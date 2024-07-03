@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 약국 상세 화면</title>
+<link th:href="@{/css/pharmacy/pharmacyDetail.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=dd02e1af86e8604c26e796a10b9093e4&libraries=services,clusterer,drawing"></script>
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+	$(document).ready(function () {
+	    var mapContainer = document.getElementById('map');
+	    var mapOption = { 
+	        center: new kakao.maps.LatLng($("#latitude").val(), $("#longitude").val()),
+	        level: 1,
+	    };
+	
+	    var map = new kakao.maps.Map(mapContainer, mapOption);
+	    
+	    var mapTypeControl = new kakao.maps.MapTypeControl();
+	    
+	    map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+	    
+	    map.addOverlayMapTypeId(kakao.maps.MapTypeId.TERRAIN);
+	    map.addOverlayMapTypeId(kakao.maps.MapTypeId.TRAFFIC);
+	    
+	    var zoomControl = new kakao.maps.ZoomControl();
+	    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+	    
+	    var markerPosition  = new kakao.maps.LatLng($("#latitude").val(), $("#longitude").val()); 
+
+		 var marker = new kakao.maps.Marker({
+		     position: markerPosition
+		 });
+	
+		 marker.setMap(map);
+	});
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+        <main class="main-content site-wrapper-reveal">
+        	<section>
+                <div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+            </section>
+            <section style="background-color: gainsboro;">
+				<div class="container py-4">
+					<div class="row">
+				      <div class="col mb-2">
+				        <nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+				          <ol class="breadcrumb mb-0">
+				            <li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+				            <li class="breadcrumb-item"><a th:href="@{/pharmacy}">약국 목록</a></li>
+				            <li class="breadcrumb-item active" aria-current="page" th:text="${pharmacy.pharmacyName}"></li>
+				          </ol>
+				        </nav>
+				      </div>
+				    </div>
+					<div class="row">
+						<div class="col-lg-12 card-margin">
+							<div class="card mb-0">
+			          			<div class="card-body">
+								    <h1 class="pharmacy-name mb-4" th:text="${pharmacy.pharmacyName}"></h1>
+							    	<table>
+									    <tbody>
+									        <tr>
+									            <td>전화번호</td>
+									            <td>
+						                            <span th:text="${pharmacy.phone}"></span>
+						                        </td>
+									        </tr>
+									        <tr>
+									            <td>주소</td>
+									            <td>
+						                            <span th:text="${pharmacy.address}"></span>
+						                        </td>
+									        </tr>
+									    </tbody>
+									</table>
+									<input id="latitude" th:value="${pharmacy.latitude}" type="hidden">
+						        	<input id="longitude" th:value="${pharmacy.longitude}" type="hidden">
+								</div>
+							</div>
+						 </div>
+					</div>
+				    <div class="row">
+						<div class="col-lg-6 card-margin">
+							<div class="card mb-4">
+			          			<div class="card-body">
+			          				<div id="map" style="width:100%; height:400px;"></div>
+			          			</div>
+			          		</div>
+						 </div>
+						<div class="col-lg-6 card-margin">
+							<div class="card mb-4">
+			          			<div class="card-body">
+			          				<p class="mb-4"><span class="text-primary font-italic me-1">근처 병원 현황</span></p>
+					                <div class="col-md-12 mb-3" th:each="hospital : ${hospitals}">
+		                                <a th:href="@{/hospital/details(hospitalId=${hospital.hospitalId})}">
+		                                	<span class="card-title" th:text="${hospital.hospitalName}" style="font-size: 1.25rem; font-weight: bold;"></span>
+		                                </a>
+		                                <p class="card-text">
+		                                    <strong>병원 타입:</strong> <span th:text="${hospital.type}"></span> <br>
+		                                    <strong>주소:</strong> <span th:text="${hospital.address}"></span> <br>
+		                                    <strong>전화번호:</strong> <span th:text="${hospital.phone}"></span> <br>
+		                                </p>
+		                            </div>
+			          			</div>
+			          		</div>
+						 </div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>
