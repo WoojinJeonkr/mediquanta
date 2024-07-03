@@ -70,6 +70,17 @@
 		WHERE  MEMBER_ID = #{memberId}
 	</select>
 	
+	<!-- 로그인 시간 최신화 -->
+	<update id="updateLastLogin" parameterType="UpdateLastLoginRequest">
+        UPDATE MEMBER
+        <set>
+        	<if test="lastLogin != null">
+	        	LAST_LOGIN = #{lastLogin}
+	        </if>
+        </set>
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+	
 	<!-- 로그인 -->
 	<select id="login" parameterType="String" resultType="MemberDTO">
 		SELECT	PASSWD,
@@ -80,7 +91,8 @@
 	
 	<!-- 회원 정보 조회 -->
 	<select id="getUserInfo" parameterType="String" resultType="MemberDTO">
-		SELECT 	MEMBER_ID,
+		SELECT 	MEMBER_IDX,
+				MEMBER_ID,
 				PASSWD,
 			    NICKNAME,
 			    PROFILE_ORIGINAL_NAME,
@@ -149,4 +161,62 @@
 	    </set>
 	    WHERE MEMBER_ID = #{memberId}
 	</update>
+	
+	<!-- 회원 전체 목록 조회 -->
+	<select id="getMemberList" resultType="MemberDTO">
+		SELECT  NICKNAME,
+			    PROFILE_ORIGINAL_NAME,
+				PROFILE_UUID,
+			    EMAIL,
+			    GENDER,
+			    ZIPCODE,
+				ROAD_ADDRESS,
+				LAND_ADDRESS,
+				ETC_ADDRESS,
+			    ROLE,
+			    ACTIVE_YN,
+			    CREATED_AT,
+			    LAST_LOGIN
+		FROM	MEMBER
+	</select>
+	
+	<!-- 회원 권한 현황 조회 -->
+	<select id="getRoleCount" resultType="map">
+		SELECT
+	        SUM(CASE WHEN ROLE = 'ADMIN' THEN 1 ELSE 0 END) AS adminCount,
+	        SUM(CASE WHEN ROLE = 'USER' THEN 1 ELSE 0 END) AS userCount
+    	FROM MEMBER
+	</select>
+	
+	<!-- 회원 성별 현황 조회 -->
+	<select id="getGenderCount" resultType="map">
+		SELECT
+			SUM(CASE WHEN GENDER = 'M' THEN 1 ELSE 0 END) AS maleCount,
+	        SUM(CASE WHEN GENDER = 'F' THEN 1 ELSE 0 END) AS femaleCount
+		FROM MEMBER
+	</select>
+	
+	<!-- 회원 상태 현황 조회 -->
+	<select id="getActiveCount" resultType="map">
+		SELECT
+			SUM(CASE WHEN ACTIVE_YN = 'y' THEN 1 ELSE 0 END) AS activeCount,
+	        SUM(CASE WHEN ACTIVE_YN = 'n' THEN 1 ELSE 0 END) AS inactiveCount
+		FROM MEMBER
+	</select>
+	
+	<!-- 비밀번호 재발급 -->
+	<update id="setTempPassword" parameterType="map">
+		UPDATE 	MEMBER
+		SET		PASSWD = #{authNum}
+		WHERE	EMAIL = #{email}
+	</update>
+	
+	<!-- 회원 삭제 -->
+	<delete id="deleteMember" parameterType="map">
+		<![CDATA[
+	        DELETE FROM MEMBER
+	        WHERE last_login < DATE_SUB(#{date}, INTERVAL 1 YEAR) AND ACTIVE_YN = 'n'
+	    ]]>
+    </delete>
+	
 </mapper>

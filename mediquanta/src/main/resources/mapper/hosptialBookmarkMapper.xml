@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.hospital.bookmark.dao.HospitalBookmarkDAO">
+
+	<!-- 회원 ID로 병원 즐겨찾기 및 약국 즐겨찾기 정보 조회 -->
+    <select id="findByMemberIdx" parameterType="long" resultType="HospitalBookmarkDTO">
+	    SELECT 	HOSPITAL_BOOKMARK_ID,
+	    		MEMBER_IDX, 
+	           	HOSPITAL_ID
+	    FROM 	HOSPITAL_BOOKMARK
+	    WHERE 	MEMBER_IDX = #{memberIdx}
+	</select>
+
+    <!-- 병원 즐겨찾기 추가 -->
+    <insert id="addHospitalBookmark" parameterType="HospitalBookmarkDTO">
+	   	INSERT INTO HOSPITAL_BOOKMARK (MEMBER_IDX, HOSPITAL_ID)
+        VALUES (#{memberIdx}, #{hospitalId})
+	</insert>
+
+    <!-- 병원 즐겨찾기 삭제 -->
+    <delete id="removeHospitalBookmark" parameterType="map">
+        DELETE FROM HOSPITAL_BOOKMARK
+        WHERE MEMBER_IDX = #{memberIdx} AND HOSPITAL_ID = #{hospitalId}
+    </delete>
+
+</mapper>

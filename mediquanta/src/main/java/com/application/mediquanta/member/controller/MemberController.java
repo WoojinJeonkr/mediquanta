@@ -2,7 +2,8 @@ package com.application.mediquanta.member.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.mediquanta.email.entity.EmailMessage;
+import com.application.mediquanta.email.service.EmailService;
+import com.application.mediquanta.hospital.dto.HospitalDTO;
+import com.application.mediquanta.hospital.service.HospitalService;
 import com.application.mediquanta.member.dto.MemberDTO;
 import com.application.mediquanta.member.service.MemberService;
+import com.application.mediquanta.pharmacy.dto.PharmacyDTO;
+import com.application.mediquanta.pharmacy.service.PharmacyService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -34,6 +41,15 @@ public class MemberController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
+	private HospitalService hospitalService;
+	
+	@Autowired
+	private PharmacyService pharmacyService;
 	
 	@GetMapping("/register")
 	public String register() {
@@ -67,7 +83,7 @@ public class MemberController {
 	@PostMapping("/register")
 	public String register(@RequestParam("uploadProfile") MultipartFile uploadProfile, @ModelAttribute MemberDTO memberDTO) throws IllegalStateException, IOException {
 		memberService.createMember(uploadProfile, memberDTO);
-		return "redirect:member/login";
+		return "member/login";
 	}
 	
 	@GetMapping("/login")
@@ -84,16 +100,38 @@ public class MemberController {
 			session.setAttribute("memberId", memberDTO.getMemberId());
 			session.setAttribute("role", checkRole(memberDTO.getMemberId()));
 			isValidMember = "y";
-			memberDTO.setLastLogin(new Date());
-			
 		}
 		return isValidMember;
+	}
+	
+	@GetMapping("/forgotPasswd")
+	public String tempPasswd() {
+		return "member/forgotPasswdForm";
+	}
+	
+	@PostMapping("/forgotPasswd")
+	public String forgotPasswd(@RequestParam("memberId") String memberId) {
+		MemberDTO memberDTO = memberService.getUserInfo(memberId);
+		String page = "";
+		if (memberDTO == null) {
+			page = "/member/register";
+		} else {
+			String email = memberDTO.getEmail();
+			EmailMessage emailMessage = EmailMessage.builder()
+	                .to(email)
+	                .subject("[Mediquanta] 임시 비밀번호 발급")
+	                .build();
+
+	        emailService.sendMail(emailMessage, "email");
+			page = "/member/login";
+		}
+		return "redirect:" + page;
 	}
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:";
+		return "redirect:/";
 		
 	}
 	
@@ -106,18 +144,21 @@ public class MemberController {
 	@GetMapping("/profile")
 	public String redirectProfile(Model model, HttpSession session) {
 		String role = (String)session.getAttribute("role");
-		String page = "";
-		if (role == null) {
-			page = "redirect:/";
-		} else {
-			String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
-			
-			String memberId = (String)session.getAttribute("memberId");
-			model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
-			page = "member/" + profilePage;
-		}
-		
-		return page;
+		String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
+		String memberId = (String)session.getAttribute("memberId");
+		MemberDTO memberDTO = memberService.getUserInfo(memberId);
+		Map<String, Double> location = memberService.kakaoLocalAPI(memberDTO.getRoadAddress());
+		List<HospitalDTO> hospitals = hospitalService.selectNearestHospitals(location.get("latitude").doubleValue(), location.get("longitude").doubleValue());
+		List<PharmacyDTO> pharmacies = pharmacyService.selectNearestPharmacies(location.get("latitude").doubleValue(), location.get("longitude").doubleValue());
+		List<Map<String, Object>> hospitalTypeCounts = hospitalService.getHospitalTypeCounts();
+		List<Map<String, Object>> pharmacyTypeCounts = pharmacyService.getPharmacyTypeCounts();
+        
+		model.addAttribute("memberDTO", memberDTO);
+		model.addAttribute("hospitals", hospitals);
+		model.addAttribute("pharmacies", pharmacies);
+		model.addAttribute("hospitalTypeCounts", hospitalTypeCounts);
+		model.addAttribute("pharmacyTypeCounts", pharmacyTypeCounts);
+		return "member/" + profilePage;
 	}
 	
 	@GetMapping("/updateProfile")
@@ -140,7 +181,25 @@ public class MemberController {
 		String memberId = (String)session.getAttribute("memberId");
 		memberService.signOut(memberId);
 		session.invalidate();
-		return "redirect:";
+		return "redirect:/";
+	}
+	
+	@GetMapping("/memberList")
+	public String getMemberList(HttpSession session, Model model) {
+		String memberId = (String)session.getAttribute("memberId");
+		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
+		model.addAttribute("memberList", memberService.getMemberList());
+		model.addAttribute("memberRoleCount", memberService.getRoleCount());
+		model.addAttribute("memberGenderCount", memberService.getGenderCount());
+		model.addAttribute("memberActiveCount", memberService.getActiveCount());
+		return "member/memberList";
+	}
+	
+	
+	@GetMapping("/deleteMember")
+	public String deleteMember() {
+		memberService.deleteMember();
+		return "redirect:/member/memberList";
 	}
 	
 }
