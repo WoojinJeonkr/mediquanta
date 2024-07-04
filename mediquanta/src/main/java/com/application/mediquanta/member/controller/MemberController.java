@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.application.mediquanta.community.service.CommunityService;
 import com.application.mediquanta.email.entity.EmailMessage;
 import com.application.mediquanta.email.service.EmailService;
 import com.application.mediquanta.hospital.dto.HospitalDTO;
@@ -50,6 +51,9 @@ public class MemberController {
 	
 	@Autowired
 	private PharmacyService pharmacyService;
+	
+	@Autowired
+	private CommunityService communityService;
 	
 	@GetMapping("/register")
 	public String register() {
@@ -195,6 +199,14 @@ public class MemberController {
 		return "member/memberList";
 	}
 	
+	@GetMapping("/communityList")
+	public String getCommunityList(HttpSession session, Model model) {
+		String memberId = (String)session.getAttribute("memberId");
+		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
+		model.addAttribute("communityActiveCount", communityService.countActiveCommunity());
+		model.addAttribute("communityList", communityService.getCommunityList());
+		return "member/communityList";
+	}
 	
 	@GetMapping("/deleteMember")
 	public String deleteMember() {

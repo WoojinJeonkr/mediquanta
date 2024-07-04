@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 커뮤니티 추가</title>
+<link th:href="@{/css/community/communityCreate.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+
+	$(document).ready(function() {
+		$("#communityName").on("input", function() {
+			if ($("#checkCommunityNameBtn").text() === "사용 불가" && $("#checkCommunityNameBtn").hasClass("btn-danger")) {
+		        $("#checkCommunityNameBtn").text("중복 확인").removeClass("btn-danger").addClass("btn-primary");
+		    }
+	
+		    if ($("#checkCommunityNameBtn").text() === "사용 가능" && $("#checkCommunityNameBtn").hasClass("btn-success")) {
+		        $("#checkCommunityNameBtn").text("중복 확인").removeClass("btn-success").addClass("btn-primary");
+		    }
+	    });
+	});
+	
+	function checkCommunityNameAvailability() {
+		
+		let param = {
+			"communityName" : $("#communityName").val()
+		}
+		
+		$.ajax({
+		
+			url : "/community/validCommunityName",
+			type : "POST",
+			data : param,
+			success : function(isValid) {
+				if (isValid === 'y') {
+					document.getElementById("checkCommunityNameBtn").className = "btn btn-success btn-md";
+			        document.getElementById("checkCommunityNameBtn").innerHTML = "사용 가능";
+				} else {
+					document.getElementById("checkCommunityNameBtn").className = "btn btn-danger btn-md";
+			        document.getElementById("checkCommunityNameBtn").innerHTML = "사용 불가";
+				}
+			}
+				
+		});
+		
+	}
+	
+	function checkCreateCommunityForm() {
+
+		let isCheck = true;
+		
+		let communityName = $("#communityName").val();
+		let purpose = $("#purpose").val();
+		
+		if (communityName.trim() === "") {
+			$("#isValidCommunityNameMsg").html(`<span style="color:red;">커뮤니티 이름을 입력하세요.</span>`);
+			isCheck = false;		
+		} else if (document.getElementById("checkCommunityNameBtn").innerHTML == "중복 확인") {
+			$("#isValidCommunityNameMsg").html(`<span style="color:red;">커뮤니티 이름 중복을 확인하세요.</span>`);
+			isCheck = false;
+		} else if (document.getElementById("checkCommunityNameBtn").innerHTML == "사용 불가") {
+			$("#isValidCommunityNameMsg").html(`<span style="color:red;">중복된 커뮤니티 이름입니다.</span>`);
+			isCheck = false;
+		} else {
+			$("#isValidCommunityNameMsg").text("");
+		}
+		
+		if (purpose.trim() === "" || purpose === null) {
+			$("#isValidPurposeMsg").html(`<span style="color:red;">커뮤니티 목적을 입력하세요.</span>`);
+			isCheck = false;
+		} else {
+			$("#isValidPurposeMsg").text("");
+		}
+		
+		return isCheck;
+		
+	}
+
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section>
+				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+			</section>
+			<section style="background-color: #eee;">
+				<div class="container py-4">
+					<div class="row">
+						<div class="col">
+							<nav aria-label="breadcrumb"
+								class="bg-body-tertiary rounded-3 mb-4">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+									<li class="breadcrumb-item"><a th:href="@{/community}">커뮤니티</a></li>
+									<li class="breadcrumb-item active" aria-current="page">커뮤니티 추가</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12 card-margin">
+							<div class="card mb-0">
+			          			<div class="card-body">
+									<form class="validation-form" th:action="@{/community/createCommunity}" th:onsubmit="return checkCreateCommunityForm();" method="post" enctype="multipart/form-data" novalidate>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="communityName">커뮤니티 이름<span style="color: red;">*</span></label>
+											<div class="form-group row">
+												<div class="col-md-10">
+													<input type="text" id="communityName" name="communityName" placeholder="사용하시고자 하는 커뮤니티 이름을 입력하세요" class="form-control form-control-lg" />
+													<span id="isValidCommunityNameMsg"></span>
+												</div>
+												<div class="col-md-2">
+													<button type="button" class="btn btn-md btn-light" id="checkCommunityNameBtn" onclick="checkCommunityNameAvailability()" style="float:right; border: 1px solid cadetblue;">중복 확인</button>
+												</div>
+											</div>
+										</div>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="description">커뮤니티 설명</label>
+											<input type="text" id="description" name="description" placeholder="사용하시고자 하는 커뮤니티에 대한 설명을 입력하세요" class="form-control form-control-lg" />
+										</div>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="purpose">커뮤니티 목적<span style="color: red;">*</span></label>
+											<input type="text" id="purpose" name="purpose" placeholder="커뮤니티를 만들고자 하는 목적을 서술하세요" class="form-control form-control-lg" />
+											<span id="isValidPurposeMsg"></span>
+										</div>
+										<div class="mb-4"></div>
+										<button class="btn btn-primary btn-sm btn-block" style="float:right;" type="submit">추가</button>
+										<a th:href="@{/community}">취소</a>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

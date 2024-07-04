@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>커뮤니티 목록</title>
+<link th:href="@{/css/communityList.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+	var communityId = $("#communityId").val();
+	function agreeCommunity(communityId) {
+	    $.ajax({
+	        url: "/community/agreeCommunity",
+	        type: "POST",
+	        data: { "communityId" : communityId },
+	        success: function(response) {
+	            alert('승인되었습니다.');
+	            location.reload();
+	        },
+	        error: function(xhr, status, error) {
+	            alert('승인에 실패했습니다.');
+	        }
+	    });
+	}
+</script>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section>
+				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+			</section>
+			<section style="background-color: #eee;">
+				<div class="container py-4">
+					<div class="row">
+						<div class="col">
+							<nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+									<li class="breadcrumb-item">
+										<a th:href="@{/member/profile}">관리자 프로필</a>
+									</li>
+									<li class="breadcrumb-item active" aria-current="page">커뮤니티 관리</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+							<div class="card mb-4">
+								<div class="card-body text-center">
+									<img th:src="@{/member/thumbnails(fileName=${memberDTO.profileUUID})}" alt="avatar"
+										class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+									<div class="d-flex justify-content-center align-items-center mt-3">
+										<h5 class="my-3" id="memberNickname" th:text="${memberDTO?.nickname}"></h5>
+									</div>
+									<div class="d-flex justify-content-center mb-2">
+										<span th:if="${memberDTO?.memberId} == ${session.memberId}">
+											<input type="button" value="회원 정보 수정" data-mdb-button-init
+												data-mdb-ripple-init class="btn btn-secondary btn-sm ms-1"
+												th:onclick="|location.href='@{/member/updateProfile}'|">
+											<input type="button" value="회원 삭제" data-mdb-button-init data-mdb-ripple-init
+												class="btn btn-danger btn-sm ms-1"
+												th:onclick="|location.href='@{/member/deleteMember}'|">
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-8">
+							<div class="card mb-4" style="height: 45%;">
+								<div class="card-body">
+									<div class="row">
+									    <div class="col-md-4 col-xl-4 mt-1 mb-4">
+										    <div class="card bg-c-blue order-card">
+										        <div class="card-block">
+										            <h6>커뮤니티 현황</h6>
+										            <h2 class="text-right" style="display: flex; align-items: center;">
+										                <i class="fas fa-users f-left color-white" style="margin-right: 17vh;"></i>
+										                <span class="color-white " th:text="${communityList.size}"></span>
+										            </h2>
+										            <p class="m-b-0 color-gray">승인<span class="f-right" th:text="${communityActiveCount['y'] == null ? 0 : communityActiveCount['y']}"></span></p>
+										            <p class="m-b-0 color-gray">미승인<span class="f-right" th:text="${communityActiveCount['n'] == null ? 0 : communityActiveCount['n']}"></span></p>
+										        </div>
+										    </div>
+										</div>
+								        <!-- <div class="col-md-4 col-xl-4 mt-1">
+								            <div class="card bg-c-green order-card">
+								                <div class="card-block">
+								                	<h6 class="m-b-20">게시글 수</h6>
+										            <h2 class="text-right" style="display: flex; align-items: center;">
+										                <i class="fas fa-venus-mars f-left color-white" style="margin-right: 16vh;"></i>
+										                <span class="color-white" th:text="${postList.size}"></span>
+										            </h2>
+								            	</div>
+								            </div>
+								        </div> -->
+									</div>
+								</div>
+							</div>
+							<div class="card mb-4">
+								<div class="card-body">
+									<div class="main-box clearfix">
+										<div class="table-responsive">
+											<table class="table user-list">
+												<thead>
+													<tr class="text-center">
+														<th style="width: 20%;"><span>커뮤니티 명</span></th>
+														<th style="width: 20%;"><span>설명</span></th>
+														<th style="width: 25%;"><span>목적</span></th>
+														<th style="width: 10%;"><span>상태</span></th>
+														<th style="width: 15%;"><span>생성 일자</span>
+														<th style="width: 10%;"><span>승인</span>
+													</tr>
+												</thead>
+												<tbody>
+													<tr th:each="community : ${communityList}">
+														<td style="display:none;">
+															<input id="communityId" type="hidden" th:value="${community.communityId}">
+														</td>
+														<td>
+															<span class="text-muted" th:text="${community.communityName}"></span>
+														</td>
+														<td>
+															<span class="text-muted" th:text="${community.description == '' || community.description == null ? '설명 없음' : community.description}"></span>
+														</td>
+														<td>
+															<span class="text-muted" th:text="${community.purpose}"></span>
+														</td>
+														<td class="text-center">
+															<span class="label label-default">
+																<span class="fa-stack"
+																	th:if="${community.activeYn} == 'y'">
+																	<i class="fas fa-check" style="color: green"></i>
+																</span>
+																<span class="fa-stack"
+																	th:unless="${community.activeYn} == 'y'">
+																	<i class="fas fa-times" style="color: red"></i>
+																</span>
+															</span>
+														</td>
+														<td class="text-center" th:text="${#dates.format(community.createdAt, 'yyyy-MM-dd')}" id="createdAt"></td>
+														<td class="text-center" th:if="${community.activeYn == 'n'}">
+															<button type="button" class="btn btn-sm btn-success" th:onclick="|agreeCommunity(${community.communityId})|" th:text="승인"></button>
+														</td>
+														<td class="text-center" th:unless="${community.activeYn == 'n'}">
+															<i class="fas fa-check" style="color: green"></i>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<!-- 페이지네이션 추가 -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.community.dao.CommunityDAO">
+
+	<select id="getCommunityList">
+		SELECT 	COMMUNITY_ID,
+				COMMUNITY_NAME,
+				DESCRIPTION,
+				PURPOSE,
+				ACTIVE_YN,
+				TOTAL_VIEW_COUNT,
+				TOTAL_MEMBER_COUNT,
+				TOTAL_POST_COUNT,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	COMMUNITY
+	</select>
+	
+	<select id="findCommunity">
+		SELECT 	COMMUNITY_ID,
+				COMMUNITY_NAME,
+				DESCRIPTION,
+				PURPOSE,
+				ACTIVE_YN,
+				TOTAL_VIEW_COUNT,
+				TOTAL_MEMBER_COUNT,
+				TOTAL_POST_COUNT,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	COMMUNITY
+		WHERE	COMMUNITY_ID = #{communityId}
+	</select>
+	
+	<select id="validCommunityName" parameterType="String" resultType="String">
+		SELECT 	COMMUNITY_NAME
+		FROM 	COMMUNITY
+		WHERE	COMMUNITY_NAME = #{communityName}
+	</select>
+	
+	<insert id="createCommunity" parameterType="CommunityDTO">
+		INSERT INTO COMMUNITY (
+			COMMUNITY_NAME,
+			DESCRIPTION,
+			PURPOSE,
+			ACTIVE_YN,
+			CREATED_AT
+		) VALUES (
+			#{communityName},
+			#{description},
+			#{purpose},
+			#{activeYn},
+			#{createdAt}
+		)
+	</insert>
+	
+	<select id="countActiveCommunity" resultType="map">
+        SELECT
+            ACTIVE_YN, 
+            COUNT(*) AS count
+        FROM 
+            COMMUNITY
+        GROUP BY 
+            ACTIVE_YN
+    </select>
+    
+    <update id="agreeCommunity" parameterType="CommunityDTO">
+    	UPDATE
+    		COMMUNITY
+    	SET
+    		ACTIVE_YN = #{activeYn}
+    	WHERE COMMUNITY_ID = #{communityId}
+    </update>
+	
+</mapper>
