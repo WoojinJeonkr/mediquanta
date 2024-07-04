@@ -16,10 +16,6 @@ import com.application.mediquanta.pharmacy.bookmark.dto.PharmacyBookmarkDTO;
 @Service
 public class PharmacyBookmarkServiceImpl implements PharmacyBookmarkService {
 
-	// TODO 1. 북마크 화면 단에서 보여지도록 표시
-	// pharmacyList.html (widget-26-pharmacy-starred : click -> addPharmacyBookmark,
-	// cancel -> removePharmacyBookmark)
-
 	@Autowired
 	private PharmacyBookmarkDAO pharmacyBookmarkDAO;
 
