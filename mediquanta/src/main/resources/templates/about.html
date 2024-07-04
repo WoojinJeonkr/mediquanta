@@ -17,25 +17,26 @@
             <section class="about-us" id="about-us">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6 about-content">
+                        <div class="col-md-7 about-content">
                             <div class="about-heading">
                                 <h1>About <span class='text-success'>Mediquanta</span></h1>
                                 <hr>
                             </div>
-                            <p>근처 병원 및 약국을 조회할 수 있는 커뮤니티 플랫폼입니다.</p>
+                            <p>주소를 기반으로 근처 병원 및 약국을 조회할 수 있는 사이트입니다.</p>
                             <ul>
+                                <li><label><i class="fas fa-user-circle"></i> 비회원</label><br></li>
+                                <li>병원 / 약국 목록에서 검색창으로 통해 근처 병원 및 약국을 조회하실 수 있습니다.</li>
+                           </ul>
+                           <ul>
                                 <li>
-                                    <label><i class="fas fa-user-circle"></i> 비회원</label><br>
-                                    현재 주소를 입력하시면 근처 병원 및 약국을 조회하실 수 있습니다.
+                                	<label><i class="fas fa-address-card"></i> 회원</label><br>
                                 </li>
-                                <li>
-                                    <label><i class="fas fa-address-card"></i> 회원</label><br>
-                                    회원 정보의 주소를 기반으로 근처 병원과 약국을 확인하실 수 있습니다.
-                                </li>
+                              	<li>프로필에서 회원 정보의 주소를 기반으로 근처 병원과 약국을 확인하실 수 있습니다.</li>
+                              	<li>병원 / 약국 목록에서 검색창으로 통해 근처 병원 및 약국을 조회하실 수 있습니다.</li>
                             </ul>
                             <p><i class="fas fa-check-circle" style='color:green;'></i>건강보험심사평가원에 등록된 병원과 약국만 검색이 가능합니다.</p>
                         </div>
-                        <div class="col-md-6 about-image">
+                        <div class="col-md-5 about-image">
                             <img th:src="@{/img/about/about.jpg}" alt="about image">
                         </div>
                     </div>
