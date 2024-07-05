@@ -9,6 +9,7 @@ public interface CommunityService {
 
 	public List<CommunityDTO> getCommunityList();
 	public CommunityDTO findCommunity(long communityId);
+	public CommunityDTO findCommunityByCommunityName(String communityName);
 	public String validCommunityName(String communityName);
 	public void createCommunity(CommunityDTO communityDTO);
 	public Map<String, Long> countActiveCommunity();

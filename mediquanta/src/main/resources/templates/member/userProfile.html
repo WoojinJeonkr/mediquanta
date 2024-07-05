@@ -36,6 +36,9 @@
 						</div>
 			            <div class="d-flex justify-content-center mb-2">
 			            	<span th:if="${memberDTO.memberId} == ${session.memberId}">
+			            	<input	type="button" value="북마크"
+			            			data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-sm ms-1" 
+			            			th:onclick="|location.href='@{/member/bookmark}'|">
 			            	<input	type="button" value="회원 정보 수정"
 			            			data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-sm ms-1" 
 			            			th:onclick="|location.href='@{/member/updateProfile}'|">

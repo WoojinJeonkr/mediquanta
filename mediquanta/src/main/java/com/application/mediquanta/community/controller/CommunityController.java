@@ -1,10 +1,14 @@
 package com.application.mediquanta.community.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +30,10 @@ public class CommunityController {
 	public String viewRounge(HttpSession session, Model model) {
 		String role = (String)session.getAttribute("role");
 		if (role != null) model.addAttribute("role", role);
-		model.addAttribute("communityList", communityService.getCommunityList());
+		List<CommunityDTO> activeCommunities = communityService.getCommunityList().stream()
+		        .filter(community -> "y".equals(community.getActiveYn()))
+		        .collect(Collectors.toList());
+		model.addAttribute("communityList", activeCommunities);
 		return "community/rounge";
 	}
 	
@@ -44,13 +51,20 @@ public class CommunityController {
 	@PostMapping("/createCommunity")
 	public String createCommunity(@ModelAttribute CommunityDTO communityDTO) {
 		communityService.createCommunity(communityDTO);
-		return "community/rounge";
+		return "redirect:/community";
 	}
 	
 	@PostMapping("/agreeCommunity")
 	@ResponseBody
 	public void agreeCommunity(@RequestParam("communityId") long communityId) {
 		communityService.agreeCommunity(communityId);
+	}
+	
+	@GetMapping("/{communityName}")
+    public String viewCommunityPage(@PathVariable("communityName") String communityName, Model model) {
+		CommunityDTO community = communityService.findCommunityByCommunityName(communityName);
+		model.addAttribute("community", community);
+		return "community/forum";
 	}
 	
 	

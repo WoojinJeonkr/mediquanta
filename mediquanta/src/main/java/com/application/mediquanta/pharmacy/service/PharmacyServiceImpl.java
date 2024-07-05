@@ -1,6 +1,7 @@
 package com.application.mediquanta.pharmacy.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +89,12 @@ public class PharmacyServiceImpl implements PharmacyService {
 
 	@Override
 	public List<PharmacyDTO> getPharmacyList() {
-		return pharmacyDAO.getPharmacyList();
+		List<PharmacyDTO> pharmacyList = pharmacyDAO.getPharmacyList();
+		if (pharmacyList.size() > 0) {
+			return pharmacyList;
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	@Override

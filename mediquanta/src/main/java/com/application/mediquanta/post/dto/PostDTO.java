@@ -1,4 +1,4 @@
-package com.application.mediquanta.community.dto;
+package com.application.mediquanta.post.dto;
 
 import java.util.Date;
 

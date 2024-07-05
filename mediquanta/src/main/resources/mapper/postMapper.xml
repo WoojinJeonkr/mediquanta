@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.post.dao.PostDAO">
+	
+	<!-- 게시글 작성 -->
+	<insert id="createPost" parameterType="PostDTO">
+		INSERT INTO POST (
+			TITLE,
+			AUTHOR,
+			CONTENT,
+			CREATED_AT
+		) VALUES (
+			#{title},
+			#{author},
+			#{content},
+			#{createdAt}
+		)		
+	</insert>
+
+</mapper>

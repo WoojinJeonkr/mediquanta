@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +24,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.application.mediquanta.community.service.CommunityService;
 import com.application.mediquanta.email.entity.EmailMessage;
 import com.application.mediquanta.email.service.EmailService;
+import com.application.mediquanta.hospital.bookmark.service.HospitalBookmarkService;
 import com.application.mediquanta.hospital.dto.HospitalDTO;
 import com.application.mediquanta.hospital.service.HospitalService;
 import com.application.mediquanta.member.dto.MemberDTO;
 import com.application.mediquanta.member.service.MemberService;
+import com.application.mediquanta.pharmacy.bookmark.service.PharmacyBookmarkService;
 import com.application.mediquanta.pharmacy.dto.PharmacyDTO;
 import com.application.mediquanta.pharmacy.service.PharmacyService;
 
@@ -51,6 +54,12 @@ public class MemberController {
 	
 	@Autowired
 	private PharmacyService pharmacyService;
+	
+	@Autowired
+	private HospitalBookmarkService hospitalBookmarkService;
+	
+	@Autowired
+	private PharmacyBookmarkService pharmacyBookmarkService;
 	
 	@Autowired
 	private CommunityService communityService;
@@ -206,6 +215,24 @@ public class MemberController {
 		model.addAttribute("communityActiveCount", communityService.countActiveCommunity());
 		model.addAttribute("communityList", communityService.getCommunityList());
 		return "member/communityList";
+	}
+	
+	@GetMapping("/bookmark")
+	public String getBookmarkList(HttpSession session, Model model) {
+		String memberId = (String)session.getAttribute("memberId");
+		List<HospitalDTO> hospitalBookmarkList = hospitalBookmarkService.getBookmarksForMember(memberId)
+		        .stream()
+		        .map(hospitalBookmark -> hospitalService.getHospitalDetails(hospitalBookmark.getHospitalId()))
+		        .collect(Collectors.toList());
+
+		List<PharmacyDTO> pharmacyBookmarkList = pharmacyBookmarkService.getBookmarksForMember(memberId)
+		        .stream()
+		        .map(pharmacyBookmark -> pharmacyService.getPharmacyDetails(pharmacyBookmark.getPharmacyId()))
+		        .collect(Collectors.toList());
+		model.addAttribute("memberDTO", memberService.getUserInfo(memberId));
+		model.addAttribute("hospitalBookmarkList", hospitalBookmarkList);
+		model.addAttribute("pharmacyBookmarkList", pharmacyBookmarkList);
+		return "member/bookmarkList";
 	}
 	
 	@GetMapping("/deleteMember")

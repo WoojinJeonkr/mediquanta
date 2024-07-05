@@ -2,6 +2,7 @@ package com.application.mediquanta.member.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -170,7 +171,7 @@ public class MemberServiceImpl implements MemberService {
 		if (memberList.size() > 0) {
 			return memberList;
 		} else {
-			return null;
+			return Collections.emptyList();
 		}
 	}
 

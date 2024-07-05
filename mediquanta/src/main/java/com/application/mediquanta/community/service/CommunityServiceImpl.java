@@ -28,6 +28,11 @@ public class CommunityServiceImpl implements CommunityService {
 	public CommunityDTO findCommunity(long communityId) {
 		return communityDAO.findCommunity(communityId);
 	}
+	
+	@Override
+	public CommunityDTO findCommunityByCommunityName(String communityName) {
+		return communityDAO.findCommunityByCommunityName(communityName);
+	}
 
 	@Override
 	public String validCommunityName(String communityName) {

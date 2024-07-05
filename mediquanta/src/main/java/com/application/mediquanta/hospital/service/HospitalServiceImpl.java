@@ -146,7 +146,6 @@ public class HospitalServiceImpl implements HospitalService {
 	@Override
 	public void updateHospInfo(HospitalDTO hospitalDTO) {
 		hospitalDTO.setUpdatedAt(new Date());
-		log.info("hospitalDTO -> {}", hospitalDTO);
 		hospitalDAO.updateHospInfo(hospitalDTO);
 	}
 
