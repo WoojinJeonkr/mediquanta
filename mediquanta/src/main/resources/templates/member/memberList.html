@@ -24,9 +24,6 @@
 								<ol class="breadcrumb mb-0">
 									<li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
 									<li class="breadcrumb-item">
-										<span th:if="${memberDTO.role == 'USER'}">
-											<a th:href="@{/member/profile}">사용자 프로필</a>
-										</span>
 										<span th:unless="${memberDTO.role == 'USER'}">
 											<a th:href="@{/member/profile}">관리자 프로필</a>
 										</span>
@@ -128,8 +125,7 @@
 															<img th:src="@{/member/thumbnails(fileName=${memberDTO?.profileUUID})}"
 																alt="avatar" class="rounded-circle img-fluid"
 																style="width: 50px; height: 50px;">
-															<a href="#" class="user-link"
-																th:text="${member.nickname}"></a>
+															<span class="user-link" th:text="${member.nickname}"></span>
 															<span class="user-subhead" th:text="${member.role}"></span>
 														</td>
 														<td th:text="${#dates.format(member.createdAt, 'yyyy-MM-dd')}"
@@ -156,7 +152,6 @@
 												</tbody>
 											</table>
 										</div>
-										<!-- 페이지네이션 추가 -->
 									</div>
 								</div>
 							</div>

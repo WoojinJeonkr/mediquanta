@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 게시글 상세</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+<link th:href="@{/css/community/postDetail.css}" type="text/css" rel="stylesheet" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+
+	function deletePost() {
+	    if (confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+	        var communityName = $("#communityName").val();
+	        var postId = $("#postId").val();
+	
+	        $.ajax({
+	            url: '/community/' + communityName + '/deletePost/' + postId,
+	            type: 'POST',
+	            headers: {
+	                'Content-Type': 'application/x-www-form-urlencoded',
+	            },
+	            success: function(response) {
+	                alert("게시글이 삭제되었습니다.");
+	                window.location.href = '/community/' + communityName;
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('Error:', error);
+	                alert("게시글 삭제 중 오류가 발생했습니다.");
+	            }
+	        });
+	    }
+	}
+	
+	function createReply() {
+        var communityName = $("#communityName").val();
+        var postId = $("#postId").val();
+        var replyContent = $("#replyContent").val();
+        var replyAuthor = $("#replyAuthor").val();
+
+        let param = {
+        	"postId" : postId,
+        	"nickname" : replyAuthor,
+        	"content" : replyContent
+        }
+        
+        $.ajax({
+            url: '/community/' + communityName + '/postDetail/' + postId + '/createReply',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(param),
+            success: function(response) {
+                location.reload();
+            }
+        });
+    }
+	
+	function showUpdateForm(replyId) {
+		console.log(replyId);
+		$("#showUpdateBtn" + replyId).hide();
+		$("#replyContent" + replyId).hide();
+        $("#deleteReplyBtn" + replyId).hide();
+        $("#replyContentInput" + replyId).removeClass("d-none").addClass("mb-3");
+        $("#replyUpdateBtn" + replyId).removeClass("d-none");
+    }
+	
+	function updateReply(replyId) {
+       var newContent = $("#replyContentInput" + replyId).val();
+       if (newContent) {
+           var communityName = $("#communityName").val();
+           var postId = $("#postId").val();
+           
+           let param = {
+	           "postId" : postId,
+	           "replyId" : replyId,
+	           "content" : newContent
+           }
+
+           $.ajax({
+               url: '/community/' + communityName + '/postDetail/' + postId + '/updateReply',
+               type: 'POST',
+               contentType: 'application/json',
+               data: JSON.stringify(param),
+               success: function(response) {
+                   alert("댓글이 수정되었습니다.");
+                   location.reload();
+               },
+               error: function(xhr, status, error) {
+                   console.error('Error:', error);
+                   alert("댓글 수정 중 오류가 발생했습니다.");
+               }
+           });
+       }
+   }
+
+    function deleteReply(replyId) {
+    	console.log(replyId);
+        if (confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+            var communityName = $("#communityName").val();
+            var postId = $("#postId").val();
+
+            $.ajax({
+                url: '/community/' + communityName + '/postDetail/' + postId + '/deleteReply',
+                type: 'POST',
+                contentType: 'application/x-www-form-urlencoded',
+                data: { replyId: replyId },
+                success: function(response) {
+                    alert("댓글이 삭제되었습니다.");
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert("댓글 삭제 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    }
+</script>
+<body>
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section>
+				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+			</section>
+			<section style="background-color: #eee;">
+				<div class="container py-4">
+					<div class="row">
+						<div class="col">
+							<nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+									<li class="breadcrumb-item"><a th:href="@{/community}">라운지</a></li>
+									<li class="breadcrumb-item"><a th:href="@{'/community/' + ${communityName}}" th:text="${communityName}"></a></li>
+									<li class="breadcrumb-item active" aria-current="page">게시글 상세</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+				</div>
+				<div class="container py-4 rounded-1">
+					<div class="row">
+						<div class="col-lg-12 card-margin">
+							<div class="card mb-0 ml-2">
+								<div class="card-body">
+									<div class="col-sm-12 blog">
+										<h2 class="py-2" th:text="${post.title}"></h2>
+										<ul class="blog-detail list-unstyled">
+											<li><i class="fas fa-calendar"></i>&emsp;<span th:text="${#dates.format(post.createdAt, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></li>
+											<li><i class="fas fa-user"></i>&emsp;<span th:text="${post.author}"></span></li>
+											<li><i class="fas fa-eye"></i>&emsp;<span th:text="${post.viewCnt}"></span></li>
+											<li class="btn-group ms-auto" th:if="${memberDTO.nickname == post.author}">
+												<a th:href="@{'/community/' + ${communityName} + '/updatePost/' + ${post.postId}}" class="btn btn-sm btn-success rounded-2 btn-edit"><i class="fas fa-edit" style="fill:#ffffff;"></i></a>
+												<button class="btn btn-sm btn-danger rounded-2" onClick="deletePost()"><i class="fas fa-trash"></i></button>
+											</li>
+										</ul>
+										<input type="hidden" id="communityName" th:value="${communityName}">
+										<input type="hidden" id="postId" th:value="${post.postId}">
+										<div class="blog-post-content" th:utext="${post.content}"></div>
+									</div>
+									<div class="col-sm-12 blog">
+											<div class="be-comment-block">
+												<div th:if="${replies.size() > 0}">
+													<h1 class="comments-title">Comments (<span th:text="${replies.size()}"></span>)</h1>
+		                                            <div th:each="reply : ${replies}" class="be-comment">
+											            <div class="be-img-comment" th:if="profileUUIDMap != null">
+											                <img th:src="@{/member/thumbnails(fileName=${profileUUIDMap.get(reply.nickname)})}" alt="avatar" class="be-ava-comment">
+											            </div>
+											            <div class="be-comment-content">
+											                <span class="be-comment-name">
+											                    <span th:text="${reply.nickname}"></span>
+											                </span>
+											                <span class="be-comment-time">
+											                    <i class="fa fa-clock-o"></i>
+											                    <span th:text="${reply.updatedAt == null ? #dates.format(reply.createdAt, 'yyyy년 MM월 dd일 HH시 mm분') : #dates.format(reply.updatedAt, 'yyyy년 MM월 dd일 HH시 mm분')}"></span>
+											                </span>
+											                <div>
+											                    <p class="be-comment-text" th:id="'replyContent' + ${reply.replyId}" th:text="${reply.content}"></p>
+											                    <input type="text" th:id="'replyContentInput' + ${reply.replyId}" class="form-control d-none" th:value="${reply.content}" />
+											                </div>
+											                <span th:if="${memberDTO.nickname == reply.nickname}" style="width:100%">
+											                    <input type="hidden" th:id="'hiddenReplyId' + ${reply.replyId}" th:value="${reply.replyId}">
+											                    <button class="btn btn-sm btn-danger" th:id="'deleteReplyBtn' + ${reply.replyId}" th:onClick="deleteReply([[${reply.replyId}]])">삭제</button>
+											                    <button class="btn btn-sm btn-primary" th:id="'showUpdateBtn' + ${reply.replyId}" th:onClick="showUpdateForm([[${reply.replyId}]])">수정</button>
+											                    <button class="btn btn-sm btn-success d-none" style="float: right;" th:id="'replyUpdateBtn' + ${reply.replyId}" th:onClick="updateReply([[${reply.replyId}]])">저장</button>
+											                </span>
+											            </div>
+											        </div>
+		                                        </div>
+		                                        <div th:unless="${replies.size() > 0}">
+												</div>
+											</div>
+											<div class="be-reply-block">
+												<form class="form-block">
+										            <div class="row">
+										                <div class="col-xs-12 col-sm-6 mb-2">
+										                    <div class="form-group fl_icon">
+										                        <div class="icon"><i class="fa fa-user"></i></div>
+										                        <input id="replyAuthor" class="form-input form-control" type="text" th:value="${memberDTO.nickname}" readonly>
+										                    </div>
+										                </div>
+										                <div class="col-xs-12">
+										                    <div class="form-group">
+										                        <textarea id="replyContent" class="form-input form-control" placeholder="댓글 내용을 입력해주세요" required></textarea>
+										                    </div>
+										                </div>
+										                <div class="col-xs-12">
+										                    <button type="button" class="btn btn-primary mt-2 btn-small float-end" onClick="createReply()">작성</button>
+										                </div>
+										            </div>
+										        </form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.application.mediquanta.member.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -122,6 +123,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
+	public List<Map<String, String>> getProfileUUIDList() {
+		return memberDAO.getProfileUUIDList();
+	}
+	
+	@Override
 	public Map<String, Double> kakaoLocalAPI(String query) {
         String url = "https://dapi.kakao.com/v2/local/search/address.json?query=" + query;
         RestTemplate restTemplate = new RestTemplate();
@@ -170,7 +176,7 @@ public class MemberServiceImpl implements MemberService {
 		if (memberList.size() > 0) {
 			return memberList;
 		} else {
-			return null;
+			return Collections.emptyList();
 		}
 	}
 

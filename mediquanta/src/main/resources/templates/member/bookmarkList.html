@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>북마크 목록</title>
+<link th:href="@{/css/hospitalList.css}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+</head>
+<body>
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section>
+				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+			</section>
+			<section style="background-color: #eee;">
+				<div class="container py-4">
+					<div class="row">
+						<div class="col">
+							<nav aria-label="breadcrumb" class="bg-body-tertiary rounded-3 mb-4">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+									<li class="breadcrumb-item">
+										<a th:href="@{/member/profile}">사용자 프로필</a>
+									</li>
+									<li class="breadcrumb-item active" aria-current="page">북마크</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="card mb-4">
+								<div class="card-body">
+						            <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+						                <li class="nav-item" role="presentation">
+						                    <button class="nav-link active" id="hospital-tab" data-bs-toggle="tab" data-bs-target="#hospital" type="button" role="tab" aria-controls="hospital" aria-selected="true">병원</button>
+						                </li>
+						                <li class="nav-item" role="presentation">
+						                    <button class="nav-link" id="pharmacy-tab" data-bs-toggle="tab" data-bs-target="#pharmacy" type="button" role="tab" aria-controls="pharmacy" aria-selected="false">약국</button>
+						                </li>
+						            </ul>
+						            <div class="tab-content" id="myTabContent">
+						                <div class="tab-pane fade show active" id="hospital" role="tabpanel" aria-labelledby="hospital-tab">
+						                    <div class="main-box clearfix">
+						                        <div class="table-responsive">
+						                            <table class="table user-list">
+						                                <thead>
+															<tr class="text-center">
+																<th style="width: 20%;"><span>병원 이름</span></th>
+																<th style="width: 10%;"><span>유형</span></th>
+																<th style="width: 35%;"><span>주소</span></th>
+																<th style="width: 15%;"><span>전화번호</span></th>
+																<th style="width: 10%;"><span>홈페이지 주소</span></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="hospital : ${hospitalBookmarkList}">
+																<td style="display:none;">
+																	<input id="hospitalId" type="hidden" th:value="${hospital.hospitalId}">
+																</td>
+																<td class="text-center">
+																	<a class="text-muted" th:href="@{/hospital/details(hospitalId=${hospital.hospitalId})}" th:text="${hospital.hospitalName}"></a>
+																</td>
+																<td class="text-center">
+																	<span class="text-muted" th:text="${hospital.type}"></span>
+																</td>
+																<td>
+																	<span class="text-muted" th:text="${hospital.address}"></span>
+																</td>
+																<td class="text-center">
+																	<span class="text-muted" th:text="${hospital.phone}"></span>
+																</td>
+																<td class="text-center">
+																	<span class="text-muted" th:text="${hospital.hospitalUrl}"></span>
+																</td>
+															</tr>
+														</tbody>
+						                            </table>
+						                        </div>
+						                    </div>
+						                </div>
+						                <div class="tab-pane fade" id="pharmacy" role="tabpanel" aria-labelledby="pharmacy-tab">
+						                    <div class="main-box clearfix">
+						                        <div class="table-responsive">
+						                            <table class="table user-list">
+						                                <thead>
+															<tr class="text-center">
+																<th style="width: 10%;"><span>약국 이름</span></th>
+																<th style="width: 10%;"><span>지역</span></th>
+																<th style="width: 45%;"><span>주소</span></th>
+																<th style="width: 10%;"><span>전화번호</span></th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr th:each="pharmacy : ${pharmacyBookmarkList}" class="text-center">
+																<td style="display:none;">
+																	<input id="pharmacyId" type="hidden" th:value="${pharmacy.pharmacyId}">
+																</td>
+																<td>
+																	<a class="text-muted" th:href="@{/pharmacy/details(pharmacyId=${pharmacy.pharmacyId})}" th:text="${pharmacy.pharmacyName}"></a>
+																</td>
+																<td>
+																	<span class="text-muted" th:text="${pharmacy.sidoCdNm} + ' ' + ${pharmacy.sgguCdNm}"></span>
+																</td>
+																<td>
+																	<span class="text-muted" th:text="${pharmacy.address}"></span>
+																</td>
+																<td>
+																	<span class="text-muted" th:text="${pharmacy.phone}"></span>
+																</td>
+															</tr>
+														</tbody>
+						                            </table>
+						                        </div>
+						                    </div>
+						                </div>
+						            </div>
+						        </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+
+</html>

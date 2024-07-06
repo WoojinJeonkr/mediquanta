@@ -36,6 +36,9 @@
 						</div>
 			            <div class="d-flex justify-content-center mb-2">
 			            	<span th:if="${memberDTO.memberId} == ${session.memberId}">
+			            	<input	type="button" value="북마크"
+			            			data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-sm ms-1" 
+			            			th:onclick="|location.href='@{/member/bookmark}'|">
 			            	<input	type="button" value="회원 정보 수정"
 			            			data-mdb-button-init data-mdb-ripple-init class="btn btn-secondary btn-sm ms-1" 
 			            			th:onclick="|location.href='@{/member/updateProfile}'|">
@@ -43,35 +46,9 @@
 			            			data-mdb-button-init data-mdb-ripple-init class="btn btn-danger btn-sm ms-1" 
 			            			th:onclick="|location.href='@{/member/signOut}'|">
 			            	</span>
-			            	<button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm ms-1">Message</button>
 			            </div>
 			          </div>
 			        </div>
-			        <!-- <div class="card mb-4 mb-lg-0">
-			          <div class="card-body">
-			          	<p class="mb-4"><span class="font-italic me-1">최근 열람한 게시글</span></p>
-			          	<div class="col-sm-3">
-			          		<p class="mb-1 text-primary" style="font-size: .85rem;">일상 게시판</p>
-			          	</div>
-			            <div class="col-sm-9">
-			                <p class="text-muted mb-0" style="font-size: .77rem;">게시글 제목 1</p>
-			            </div>
-			            <hr>
-			            <div class="col-sm-3">
-			          		<p class="mb-1 text-primary" style="font-size: .85rem;">자유 게시판</p>
-			          	</div>
-			            <div class="col-sm-9">
-			                <p class="text-muted mb-0" style="font-size: .77rem;">게시글 제목 1</p>
-			            </div>
-			            <hr>
-			            <div class="col-sm-3">
-			          		<p class="mb-1 text-primary" style="font-size: .85rem;">자유 게시판</p>
-			          	</div>
-			            <div class="col-sm-9">
-			                <p class="text-muted mb-0" style="font-size: .77rem;">게시글 제목 2</p>
-			            </div>
-			          </div>
-			        </div> -->
 			      </div>
 			      <div class="col-lg-8">
 			        <div class="card mb-4">

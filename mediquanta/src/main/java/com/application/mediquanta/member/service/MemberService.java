@@ -21,6 +21,7 @@ public interface MemberService {
 	public void updateMember(MultipartFile uploadProfile, MemberDTO memberDTO) throws IllegalStateException, IOException;
 	public void signOut(String memberId);
 	public List<MemberDTO> getMemberList();
+	public List<Map<String, String>> getProfileUUIDList();
 	public Map<String, Integer> getRoleCount();
 	public Map<String, Integer> getGenderCount();
 	public Map<String, Integer> getActiveCount();

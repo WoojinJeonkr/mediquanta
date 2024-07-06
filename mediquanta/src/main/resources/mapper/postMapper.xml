@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.post.dao.PostDAO">
+	
+	<!-- 게시글 작성 -->
+	<insert id="createPost" parameterType="PostDTO">
+		INSERT INTO POST (
+			COMMUNITY_NAME,
+			TITLE,
+			AUTHOR,
+			CONTENT,
+			REPLY_CNT,
+			VIEW_CNT,
+			CREATED_AT
+		) VALUES (
+			#{communityName},
+			#{title},
+			#{author},
+			#{content},
+			#{replyCnt},
+			#{viewCnt},
+			#{createdAt}
+		)		
+	</insert>
+	
+	<!-- 전체 게시글 가져오기 -->
+	<select id="getPostList">
+		SELECT 	POST_ID,
+	            COMMUNITY_NAME,
+	            TITLE,
+	            AUTHOR,
+	            CONTENT,
+				REPLY_CNT,
+				VIEW_CNT,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	POST
+		ORDER BY POST_ID DESC
+	</select>
+	
+	<!-- 가장 최근 3개의 게시글 가져오기 -->
+	<select id="getRecentPostList">
+		SELECT 	POST_ID,
+	            COMMUNITY_NAME,
+	            TITLE,
+	            AUTHOR,
+	            CONTENT
+		FROM	POST
+		ORDER BY POST_ID DESC
+		LIMIT	3
+	</select>
+	
+	<!-- 커뮤니티 별 전체 게시글 수 가져오기 -->
+	<select id="getPostListCount" resultType="map">
+        SELECT 		COMMUNITY_NAME,
+        			COUNT(POST_ID) AS COUNT
+		FROM 		POST
+		GROUP BY 	COMMUNITY_NAME
+		ORDER BY 	COUNT DESC
+    </select>
+    
+    <!-- 게시글 상세 보기 -->
+    <select id="findPostDetail" parameterType="long">
+    	SELECT		POST_ID,
+		            COMMUNITY_NAME,
+		            TITLE,
+		            AUTHOR,
+		            CONTENT,
+					REPLY_CNT,
+					VIEW_CNT,
+					CREATED_AT,
+					UPDATED_AT
+		FROM		POST
+		WHERE		POST_ID = #{postId}
+    </select>
+    
+    <!-- 게시글 조회 수 증가 -->
+    <update id="updateViewCnt" parameterType="long">
+	    UPDATE 	POST
+	    SET 	VIEW_CNT = VIEW_CNT + 1
+	    WHERE 	POST_ID = #{postId}
+	</update>
+    
+    <!-- 댓글 수 증가 -->
+    <update id="updateReplyCntPlus" parameterType="long">
+	    UPDATE 	POST
+	    SET 	REPLY_CNT = REPLY_CNT + 1
+	    WHERE 	POST_ID = #{postId}
+	</update>
+	
+	<!-- 댓글 수 감소 -->
+	<update id="updateReplyCntMinus" parameterType="long">
+	    UPDATE 	POST
+	    SET 	REPLY_CNT = REPLY_CNT - 1
+	    WHERE 	POST_ID = #{postId}
+	</update>
+    
+    <!-- 게시글 수정 -->
+    <update id="updatePost" parameterType="PostDTO">
+    	UPDATE
+    			POST
+	    <set>
+			<if test="title != null and title != ''">
+				TITLE = #{title}, 
+			</if>
+			<if test="content != null and content != ''">
+				CONTENT = #{content},
+			</if>
+			<if test="updatedAt != null">
+				UPDATED_AT = #{updatedAt}
+			</if>
+	    </set>
+	    WHERE POST_ID = #{postId}
+    </update>
+    
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost" parameterType="long">
+    	DELETE FROM REPLY
+    	WHERE POST_ID = #{postId};
+    
+        DELETE FROM POST
+        WHERE POST_ID = #{postId}
+	</delete>
+	
+</mapper>
