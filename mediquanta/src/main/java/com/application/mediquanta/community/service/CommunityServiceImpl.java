@@ -43,6 +43,7 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public void createCommunity(CommunityDTO communityDTO) {
 		communityDTO.setActiveYn("n");
+		communityDTO.setTotalViewCount(0);
 		communityDTO.setCreatedAt(new Date());
 		communityDAO.createCommunity(communityDTO);
 	}
@@ -66,4 +67,10 @@ public class CommunityServiceImpl implements CommunityService {
 		community.setActiveYn("y");
 		communityDAO.agreeCommunity(community);
 	}
+
+	@Override
+	public void updateViewCnt(String communityName) {
+		communityDAO.updateViewCnt(communityName);
+	}
+
 }

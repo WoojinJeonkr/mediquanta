@@ -183,10 +183,8 @@ public class MemberController {
 	
 	@PostMapping("/updateProfile")
 	public String updateProfile(@RequestParam("uploadProfile") MultipartFile uploadProfile, MemberDTO memberDTO, HttpSession session) throws IllegalStateException, IOException {
-		String role = (String)session.getAttribute("role");
 		memberService.updateMember(uploadProfile, memberDTO);
-		String profilePage = role.equals("USER") ? "userProfile" : "adminProfile";
-		return "member/" + profilePage;
+		return "redirect:/member/profile";
 	}
 	
 	@GetMapping("/signOut")

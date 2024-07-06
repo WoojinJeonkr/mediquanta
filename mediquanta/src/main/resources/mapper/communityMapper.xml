@@ -10,8 +10,6 @@
 				PURPOSE,
 				ACTIVE_YN,
 				TOTAL_VIEW_COUNT,
-				TOTAL_MEMBER_COUNT,
-				TOTAL_POST_COUNT,
 				CREATED_AT,
 				UPDATED_AT
 		FROM	COMMUNITY
@@ -25,8 +23,6 @@
 				PURPOSE,
 				ACTIVE_YN,
 				TOTAL_VIEW_COUNT,
-				TOTAL_MEMBER_COUNT,
-				TOTAL_POST_COUNT,
 				CREATED_AT,
 				UPDATED_AT
 		FROM	COMMUNITY
@@ -41,8 +37,6 @@
 				PURPOSE,
 				ACTIVE_YN,
 				TOTAL_VIEW_COUNT,
-				TOTAL_MEMBER_COUNT,
-				TOTAL_POST_COUNT,
 				CREATED_AT,
 				UPDATED_AT
 		FROM	COMMUNITY
@@ -63,12 +57,14 @@
 			DESCRIPTION,
 			PURPOSE,
 			ACTIVE_YN,
+			TOTAL_VIEW_COUNT,
 			CREATED_AT
 		) VALUES (
 			#{communityName},
 			#{description},
 			#{purpose},
 			#{activeYn},
+			#{totalViewCount},
 			#{createdAt}
 		)
 	</insert>
@@ -92,5 +88,14 @@
     		ACTIVE_YN = #{activeYn}
     	WHERE COMMUNITY_ID = #{communityId}
     </update>
-	
+    
+    <!-- 커뮤니티 조회수 증가 -->
+    <update id="updateViewCnt" parameterType="String">
+    	UPDATE
+    		COMMUNITY
+    	SET
+    		TOTAL_VIEW_COUNT = TOTAL_VIEW_COUNT + 1
+    	WHERE COMMUNITY_NAME = #{communityName}
+    </update>
+    
 </mapper>

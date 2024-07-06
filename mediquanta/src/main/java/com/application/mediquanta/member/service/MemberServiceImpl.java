@@ -123,6 +123,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
+	public List<Map<String, String>> getProfileUUIDList() {
+		return memberDAO.getProfileUUIDList();
+	}
+	
+	@Override
 	public Map<String, Double> kakaoLocalAPI(String query) {
         String url = "https://dapi.kakao.com/v2/local/search/address.json?query=" + query;
         RestTemplate restTemplate = new RestTemplate();

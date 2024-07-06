@@ -14,5 +14,6 @@ public interface CommunityService {
 	public void createCommunity(CommunityDTO communityDTO);
 	public Map<String, Long> countActiveCommunity();
 	public void agreeCommunity(long communityId);
+	public void updateViewCnt(String communityName);
 	
 }
