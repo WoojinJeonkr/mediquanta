@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.reply.dao.ReplyDAO">
+	
+	<!-- 전체 댓글 가져오기 -->
+	<select id="findByPostId" parameterType="long" resultType="ReplyDTO">
+		SELECT 	REPLY_ID,
+				POST_ID,
+				COMMUNITY_NAME,
+				NICKNAME,
+				CONTENT,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	REPLY
+		WHERE	POST_ID = #{postId}
+	</select>
+	
+	<!-- 커뮤니티 별 전체 회원 수 가져오기 -->
+	<select id="getReplyMemberCount" resultType="map">
+        SELECT 
+        	COMMUNITY_NAME,
+        	COUNT(DISTINCT NICKNAME) AS COUNT
+	    FROM 
+	        (
+	            SELECT 
+	                COMMUNITY_NAME,
+	                AUTHOR AS NICKNAME
+	            FROM 
+	                POST
+	            UNION
+	            SELECT 
+	                COMMUNITY_NAME,
+	                NICKNAME
+	            FROM 
+	                REPLY
+	        ) AS COMBINED
+	    GROUP BY 
+	        COMMUNITY_NAME
+	    ORDER BY 
+	        COUNT DESC
+    </select>
+    
+	<!-- 댓글 작성 -->
+	<insert id="createReply" parameterType="ReplyDTO">
+		INSERT INTO REPLY (
+		    POST_ID,
+		    NICKNAME,
+		    COMMUNITY_NAME,
+		    CONTENT,
+		    CREATED_AT
+		) VALUES (
+			#{postId},
+			#{nickname},
+			#{communityName},
+			#{content},
+			#{createdAt}
+		)		
+	</insert>
+	
+    <!-- 댓글 수정 -->
+    <update id="updateReply" parameterType="PostDTO">
+    	UPDATE
+    			REPLY
+	    <set>
+			<if test="content != null and content != ''">
+				CONTENT = #{content},
+			</if>
+			<if test="updatedAt != null">
+				UPDATED_AT = #{updatedAt}
+			</if>
+	    </set>
+	    WHERE REPLY_ID = #{replyId}
+    </update>
+    
+    <!-- 댓글 삭제 -->
+    <delete id="deleteReply" parameterType="long">
+        DELETE FROM REPLY
+        WHERE REPLY_ID = #{replyId}
+	</delete>
+	
+</mapper>

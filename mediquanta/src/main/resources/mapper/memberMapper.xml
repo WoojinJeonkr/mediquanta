@@ -180,6 +180,12 @@
 		FROM	MEMBER
 	</select>
 	
+	<!-- 닉네임별 profileUUID 조회 -->
+	<select id="getProfileUUIDList" resultType="map">
+        SELECT	NICKNAME, PROFILE_UUID
+        FROM	MEMBER
+    </select>
+	
 	<!-- 회원 권한 현황 조회 -->
 	<select id="getRoleCount" resultType="map">
 		SELECT
