@@ -25,6 +25,7 @@ public interface MemberDAO {
 	public void signOut(String memberId);															// 회원 탈퇴
 	public void deleteMember(Date date);															// 회원 삭제
 	public List<MemberDTO> getMemberList();															// 전체 회원 목록 조회
+	public List<Map<String, String>> getProfileUUIDList();
 	public Map<String, Integer> getRoleCount();														// 회원 권한 현황 조회
 	public Map<String, Integer> getGenderCount();													// 회원 성별 현황 조회
 	public Map<String, Integer> getActiveCount();													// 회원 상태 현황 조회

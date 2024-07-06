@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout}">
+<head>
+<meta charset="UTF-8">
+<title>Mediquanta | 게시글 작성</title>
+<script th:src="@{/ckeditor/ckeditor.js}"></script>
+<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+<script>
+	function checkCreateForm() {
+		let isCheck = true;
+		let title = $("#title").val();
+		
+		if (title.trim() === "") {
+			$("#isValidTitleMsg").html(`<span style="color:red;">게시글 제목을 입력하세요.</span>`);
+			isCheck = false;
+		} else {
+			$("#isValidTitleMsg").text("");
+		}
+	}
+</script>
+<style>
+	.cke_notifications_area { display: none; }
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<main class="main-content site-wrapper-reveal">
+			<section>
+				<div style="height: 142px; z-index: 8; background-color: #666666">&emsp;</div>
+			</section>
+			<section style="background-color: #eee;">
+				<div class="container py-4">
+					<div class="row">
+						<div class="col">
+							<nav aria-label="breadcrumb"
+								class="bg-body-tertiary rounded-3 mb-4">
+								<ol class="breadcrumb mb-0">
+									<li class="breadcrumb-item"><a th:href="@{/}">메인</a></li>
+									<li class="breadcrumb-item"><a th:href="@{/community}">라운지</a></li>
+									<li class="breadcrumb-item"><a th:href="@{'/community/' + ${communityName}}" th:text="${communityName}"></a></li>
+									<li class="breadcrumb-item active" aria-current="page">게시글 작성</li>
+								</ol>
+							</nav>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12 card-margin">
+							<div class="card mb-0">
+			          			<div class="card-body">
+									<form class="validation-form" th:action="@{'/community/' + ${communityName} + '/createPost'}" th:onsubmit="return checkCreateForm();" method="post" accept-charset="UTF-8" enctype="multipart/form-data" novalidate>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<input type="hidden" id="communityName" th:value="${communityName}">
+											<label class="form-label" for="communityName">게시글 제목<span style="color: red;">*</span></label>
+											<div class="form-group row">
+												<div class="col-md-10">
+													<input type="text" id="title" name="title" placeholder="게시글 제목을 입력하세요" class="form-control form-control-lg" maxlength="35"/>
+													<span id="isValidTitleMsg"></span>
+												</div>
+												<div class="col-md-2">
+													<input type="text" id="author" name="author" class="form-control form-control-lg" th:value="${author}" readonly/>
+												</div>
+											</div>
+										</div>
+										<div data-mdb-input-init class="form-outline mb-4">
+											<label class="form-label" for="content">게시글 내용</label>
+											<textarea rows="10" cols="50" name="content" maxlength="200"></textarea>
+											<script>CKEDITOR.replace("content", {removePlugins: 'image,uploadimage, video'});</script>
+										</div>
+										<div class="mb-4"></div>
+										<button class="btn btn-success btn-sm btn-block" style="float:right;" type="submit">작성</button>
+										<a th:href="@{'/community/' + ${communityName}}">취소</a>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+	</div>
+</body>
+</html>

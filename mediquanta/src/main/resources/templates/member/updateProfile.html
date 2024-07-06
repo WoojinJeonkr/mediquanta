@@ -16,8 +16,8 @@
 		        $("#checkNicknameButton").text("중복 확인").removeClass("btn-danger").addClass("btn-primary");
 		    }
 
-		    if ($("#checkEmailButton").text() === "사용 가능" && $("#checkNicknameButton").hasClass("btn-success")) {
-		        $("#checkEmailButton").text("중복 확인").removeClass("btn-success").addClass("btn-primary");
+		    if ($("#checkNicknameButton").text() === "사용 가능" && $("#checkNicknameButton").hasClass("btn-success")) {
+		        $("#checkNicknameButton").text("중복 확인").removeClass("btn-success").addClass("btn-primary");
 		    }
 		    
 	    });
@@ -69,8 +69,6 @@
 			"nickname" : $("#nickname").val()
 		}
 		
-		console.log(param);
-		
 		$.ajax({
 		
 			url : "/member/validNickname",
@@ -115,7 +113,7 @@
 		
 	}
 	
-function checkFormValidation() {
+	function checkFormValidation() {
 		
 		let isValid = true;
 	

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.application.mediquanta.community.dao.CommunityDAO">
+
+	<!-- 전체 커뮤니티 목록 가져오기 -->
+	<select id="getCommunityList">
+		SELECT 	COMMUNITY_ID,
+				COMMUNITY_NAME,
+				DESCRIPTION,
+				PURPOSE,
+				ACTIVE_YN,
+				TOTAL_VIEW_COUNT,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	COMMUNITY
+	</select>
+	
+	<!-- 단일 커뮤니티 목록 가져오기 -->
+	<select id="findCommunity" parameterType="long" resultType="CommunityDTO">
+		SELECT 	COMMUNITY_ID,
+				COMMUNITY_NAME,
+				DESCRIPTION,
+				PURPOSE,
+				ACTIVE_YN,
+				TOTAL_VIEW_COUNT,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	COMMUNITY
+		WHERE	COMMUNITY_ID = #{communityId}
+	</select>
+	
+	<!-- 커뮤니티 명을 기반으로 단일 커뮤니티 목록 가져오기 -->
+	<select id="findCommunityByCommunityName" parameterType="String" resultType="CommunityDTO">
+		SELECT 	COMMUNITY_ID,
+				COMMUNITY_NAME,
+				DESCRIPTION,
+				PURPOSE,
+				ACTIVE_YN,
+				TOTAL_VIEW_COUNT,
+				CREATED_AT,
+				UPDATED_AT
+		FROM	COMMUNITY
+		WHERE	COMMUNITY_NAME = #{communityName}
+	</select>
+	
+	<!-- 커뮤니티 명 중복 확인 -->
+	<select id="validCommunityName" parameterType="String" resultType="String">
+		SELECT 	COMMUNITY_NAME
+		FROM 	COMMUNITY
+		WHERE	COMMUNITY_NAME = #{communityName}
+	</select>
+	
+	<!-- 커뮤니티 생성 -->	
+	<insert id="createCommunity" parameterType="CommunityDTO">
+		INSERT INTO COMMUNITY (
+			COMMUNITY_NAME,
+			DESCRIPTION,
+			PURPOSE,
+			ACTIVE_YN,
+			TOTAL_VIEW_COUNT,
+			CREATED_AT
+		) VALUES (
+			#{communityName},
+			#{description},
+			#{purpose},
+			#{activeYn},
+			#{totalViewCount},
+			#{createdAt}
+		)
+	</insert>
+	
+	<!-- 커뮤니티 활성화 수 가져오기 ('y' : 승인, 'n' : 미승인) -->
+	<select id="countActiveCommunity" resultType="map">
+        SELECT
+            ACTIVE_YN, 
+            COUNT(*) AS count
+        FROM 
+            COMMUNITY
+        GROUP BY 
+            ACTIVE_YN
+    </select>
+    
+    <!-- 커뮤니티 승인 -->
+    <update id="agreeCommunity" parameterType="CommunityDTO">
+    	UPDATE
+    		COMMUNITY
+    	SET
+    		ACTIVE_YN = #{activeYn}
+    	WHERE COMMUNITY_ID = #{communityId}
+    </update>
+    
+    <!-- 커뮤니티 조회수 증가 -->
+    <update id="updateViewCnt" parameterType="String">
+    	UPDATE
+    		COMMUNITY
+    	SET
+    		TOTAL_VIEW_COUNT = TOTAL_VIEW_COUNT + 1
+    	WHERE COMMUNITY_NAME = #{communityName}
+    </update>
+    
+</mapper>
