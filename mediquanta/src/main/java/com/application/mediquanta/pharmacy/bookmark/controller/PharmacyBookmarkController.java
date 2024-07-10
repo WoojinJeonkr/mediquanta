@@ -25,7 +25,7 @@ public class PharmacyBookmarkController {
 
 	@PostMapping("/getPharmacyBookmarks")
 	@ResponseBody
-	public List<PharmacyBookmarkDTO> getHospitalBookmarks(HttpSession session) {
+	public List<PharmacyBookmarkDTO> getPharmacyBookmarks(HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
 		List<PharmacyBookmarkDTO> bookmarkList = pharmacybookmarkService.getBookmarksForMember(memberId);
 		return bookmarkList;
