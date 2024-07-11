@@ -20,6 +20,7 @@
 			ROLE,
 			ACTIVE_YN,
 			CREATED_AT,
+			UPDATED_AT,
 			LAST_LOGIN
 		) 
 		VALUES (
@@ -38,6 +39,7 @@
 			#{role},
 			#{activeYn},
 			#{createdAt},
+			#{updatedAt},
 			#{lastLogin}
 		 )
 	</insert>	
@@ -138,8 +140,6 @@
 			<if test="gender != null and gender != ''">
 				GENDER = #{gender},
 			</if>
-			<!-- birth 필드는 java.util.Date 타입이므로, null 체크만 수행합니다. -->
-			<!-- MyBatis는 자동으로 자바의 Date 객체를 데이터베이스의 날짜 형식으로 변환하여 사용합니다 -->
 			<if test="birth != null">
 				BIRTH = #{birth},
 			</if>
@@ -156,7 +156,10 @@
 				ETC_ADDRESS = #{etcAddress},
 			</if>
 			<if test="activeYn != null and activeYn != ''">
-				ACTIVE_YN = #{activeYn}
+				ACTIVE_YN = #{activeYn},
+			</if>
+			<if test="updatedAt != null">
+				UPDATED_AT = #{updatedAt},
 			</if>
 	    </set>
 	    WHERE MEMBER_ID = #{memberId}
@@ -221,7 +224,7 @@
 	<delete id="deleteMember" parameterType="map">
 		<![CDATA[
 	        DELETE FROM MEMBER
-	        WHERE last_login < DATE_SUB(#{date}, INTERVAL 1 YEAR) AND ACTIVE_YN = 'n'
+	        WHERE last_login > DATE_ADD(#{date}, INTERVAL 1 YEAR) AND ACTIVE_YN = 'n'
 	    ]]>
     </delete>
 	

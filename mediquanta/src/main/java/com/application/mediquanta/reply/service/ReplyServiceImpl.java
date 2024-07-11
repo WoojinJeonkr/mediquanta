@@ -23,7 +23,7 @@ public class ReplyServiceImpl implements ReplyService {
 	private ReplyDAO replyDAO;
 	
 	@Override
-	public List<ReplyDTO> getRepliesByPostId(Long postId) {
+	public List<ReplyDTO> getRepliesByPostId(long postId) {
 		List<ReplyDTO> replyList = replyDAO.findByPostId(postId);
 		if (replyList != null) {
 			return replyDAO.findByPostId(postId).stream().map(reply -> {
