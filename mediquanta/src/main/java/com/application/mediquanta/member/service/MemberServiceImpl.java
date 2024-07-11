@@ -60,6 +60,7 @@ public class MemberServiceImpl implements MemberService {
 		memberDTO.setEtcAddress(memberDTO.getEtcAddress() == null ? "" : memberDTO.getEtcAddress());
 		memberDTO.setRole(memberDTO.getMemberId().equals("admin") ? "ADMIN" : "USER");
 		memberDTO.setCreatedAt(new Date());
+		memberDTO.setUpdatedAt(null);
 		memberDTO.setLastLogin(new Date());
 		
 		memberDAO.createMember(memberDTO);
@@ -159,7 +160,7 @@ public class MemberServiceImpl implements MemberService {
 		
 		memberDTO.setPasswd(passwordEncoder.encode(memberDTO.getPasswd()));
 		memberDTO.setEtcAddress(memberDTO.getEtcAddress() == null ? "" : memberDTO.getEtcAddress());
-		memberDTO.setActiveYn("y");
+		memberDTO.setUpdatedAt(new Date());
 		memberDAO.updateMember(memberDTO);
 	}
 

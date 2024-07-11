@@ -28,6 +28,8 @@ public class MemberDTO {
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date createdAt;		// 회원 등록 날짜
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date updatedAt;		// 회원 수정 날짜
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date lastLogin;		// 최종 로그인
 
 }
