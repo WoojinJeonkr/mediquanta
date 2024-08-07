@@ -45,80 +45,98 @@
 	
 	function checkFormValidation() {
 		
-		let isValid = false;
+		let isValid = true;
 	
 	    let memberId = $("#memberId").val();
 	    if (memberId.trim() === "") {
 	        $("#isValidIdMsg").html(`<span style="color:red;">아이디를 입력하세요.</span>`);
+	        isValid = false;
 	    } else if (document.getElementById("checkIdButton").innerHTML == "중복 확인") {
 	    	$("#isValidIdMsg").html(`<span style="color:red;">닉네임 중복을 확인해주세요.</span>`);
+	    	isValid = false;
 	    } else if (document.getElementById("checkIdButton").innerHTML == "사용 불가") {
 	    	$("#isValidIdMsg").html(`<span style="color:red;">중복된 닉네임입니다.</span>`);
+	    	isValid = false;
 	    } else {
 	        $("#isValidIdMsg").text("");
-	        isValid = true;
 	    }
 		
 	    let nickname = $("#nickname").val();
 	    if (nickname.trim() === "") {
 	        $("#isValidNicknameMsg").html(`<span style="color:red;">닉네임을 입력하세요.</span>`);
+	        isValid = false;
 	    } else if (document.getElementById("checkNicknameButton").innerHTML == "중복 확인") {
 	    	$("#isValidNicknameMsg").html(`<span style="color:red;">닉네임 중복을 확인해주세요.</span>`);
+	    	isValid = false;
 	    } else if (document.getElementById("checkNicknameButton").innerHTML == "사용 불가") {
 	    	$("#isValidNicknameMsg").html(`<span style="color:red;">중복된 닉네임입니다.</span>`);
+	    	isValid = false;
 	    } else {
 	        $("#isValidNicknameMsg").text("");
-	        isValid = true;
 	    }
 	
 	    let passwd = $("#passwd").val();
 	    if (passwd.trim() === "") {
 	        $("#isValidPasswdMsg").html(`<span style="color:red;">비밀번호를 입력하세요.</span>`);
+	        isValid = false;
 	    } else {
 	        $("#isValidPasswdMsg").text("");
-	        isValid = true;
 	    }
 	
 	    let confirmPasswd = $("#confirmPasswd").val();
 	    if (confirmPasswd.trim() === "") {
 	        $("#isValidConfirmPasswdMsg").html(`<span style="color:red;">비밀번호를 다시 입력하세요.</span>`);
+	        isValid = false;
 	    } else if (passwd != confirmPasswd) {
 	        $("#isValidConfirmPasswdMsg").html(`<span style="color:red;">비밀번호가 일치하지 않습니다.</span>`);
+	        isValid = false;
 	    } else {
 	        $("#isValidConfirmPasswdMsg").text("");
-	        isValid = true;
 	    }
 	
 	    let email = $("#email").val();
 	    if (email.trim() === "") {
 	        $("#isValidEmailMsg").html(`<span style="color:red;">이메일을 입력하세요.</span>`);
+	        isValid = false;
 	    }  else if (document.getElementById("checkEmailButton").innerHTML == "중복 확인") {
 	    	$("#isValidEmailMsg").html(`<span style="color:red;">이메일 중복을 확인해주세요.</span>`);
+	    	isValid = false;
 	    } else if (document.getElementById("checkEmailButton").innerHTML == "사용 불가") {
 	    	$("#isValidEmailMsg").html(`<span style="color:red;">중복된 이메일입니다.</span>`);
+	    	isValid = false;
 	    } else {
 	        $("#isValidEmailMsg").text("");
-	        isValid = true;
 	    }
 	
 	    let zipcode = $("#zipcode").val();
 	    if (zipcode.trim() === "") {
 	        $("#isValidAddressMsg").html(`<span style="color:red;">우편번호를 선택하세요.</span>`);
+	        isValid = false;
 	    } else {
 	        $("#isValidAddressMsg").text("");
-	        isValid = true;
 	    }
 	    
 	    let birth = $("#birth").val();
 	    if (birth.trim() === "") {
 	        $("#isValidBirthMsg").html(`<span style="color:red;">생년월일을 입력하세요.</span>`);
+	        isValid = false;
 	    } else {
 	        $("#isValidBirthMsg").text("");
-	        isValid = true;
+	    }
+	    
+	    let profileImage = $("#profileImage").val();
+	    if (profileImage.trim() === "") {
+	        $("#isValidProfileImageMsg").html(`<span style="color:red;">프로필 이미지를 업로드하세요.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidProfileImageMsg").text("");
 	    }
 	
-	    if ($('#aggrement').is(':checked')) {
-	    	isValid = true;
+	    if (!$('#aggrement').is(':checked')) {
+	        $("#isValidAgreementMsg").html(`<span style="color:red;">개인정보 수집 및 이용에 동의하셔야 합니다.</span>`);
+	        isValid = false;
+	    } else {
+	        $("#isValidAgreementMsg").text("");
 	    }
 	    
 	    return isValid;
@@ -316,6 +334,7 @@
 						<div class="mb-3">
 							<label for="profileImage">프로필<span style="color: red;">*</span></label>
 							<input type="file" class="form-control" id="profileImage" name="uploadProfile" required/>
+							<span id="isValidProfileImageMsg"></span>
 						</div>
 						
 						<div class="mb-3">
@@ -360,6 +379,7 @@
 						<div class="custom-control custom-checkbox">
 							<input type="checkbox" class="custom-control-input" id="aggrement" required>
 							<label class="custom-control-label" id="aggrement" for="aggrement">개인정보 수집 및 이용에 동의합니다.<span style="color: red;">*</span></label>
+							<span id="isValidAgreementMsg"></span>
 						</div>
 						<div class="mb-4"></div>
 						<button class="btn btn-primary btn-sm btn-block" style="float:right;" id="signInBtn" type="submit">회원가입</button>
